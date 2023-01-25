@@ -1,0 +1,181 @@
+#top-bar {
+    height: 40px;
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid;
+    padding: 5px;
+}
+  
+#top-left {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+#top-right {
+    flex: 2;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  
+  #cyril {
+    font-weight: 600;
+  }
+  
+  #hpy {
+    font-size: 13px;
+    position: relative;
+    left: 4px;
+  }
+  
+  #page-title-div {
+    background-color: #ABCBFF;
+    height: 25px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  #left-page-title {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    
+  }
+  
+  #right-page-title {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+  }
+  
+  #appointment-booking {
+    font-weight: 600;
+  }
+  
+  #cjmab {
+    font-size: 13px;
+  }
+  
+  #empty-space {
+    height: 50px;
+  }
+
+  #container-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #booking-container {
+    display: flex;
+    width: 60vw;
+    height: 80vh;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+
+  #left-booking {
+    flex: 1.8;
+    display: flex;
+    border-right: 1px solid black;
+    flex-direction: column;
+    background-color: #7F9BC9;
+  }
+
+  #service {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    background-color: #DBE8FF;
+    cursor: pointer;
+  }
+
+  #service:hover {
+    font-size: 18px;
+  }
+
+  #time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #DBE8FF;
+    font-weight: 600;
+  }
+
+  #time:hover {
+    font-size: 18px;
+  }
+
+  #details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #BFD7FF;
+    font-weight: 600;
+  }
+
+  #details:hover {
+    font-size: 18px;
+  }
+
+  #payment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #9EC3FF;
+    font-weight: 600;
+  }
+
+  #payment:hover {
+    font-size: 18px;
+  }
+
+  #done {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #89ADE8;
+    font-weight: 600;
+  }
+
+  #done:hover {
+    font-size: 18px;
+  }
+
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+  }
+
+  #right-booking {
+    flex:3;
+    display: flex;
+  }
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+  
+  /* Style the buttons inside the tab */
+  .tab div {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 17px;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab div:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab div.active {
+    background-color: #ccc;
+  }
+  
