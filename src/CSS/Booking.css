@@ -72,10 +72,12 @@
   #booking-container {
     display: flex;
     width: 60vw;
-    height: 80vh;
+    height: auto;
     border: 1px solid black;
     border-radius: 5px;
   }
+
+  
 
   #left-booking {
     flex: 1.8;
@@ -85,12 +87,13 @@
     background-color: #7F9BC9;
   }
 
-  #service {
+
+  /* #service {
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 600;
-    background-color: #DBE8FF;
+    /* background-color: #DBE8FF; 
     cursor: pointer;
   }
 
@@ -102,7 +105,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #DBE8FF;
+    /* background-color: #DBE8FF; 
     font-weight: 600;
   }
 
@@ -114,7 +117,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #BFD7FF;
+    /* background-color: #BFD7FF; 
     font-weight: 600;
   }
 
@@ -126,7 +129,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #9EC3FF;
+    /* background-color: #9EC3FF; 
     font-weight: 600;
   }
 
@@ -138,17 +141,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #89ADE8;
+    /* background-color: #89ADE8; 
     font-weight: 600;
   }
 
   #done:hover {
     font-size: 18px;
+  } */
+
+  .tablinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
   }
 
   .tabcontent {
     display: none;
-    padding: 6px 12px;
+    padding: 6px 12px 30px 20px;
   }
 
   #right-booking {
@@ -167,15 +177,105 @@
     outline: none;
     cursor: pointer;
     font-size: 17px;
+    border-bottom: 1px solid black;
   }
   
   /* Change background color of buttons on hover */
   .tab div:hover {
-    background-color: #ddd;
+    background-color: #BFD7FF;
   }
   
   /* Create an active/current tablink class */
   .tab div.active {
-    background-color: #ccc;
+    background-color: white;
   }
   
+  #service-type {
+    width: 300px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  #next-btn {
+    border: 1px solid black;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 30px;
+    font-weight: 600;
+    border-radius: 3px;
+  }
+
+  #time-slot-div {
+    width: 30vw;
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+
+  .ts {
+    border: 1px solid black;
+    width: 130px;
+    height: 30px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #input-name {
+    width: 300px;
+    padding: 5px;
+  }
+
+  #notes {
+    padding: 5px;
+    width:200px;
+    height: 200px;
+  }
+
+  #summary-container {
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  #summary {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    padding: 10px;
+  }
+
+
+
+  @media only screen and (max-width : 520px) {
+
+    #booking-container {
+    width: 80vw;
+    }
+
+    .tab div:hover {
+      background-color: #7F9BC9;
+    }
+
+    .ts {
+      border: 1px solid black;
+      width: 70px;
+      height: 40px;
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px;
+    }
+
+    #time-slot-div {
+      width: 55vw;
+      display: grid;
+      grid-template-columns: auto auto;
+    }
+  
+  }
