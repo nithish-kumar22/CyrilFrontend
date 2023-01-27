@@ -1,7 +1,6 @@
 import React from "react";
 import { Component } from "react";
 import "../CSS/Home.css";
-import { useNavigate } from "react-router";
 
 export default class Home extends Component {
   constructor(props) {

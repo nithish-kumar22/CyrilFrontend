@@ -136,10 +136,64 @@ export default class ListAppointments extends React.Component {
             <button id="create">Create</button>
           </div>
           <div id="past-content" className="tabcontent">
-            <p>Past</p>
+            <div id="list">
+              <div>Mr westn howk</div>
+              <div>Mark P. Daye</div>
+              <div>
+                Individual therapy <br /> (pre-booked)
+              </div>
+              <div>One to one</div>
+              <div>
+                22.01.23
+                <br />
+                9.30 - 10.00
+              </div>
+              <div></div>
+            </div>
+            <div id="list">
+              <div>Mr westn howk</div>
+              <div>Mark P. Daye</div>
+              <div>
+                Individual therapy <br /> (pre-booked)
+              </div>
+              <div>One to one</div>
+              <div>
+                22.01.23
+                <br />
+                9.30 - 10.00
+              </div>
+              <div></div>
+            </div>
           </div>
           <div id="canceled-content" className="tabcontent">
-            <p>Canceled</p>
+            <div id="list">
+              <div>Mr westn howk</div>
+              <div>Mark P. Daye</div>
+              <div>
+                Individual therapy <br /> (pre-booked)
+              </div>
+              <div>One to one</div>
+              <div>
+                22.01.23
+                <br />
+                9.30 - 10.00
+              </div>
+              <div></div>
+            </div>
+            <div id="list">
+              <div>Mr westn howk</div>
+              <div>Mark P. Daye</div>
+              <div>
+                Individual therapy <br /> (pre-booked)
+              </div>
+              <div>One to one</div>
+              <div>
+                22.01.23
+                <br />
+                9.30 - 10.00
+              </div>
+              <div></div>
+            </div>
           </div>
         </div>
       </div>

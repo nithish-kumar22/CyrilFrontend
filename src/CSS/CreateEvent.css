@@ -1,0 +1,29 @@
+#event-container {
+    display: flex;
+    justify-content: space-between;
+    width: 30vw;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.text-size {
+    font-size: 20px;
+}
+
+.dropdown {
+    padding: 5px;
+}
+
+#ts-container {
+    display: flex;
+    
+    padding-bottom: 30px;
+    flex-direction: column;
+}
+
+#ts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 40vw;
+}
