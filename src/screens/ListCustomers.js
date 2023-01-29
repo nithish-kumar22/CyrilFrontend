@@ -2,10 +2,6 @@ import React from "react";
 import "../CSS/ListCustomers.css";
 
 export default class ListCustomers extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   openModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";

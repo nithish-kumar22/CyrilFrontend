@@ -52,7 +52,7 @@ export default class Home extends Component {
 
   handleExpand = (therapist) => {
     let newExpandedRows = [...this.state.expandedRows];
-    let allExpanded = this.state.allExpanded;
+    //let allExpanded = this.state.allExpanded;
     let idxFound = newExpandedRows.findIndex((id) => {
       return id === therapist.id;
     });

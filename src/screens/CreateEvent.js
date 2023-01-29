@@ -2,10 +2,6 @@ import React from "react";
 import "../CSS/CreateEvent.css";
 
 export default class CreateEvent extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   createEvent = () => {
     var days = document.getElementsByClassName("day").value;
     var start = document.getElementsByClassName("start-time").value;
@@ -14,13 +10,13 @@ export default class CreateEvent extends React.Component {
     var starttime = [];
     var endtime = [];
     for (let i = 0; i < days.length; i++) {
-      if (days[i].value != "") {
+      if (days[i].value !== "") {
         day.push(days[i]);
       }
-      if (start[i].value != "") {
+      if (start[i].value !== "") {
         starttime.push(start[i]);
       }
-      if (end[i].value != "") {
+      if (end[i].value !== "") {
         endtime.push(end[i].value);
       }
     }

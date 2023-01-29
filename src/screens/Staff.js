@@ -112,7 +112,7 @@ export default class Staff extends React.Component {
 
     var fullnamecell = row.insertCell(0);
 
-    var editBtn = row.insertCell(1);
+    //var editBtn = row.insertCell(1);
     // ReactDOM.render(
     //   <FaEdit
     //     style={{ cursor: "pointer" }}

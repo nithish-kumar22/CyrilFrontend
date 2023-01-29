@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./screens/Home";
 import Booking from "./screens/Booking";
@@ -11,10 +11,6 @@ import ListCustomers from "./screens/ListCustomers";
 import Services from "./screens/Services";
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Router>

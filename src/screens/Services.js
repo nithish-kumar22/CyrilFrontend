@@ -3,10 +3,6 @@ import "../CSS/Services.css";
 import { FaEdit } from "react-icons/fa";
 
 export default class Services extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   editRow = (event) => {
     console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
     var extra = document.getElementById("extraModal");
