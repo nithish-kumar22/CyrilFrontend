@@ -1,7 +1,6 @@
 import React from "react";
 import "../CSS/Staff.css";
 import { FaEdit } from "react-icons/fa";
-import { ReactDOM } from "react";
 import { FaUserCircle } from "react-icons/fa";
 
 export default class Staff extends React.Component {
