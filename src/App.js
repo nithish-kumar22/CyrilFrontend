@@ -9,6 +9,7 @@ import CreateEvent from "./screens/CreateEvent";
 import Staff from "./screens/Staff";
 import ListPayments from "./screens/ListPayments";
 import ListCustomers from "./screens/ListCustomers";
+import Services from "./screens/Services";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export default class App extends React.Component {
           <Route path="/staff" element={<Staff />} />
           <Route path="/listpayments" element={<ListPayments />} />
           <Route path="/listcustomers" element={<ListCustomers />} />
+          <Route path="/services" element={<Services />} />
         </Routes>
       </Router>
     );

@@ -6,56 +6,61 @@ export default class CreateEvent extends React.Component {
     super(props);
   }
 
+  createEvent = () => {
+    var days = document.getElementsByClassName("day").value;
+    var start = document.getElementsByClassName("start-time").value;
+    var end = document.getElementsByClassName("end-time").value;
+    var day = [];
+    var starttime = [];
+    var endtime = [];
+    for (let i = 0; i < days.length; i++) {
+      if (days[i].value != "") {
+        day.push(days[i]);
+      }
+      if (start[i].value != "") {
+        starttime.push(start[i]);
+      }
+      if (end[i].value != "") {
+        endtime.push(end[i].value);
+      }
+    }
+    console.log(day);
+  };
+
   addslot = () => {
     //var tsc = document.getElementById("ts-container");
     var ts = document.getElementById("ts-container");
     ts.insertAdjacentHTML(
       "beforeend",
-      `<div style="display: "flex";
-        flex-direction: "column";
-    background-color:black;">
-    <div style="display: "flex";
-    flex-direction: "row";
-    justify-content: "space-between";
-    width: "40vw";>
-    <div id="day-div">
-  <select name="day" id="day" className="dropdown">
-    <option value="null" selected>
-      Select day
-    </option>
-    <option value="mon">Monday</option>
-    <option value="tues">Tuesday</option>
-    <option value="wed">Wednessday</option>
-    <option value="thurs">Thursday</option>
-    <option value="fri">Friday</option>
-    <option value="sat">Saturday</option>
-    <option value="sun">Sunday</option>
-  </select>
-</div>
-<div id="start-div">
-  <select
-    name="start-time"
-    id="start-time"
-    className="dropdown"
-  >
-    <option value="null" selected>
-      Select
-    </option>
-    <option value="9">9.00 AM</option>
-    <option value="930">9.30 AM</option>
-  </select>
-</div>
-<div id="end-div">
-  <select name="end-time" id="end-time" className="dropdown">
-    <option value="null" selected>
-      Select
-    </option>
-    <option value="930">9.30 AM</option>
-    <option value="10">10.00 AM</option>
-  </select>
-</div>
-</div>
-
+      `
+      <div style={{display: flex;
+    
+        padding-bottom: 30px;
+        flex-direction: column;}}>
+      <div style=" display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 40vw; 
+        padding-top: 30px">
+    <input
+    class="day"
+    type="text"
+    placeholder="Enter day"
+    style=" padding: 5px;"
+  />
+    <input
+    class="start-time"
+    type="text"
+    placeholder="Enter start time"
+    style=" padding: 5px;"
+    />
+    <input
+    class="end-time"
+    type="text"
+    placeholder="Enter end time"
+    style=" padding: 5px;"
+    />
+    </div>
   </div>`
     );
   };
@@ -191,46 +196,32 @@ export default class CreateEvent extends React.Component {
           >
             <div id="ts-container">
               <div id="ts">
-                <div id="day-div">
-                  <select name="day" id="day" className="dropdown">
-                    <option value="null" selected>
-                      Select day
-                    </option>
-                    <option value="mon">Monday</option>
-                    <option value="tues">Tuesday</option>
-                    <option value="wed">Wednessday</option>
-                    <option value="thurs">Thursday</option>
-                    <option value="fri">Friday</option>
-                    <option value="sat">Saturday</option>
-                    <option value="sun">Sunday</option>
-                  </select>
-                </div>
-                <div id="start-div">
-                  <select
-                    name="start-time"
-                    id="start-time"
-                    className="dropdown"
-                  >
-                    <option value="null" selected>
-                      Select
-                    </option>
-                    <option value="9">9.00 AM</option>
-                    <option value="930">9.30 AM</option>
-                  </select>
-                </div>
-                <div id="end-div">
-                  <select name="end-time" id="end-time" className="dropdown">
-                    <option value="null" selected>
-                      Select
-                    </option>
-                    <option value="930">9.30 AM</option>
-                    <option value="10">10.00 AM</option>
-                  </select>
-                </div>
+                <input
+                  className="day"
+                  type="text"
+                  placeholder="Enter day"
+                  style={{ padding: "5px" }}
+                />
+
+                <input
+                  className="Start-time"
+                  type="text"
+                  placeholder="Enter start time"
+                  style={{ padding: "5px" }}
+                />
+                <input
+                  className="end-time"
+                  type="text"
+                  placeholder="Enter end time"
+                  style={{ padding: "5px" }}
+                />
               </div>
             </div>
             <div style={{ paddingBottom: "30px" }}>
-              <button style={{ justifyContent: "flex-end" }}>
+              <button
+                style={{ justifyContent: "flex-end" }}
+                onClick={() => this.addslot()}
+              >
                 Add new slots
               </button>
               <button
@@ -239,7 +230,7 @@ export default class CreateEvent extends React.Component {
                   position: "relative",
                   left: "30px",
                 }}
-                onClick={() => this.addslot()}
+                onClick={() => this.createEvent()}
               >
                 Create
               </button>
