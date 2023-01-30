@@ -9,6 +9,7 @@ import Staff from "./screens/Staff";
 import ListPayments from "./screens/ListPayments";
 import ListCustomers from "./screens/ListCustomers";
 import Services from "./screens/Services";
+import SendEmail from "./screens/SendEmail";
 
 export default class App extends React.Component {
   render() {
@@ -23,6 +24,7 @@ export default class App extends React.Component {
           <Route path="/listpayments" element={<ListPayments />} />
           <Route path="/listcustomers" element={<ListCustomers />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/sendemail" element={<SendEmail />} />
         </Routes>
       </Router>
     );
