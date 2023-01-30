@@ -14,9 +14,19 @@ export default class SendEmail extends React.Component {
     extra.style.display = "none";
   };
 
-  createService = () => {
-    var serviceTitle = document.getElementById("service-title");
-    alert(serviceTitle.value);
+  sendEmail = () => {
+    var senderEmail = document.getElementById("sender-email");
+    var receiverEmail = document.getElementById("receiver-email");
+    var subject = document.getElementById("subject");
+    var main = document.getElementById("main-body");
+    if (
+      senderEmail.value !== "" &&
+      receiverEmail.value !== "" &&
+      subject.value !== "" &&
+      main.value !== ""
+    ) {
+      alert("Success");
+    }
   };
 
   getHeaderCB = () => {
@@ -94,7 +104,7 @@ export default class SendEmail extends React.Component {
               placeholder="Quick Search Customer"
             />
             <button id="add-customer" onClick={() => this.openModal()}>
-              New notification
+              Send New notification
             </button>
           </div>
         </div>
@@ -109,7 +119,8 @@ export default class SendEmail extends React.Component {
         >
           <table id="table">
             <tr style={{ fontSize: "20px" }}>
-              <th>Name</th>
+              <th>Receiver</th>
+              <th>Desc</th>
               <th>State</th>
               <th>
                 <input
@@ -121,6 +132,7 @@ export default class SendEmail extends React.Component {
               </th>
             </tr>
             <tr>
+              <td>abc@gmail.com</td>
               <td>Appointment approval to customer</td>
               <td>Enabled</td>
               <td>
@@ -142,6 +154,7 @@ export default class SendEmail extends React.Component {
               </td>
             </tr>
             <tr>
+              <td>xyz@gmail.com</td>
               <td>Appointment approval to customer</td>
               <td>Enabled</td>
               <td>
@@ -163,6 +176,7 @@ export default class SendEmail extends React.Component {
               </td>
             </tr>
             <tr>
+              <td>abc@gmail.com</td>
               <td>Appointment approval to customer</td>
               <td>Enabled</td>
               <td>
@@ -214,17 +228,30 @@ export default class SendEmail extends React.Component {
             </p>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                <p>Title</p>
+                <p>Sender</p>
                 <input
-                  id="service-title"
+                  id="sender-email"
                   type="text"
-                  placeholder="Enter title"
+                  placeholder="Enter sender email"
+                />
+                <p>Receiver</p>
+                <input
+                  id="receiver-email"
+                  type="text"
+                  placeholder="Enter receiver email"
+                />
+                <p>Subject</p>
+                <input id="subject" type="text" placeholder="Enter subject" />
+                <textarea
+                  id="main-body"
+                  style={{ width: "70%", marginTop: "20px", resize: "none" }}
+                  rows={8}
                 />
               </div>
             </div>
 
-            <button onClick={() => this.createService()} id="create-service">
-              Create
+            <button onClick={() => this.sendEmail()} id="create-service">
+              Send
             </button>
           </div>
         </div>
@@ -237,7 +264,7 @@ export default class SendEmail extends React.Component {
             >
               <span>&times;</span>
             </p>
-            <p style={{ fontWeight: "600" }}>Edit the service</p>
+            <p style={{ fontWeight: "600" }}>Edit the mail</p>
             <div
               style={{
                 display: "flex",
@@ -246,45 +273,23 @@ export default class SendEmail extends React.Component {
               }}
             >
               <div>
-                <p>Title</p>
+                <p>Description</p>
                 <input
                   id="service-modal-title"
                   type="text"
                   className="padding-input"
-                  placeholder="Enter title"
+                  placeholder="Enter description"
                 />
-                <p>Category</p>
+                <p>State</p>
                 <input
                   id="category-service-modal"
                   type="text"
                   className="padding-input"
-                  placeholder="Enter category"
+                  placeholder="State"
                 />
-                <p>Notes</p>
-                <textarea id="service-notes" rows={4} />
-              </div>
-              <div>
-                <p>Provider</p>
-                <input
-                  id="service-provier"
-                  className="padding-input"
-                  type="text"
-                  placeholder="Enter provider"
-                />
-                <p>Duration</p>
-                <input
-                  id="service-duration"
-                  className="padding-input"
-                  type="number"
-                  placeholder="Enter duration"
-                />
-                <p>Price</p>
-                <input
-                  id="service-price"
-                  className="padding-input"
-                  type="number"
-                  placeholder="Enter price"
-                />
+                <button onClick={() => this.saveMail()} id="create-service">
+                  Save
+                </button>
               </div>
             </div>
           </div>
