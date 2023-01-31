@@ -1,7 +1,6 @@
 import React from "react";
 import { Component } from "react";
 import "../CSS/Home.css";
-import { useNavigate } from "react-router";
 
 export default class Home extends Component {
   constructor(props) {
@@ -45,9 +44,7 @@ export default class Home extends Component {
   ];
 
   goToBooking = () => {
-    const navigate = useNavigate();
-    navigate("/booking");
-    //window.location.href = `https://clinicfrontend.netlify.app/booking`;
+    window.location.href = `https://clinicfrontend.netlify.app/booking`;
     //window.history.pushState({}, null, "/booking");
     //const navigate = useNavigate();
     //navigate("/booking",{replace: true})
