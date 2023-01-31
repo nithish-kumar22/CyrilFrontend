@@ -150,6 +150,7 @@
   #table-div {
     position: relative;
     top: 50px;
+    width: 100%;
     background-color: #fff;
   }
   
@@ -182,15 +183,12 @@
     position: relative;
     margin: 10px auto;
     padding: 0;
-    width: 100vw;
+    width: 100%;
     height: auto;
     border-collapse: collapse;
     text-align: center;
   }
   
-  .therapist-details {
-    width: 100vw;
-  }
   
   table {
     border-top: 1px solid black;
@@ -262,7 +260,7 @@
   }
   
   #book-button {
-    width: 130px;
+    width: 150px;
     height: 60px;
     font-size: 15px;
     border: 1px solid;

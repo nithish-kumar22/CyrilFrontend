@@ -124,21 +124,24 @@ export default class Home extends Component {
 
     if (this.isExpanded(therapist) && details.length > 0) {
       const detailRows = details.map((detail) => (
-        <tr className="therapist-details">
-          <td className="therapist-details" />
-          <td colspan="3" className="therapist-details">
-            <div className="attribute">
-              <img id="therapist-photo" alt="therapist" src={detail.photo} />
-              <p id="desc">{detail.desc}</p>
-              <li id="tslist">
-                <p>Work Schedule</p>
-                <p>{detail.ts1}</p>
-                <p>{detail.ts2}</p>
-              </li>
-              <button id="book-button" onClick={() => this.goToBooking()}>
-                Book Appointment now
-              </button>
-            </div>
+        <tr>
+          <td>
+            <img id="therapist-photo" alt="therapist" src={detail.photo} />
+          </td>
+          <td>
+            <p id="desc">{detail.desc}</p>
+          </td>
+          <td>
+            <li id="tslist">
+              <p>Work Schedule</p>
+              <p>{detail.ts1}</p>
+              <p>{detail.ts2}</p>
+            </li>
+          </td>
+          <td>
+            <button id="book-button" onClick={() => this.goToBooking()}>
+              Book Appointment now
+            </button>
           </td>
         </tr>
       ));
