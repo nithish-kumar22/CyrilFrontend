@@ -11,6 +11,10 @@ export default class ListAppointments extends React.Component {
     };
   }
 
+  componentDidMount() {
+    document.getElementById("defaultOpen").click();
+  }
+
   getDate = (date) => {
     this.setState({ startDate: date });
   };
@@ -18,7 +22,6 @@ export default class ListAppointments extends React.Component {
   openTab = (event, tabName) => {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
-    document.getElementById("upcoming").style.backgroundColor = "#ccc";
 
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
@@ -62,11 +65,10 @@ export default class ListAppointments extends React.Component {
           }}
         >
           <p style={{ fontWeight: "700", fontSize: "30px" }}>Appointments</p>
-          <div className="tab">
+          <div className="list-appointments-tab">
             <div
-              id="upcoming"
+              id="defaultOpen"
               className="tablinks"
-              style={{ backgroundColor: "#FF8B8B" }}
               onClick={(event) => this.openTab(event, "upcoming-content")}
             >
               Upcoming
@@ -100,11 +102,7 @@ export default class ListAppointments extends React.Component {
               dateFormat="d/MM/yyyy"
             />
           </div>
-          <div
-            id="upcoming-content"
-            className="tabcontent"
-            style={{ display: "block" }}
-          >
+          <div id="upcoming-content" className="tabcontent">
             <div id="list">
               <div>Mr westn howk</div>
               <div>Mark P. Daye</div>

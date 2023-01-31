@@ -1,12 +1,75 @@
 import React from "react";
 import { Component } from "react";
 import "../CSS/Home.css";
+import axios from "axios";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { expandedRows: [] };
+    this.state = {
+      expandedRows: [],
+      user: "",
+      username: "",
+      email: "",
+      passw: "",
+    };
   }
+
+  openModal = () => {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+  };
+
+  loginModal = () => {
+    var modal = document.getElementById("loginModal");
+    modal.style.display = "block";
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  };
+
+  closeModal = () => {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  };
+
+  closeLoginModal = () => {
+    var modal = document.getElementById("loginModal");
+    modal.style.display = "none";
+  };
+
+  login = () => {
+    alert("login");
+    axios.post("http://localhost:1337/api/users", {
+      headers: {
+        "content-type": "text/json",
+      },
+      body: {
+        email: this.state.email,
+        passw: this.state.passw,
+      },
+    });
+  };
+
+  signUp = () => {
+    alert(this.state.email);
+    alert(this.state.passw);
+    axios
+      .post("http://localhost:1337/api/auth/local/register", {
+        headers: {
+          "content-type": "text/json",
+        },
+        body: {
+          email: this.state.email,
+          username: this.state.username,
+          password: this.state.passw,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        alert("Success");
+      })
+      .catch((err) => console.log(err));
+  };
 
   therapists = [
     {
@@ -44,11 +107,17 @@ export default class Home extends Component {
   ];
 
   goToBooking = () => {
-    window.location.href = `https://clinicfrontend.netlify.app/booking`;
+    if (this.state.user !== "") {
+      window.location.href = `https://clinicfrontend.netlify.app/booking`;
+    } else {
+      this.openModal();
+    }
     //window.history.pushState({}, null, "/booking");
     //const navigate = useNavigate();
     //navigate("/booking",{replace: true})
   };
+
+  signup = () => {};
 
   handleExpand = (therapist) => {
     let newExpandedRows = [...this.state.expandedRows];
@@ -223,6 +292,129 @@ export default class Home extends Component {
           </div>
         </div>
         <div id="table-div">{this.gettherapistTable(this.therapists)}</div>
+
+        <div id="myModal" class="modal">
+          <div class="home-modal-content">
+            <p onClick={() => this.closeModal()} class="close">
+              <span>&times;</span>
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "30px",
+                color: "#7F9BC9",
+                fontWeight: "600",
+              }}
+            >
+              Signup
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <p>Username</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter username"
+                onChange={(text) =>
+                  this.setState({ username: text.target.value })
+                }
+              />
+              <p>Email</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter email"
+                onChange={(text) => this.setState({ email: text.target.value })}
+              />
+              <p>Password</p>
+              <input
+                id="therapist-cust"
+                type="text"
+                className="padding-input"
+                placeholder="Enter password"
+                onChange={(text) => this.setState({ passw: text.target.value })}
+              />
+              <p
+                style={{ cursor: "pointer", opacity: "0.7" }}
+                onClick={() => this.loginModal()}
+              >
+                Already have an account?
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <button onClick={() => this.signUp()} id="signup-btn">
+                  Signup
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="loginModal" class="modal">
+          <div class="home-modal-content">
+            <p onClick={() => this.closeLoginModal()} class="close">
+              <span>&times;</span>
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "30px",
+                color: "#7F9BC9",
+                fontWeight: "600",
+              }}
+            >
+              Login
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <p>Email</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter email"
+              />
+              <p>Password</p>
+              <input
+                id="therapist-cust"
+                type="text"
+                className="padding-input"
+                placeholder="Enter password"
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <button onClick={() => this.login()} id="login-btn">
+                  Login
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* <div id='foot'>
         <div id='overcome'>

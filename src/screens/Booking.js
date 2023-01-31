@@ -13,6 +13,12 @@ export default class Booking extends Component {
     };
   }
 
+  componentDidMount() {
+    //document.getElementById("defaultOpen").click();
+
+    this.tabClicked("service", "service-content");
+  }
+
   getDate = (date) => {
     this.setState({ startDate: date });
   };
@@ -23,7 +29,6 @@ export default class Booking extends Component {
 
   tabClicked = (event, tabName) => {
     var i, tabcontent, tablinks;
-    document.getElementById("service").style.backgroundColor = "#7F9BC9";
     tabcontent = document.getElementsByClassName("tabcontent");
 
     for (i = 0; i < tabcontent.length; i++) {
@@ -62,12 +67,8 @@ export default class Booking extends Component {
         <div id="empty-space"></div>
         <div id="container-display">
           <div id="booking-container">
-            <div id="left-booking" className="tab">
-              <div
-                id="service"
-                className="tablinks"
-                style={{ backgroundColor: "white" }}
-              >
+            <div id="left-booking" className="booking-tab">
+              <div id="service" className="tablinks">
                 <p>Service</p>
               </div>
               <div id="time" className="tablinks">
@@ -87,7 +88,7 @@ export default class Booking extends Component {
               <div
                 id="service-content"
                 className="tabcontent"
-                style={{ display: "block" }}
+                style={{ width: "100%" }}
               >
                 <p style={{ fontWeight: "600" }}>Please select service</p>
                 <p style={{ fontWeight: "600" }}>Service</p>
@@ -138,7 +139,11 @@ export default class Booking extends Component {
                   Next
                 </div>
               </div>
-              <div id="time-content" className="tabcontent">
+              <div
+                id="time-content"
+                className="tabcontent"
+                style={{ width: "100%" }}
+              >
                 <p style={{ fontWeight: "600" }}>Date and Time </p>
                 <p style={{ fontWeight: "600" }}>Pick the Date</p>
                 <DatePicker
@@ -177,30 +182,53 @@ export default class Booking extends Component {
                   Next
                 </div>
               </div>
-              <div id="details-content" className="tabcontent">
+              <div
+                id="details-content"
+                className="tabcontent"
+                style={{ width: "100%" }}
+              >
                 <p style={{ fontWeight: "600" }}>Details:</p>
-                <p style={{ fontWeight: "600" }}>Full name:</p>
-                <input
-                  id="input-name"
-                  placeholder="Enter full name"
-                  type="text"
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
+                <div id="details-container">
+                  <div>
+                    <p style={{ fontWeight: "600" }}>Full name:</p>
+                    <input
+                      id="booking-input-name"
+                      placeholder="Enter full name"
+                      type="text"
+                      style={{ padding: "5px" }}
+                    />
+                  </div>
+
                   <div>
                     <p style={{ fontWeight: "600" }}>Phone</p>
                     <input
+                      id="booking-input-phone"
                       style={{ padding: "5px" }}
                       type="text"
                       placeholder="Enter phone number"
                     />
                   </div>
-                  <div style={{ paddingLeft: "30px" }}>
+
+                  <div>
+                    <p style={{ fontWeight: "600" }}>Email</p>
+                    <input
+                      type="text"
+                      id="booking-input-email"
+                      style={{ padding: "5px" }}
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "600" }}>Notes</p>
+                    <textarea
+                      name="paragraph_text"
+                      cols="30"
+                      rows="7"
+                      style={{ resize: "none" }}
+                    ></textarea>
+                  </div>
+
+                  <div>
                     <p style={{ fontWeight: "600" }}>Date of Birth:</p>
                     <DatePicker
                       selected={this.state.dob}
@@ -208,29 +236,7 @@ export default class Booking extends Component {
                       dateFormat="d/MM/yyyy"
                     />
                   </div>
-                </div>
-                <p style={{ fontWeight: "600" }}>Email</p>
-                <input
-                  type="text"
-                  id="input-name"
-                  placeholder="Enter your email"
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
                   <div>
-                    <p style={{ fontWeight: "600" }}>Notes</p>
-                    <textarea
-                      name="paragraph_text"
-                      cols="30"
-                      rows="7"
-                    ></textarea>
-                  </div>
-                  <div style={{ paddingLeft: "30px" }}>
                     <p style={{ fontWeight: "600" }}>Gender</p>
                     <select name="gender" style={{ padding: "5px" }}>
                       <option value="null" selected>
@@ -242,6 +248,7 @@ export default class Booking extends Component {
                     </select>
                   </div>
                 </div>
+
                 <div
                   onClick={(event) =>
                     this.tabClicked("payment", "payment-content")
@@ -251,7 +258,11 @@ export default class Booking extends Component {
                   Next
                 </div>
               </div>
-              <div id="payment-content" className="tabcontent">
+              <div
+                id="payment-content"
+                className="tabcontent"
+                style={{ width: "100%" }}
+              >
                 <p style={{ fontWeight: "600" }}>Payments</p>
                 <p style={{ fontWeight: "600" }}>Summary</p>
                 <div id="summary-container">
@@ -291,7 +302,11 @@ export default class Booking extends Component {
                   Next
                 </div>
               </div>
-              <div id="done-content" className="tabcontent">
+              <div
+                id="done-content"
+                className="tabcontent"
+                style={{ width: "100%" }}
+              >
                 <p style={{ fontWeight: "600" }}>Congratulations</p>
                 <div
                   style={{

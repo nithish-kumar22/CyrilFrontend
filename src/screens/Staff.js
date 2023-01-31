@@ -278,6 +278,7 @@ export default class Staff extends React.Component {
                   <div class="tab">
                     <button
                       class="tablinks"
+                      id="defaultOpen"
                       onClick={(event) => this.openContent(event, "details")}
                     >
                       Details
@@ -290,7 +291,6 @@ export default class Staff extends React.Component {
                     </button>
                     <button
                       class="tablinks"
-                      id="defaultOpen"
                       onClick={(event) => this.openContent(event, "schedule")}
                     >
                       Schedule

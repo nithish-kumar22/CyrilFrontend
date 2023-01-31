@@ -63,12 +63,12 @@
     height: 50px;
   }
 
-  .tab {
+  .list-appointments-tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
   }
-  .tab div {
+  .list-appointments-tab div {
     background-color: inherit;
     float: left;
     border: none;
@@ -79,11 +79,11 @@
     font-size: 17px;
   }
 
-  .tab div:hover {
+  .list-appointments-tab div:hover {
     background-color: #ddd;
   }
 
-  .tab div.active {
+  .list-appointments-tab div.active {
     background-color: #FF8B8B;
   }
 

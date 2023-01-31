@@ -32,16 +32,18 @@
   
   #page-title-div {
     background-color: #ABCBFF;
-    height: 25px;
     padding: 5px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    height: 30px;
   }
   
   #left-page-title {
     flex: 2;
     display: flex;
     justify-content: center;
+    align-items: center;
     
   }
   
@@ -49,6 +51,7 @@
     flex: 2;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
   
   #appointment-booking {
@@ -165,14 +168,13 @@
     flex:3;
     display: flex;
   }
-  .tab {
+  .booking-tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
   }
   
-  /* Style the buttons inside the tab */
-  .tab div {
+  .booking-tab div {
     border: none;
     outline: none;
     cursor: pointer;
@@ -180,13 +182,11 @@
     border-bottom: 1px solid black;
   }
   
-  /* Change background color of buttons on hover */
-  .tab div:hover {
+  .booking-tab div:hover {
     background-color: #BFD7FF;
   }
   
-  /* Create an active/current tablink class */
-  .tab div.active {
+  .booking-tab div.active {
     background-color: white;
   }
   
@@ -211,7 +211,24 @@
   #time-slot-div {
     width: 30vw;
     display: grid;
-    grid-template-columns: auto auto;
+    /* grid-template-columns: auto auto; */
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+  }
+
+  #details-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+  }
+
+  @media only screen and (max-width: 900px) {
+    #time-slot-div {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    #details-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 
   .ts {
@@ -225,11 +242,7 @@
     cursor: pointer;
   }
 
-  #input-name {
-    width: 300px;
-    padding: 5px;
-  }
-
+  
   #notes {
     padding: 5px;
     width:200px;
@@ -249,8 +262,50 @@
     padding: 10px;
   }
 
+  @media (max-width: 767px) {
+    #time-slot-div {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* @media only screen and (max-width: 600px) {
+    #top-left {
+      flex-direction: column;
+    }
+  
+    #top-right {
+      flex-direction: column;
+      margin-top: 10px;
+    }
+  
+    #appointment-booking {
+      font-size: 20px;
+    }
+  
+    #cjmab {
+      font-size: 18px;
+    }
+  
+    #left-booking {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+  
+    .tablinks {
+      width: 80%;
+      margin-bottom: 10px;
+    }
+  
+    #right-booking {
+      width: 100%;
+    }
+  } */
+  
 
 
+/* 
   @media only screen and (max-width : 520px) {
 
     #booking-container {
@@ -278,4 +333,4 @@
       grid-template-columns: auto auto;
     }
   
-  }
+  } */
