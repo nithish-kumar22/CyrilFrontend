@@ -27,15 +27,15 @@
     margin-left: 10%;
 }
 
-td,th {
+#staff-table td,#staff-table th {
     padding:20px;
 }
 
-table {
+#staff-table {
     border: 1px solid black;
 }
 
-tr:nth-child(even) {
+#staff-table tr:nth-child(even) {
     background-color: #CECECE;
 }
 

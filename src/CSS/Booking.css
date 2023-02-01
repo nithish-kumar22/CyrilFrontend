@@ -78,6 +78,7 @@
     height: auto;
     border: 1px solid black;
     border-radius: 5px;
+    margin-bottom: 30px;
   }
 
   
@@ -258,15 +259,67 @@
   #summary {
     display: flex;
     justify-content: space-between;
-    width: 400px;
+    width: 100%;
     padding: 10px;
   }
 
-  @media (max-width: 767px) {
+  .padding-details-input {
+    padding: 5px;
+  }
+
+  #done-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 25vw;
+  }
+
+  .done-font-weight {
+    font-weight: 600;
+  }
+
+  @media only screen and (max-width: 600px) {
+
+    #top-bar {
+      height: 100px;
+      flex-direction:column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px;
+    }
+
+    #top-right p{
+      padding-left: 14px;
+
+    }
+
     #time-slot-div {
       width: 100%;
       text-align: center;
     }
+
+    #booking-container {
+      width: 80%;
+      margin-bottom: 30px;
+    }
+
+    #booking-date-picker {
+      width: 130px;
+    }
+
+    .padding-details-input {
+      width: 130px;
+    }
+
+    #summary {
+      justify-content: center;
+      flex-direction: column;
+    }
+    #done-container {
+      justify-content: center;
+      flex-direction: column;
+    }
+
   }
 
   /* @media only screen and (max-width: 600px) {

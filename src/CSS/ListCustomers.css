@@ -34,3 +34,122 @@
   #create-staff {
     margin-top: 20px;
   }
+
+  #filter-add-div {
+    display: inline-block;
+  }
+
+  #customer-table {
+    width: 100%;
+    border-collapse: collapse;
+   
+  
+  }
+  
+  
+  #customer-table tr {
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid black;
+    text-align: center;
+  }
+  #customer-table tr:nth-child(odd) {
+    background: #ccc;
+  }
+  #customer-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  #customer-table td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  #customer-modal-div {
+    display: flex; 
+    justify-content: space-between;
+  }
+
+  @media only screen and (max-width: 600px) {
+
+    #top-bar {
+      height: 100px;
+      flex-direction:column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px;
+    }
+
+    #top-right p {
+      padding-left: 14px;
+
+    }
+
+    #filter-add-div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+     }
+
+     #add-customer {
+      margin-top: 20px;
+     }
+
+     #customer-table {
+      margin-left: 150px;
+     }
+
+     .modal-content {
+      width: 90%;
+     }
+
+     #customer-modal-div {
+      justify-content: center;
+      flex-direction: column;
+     }
+
+     
+  
+    
+    /* #customer-table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+      text-align: left;
+      
+    }
+    
+    #customer-table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    
+    #customer-table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      text-align: right;
+    }
+    
+    #customer-table td::before {
+      
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    #customer-table td:last-child {
+      border-bottom: 0;
+    } */
+  }

@@ -34,10 +34,13 @@ export default class CreateEvent extends React.Component {
         padding-bottom: 30px;
         flex-direction: column;}}>
       <div style=" display: flex;
-        flex-direction: row;
+        flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
         justify-content: space-between;
         width: 40vw; 
-        padding-top: 30px">
+        padding-top: 30px
+        
+
+        ">
     <input
     class="day"
     type="text"
@@ -64,7 +67,7 @@ export default class CreateEvent extends React.Component {
   render() {
     return (
       <div>
-        <div id="top-bar">
+        <div id="top-bar" style={{ height: "100px" }}>
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
             <p id="hpy">Happiness sustains!</p>
@@ -74,7 +77,7 @@ export default class CreateEvent extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -182,14 +185,7 @@ export default class CreateEvent extends React.Component {
             </div>
           </div>
           <p className="text-size">Available Time Slots</p>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
+          <div id="time-slot-cont">
             <div id="ts-container">
               <div id="ts">
                 <input

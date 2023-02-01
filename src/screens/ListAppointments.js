@@ -47,7 +47,7 @@ export default class ListAppointments extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>

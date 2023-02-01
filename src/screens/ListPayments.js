@@ -28,7 +28,7 @@ export default class ListPayments extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -47,8 +47,12 @@ export default class ListPayments extends React.Component {
         >
           <p style={{ fontWeight: "700", fontSize: "30px" }}>Payments</p>
 
-          <div id="filter">
-            <select name="service-type" id="service-type">
+          <div id="payment-filter">
+            <select
+              name="service-type"
+              id="service-type"
+              style={{ margin: "10px" }}
+            >
               <option value="null" selected>
                 Select Service
               </option>
@@ -58,7 +62,7 @@ export default class ListPayments extends React.Component {
             <select
               name="mode-type"
               id="service-type"
-              style={{ marginLeft: "30px" }}
+              style={{ margin: "10px" }}
             >
               <option value="null" selected>
                 Select mode
@@ -69,7 +73,7 @@ export default class ListPayments extends React.Component {
             <select
               name="status-type"
               id="service-type"
-              style={{ marginLeft: "30px" }}
+              style={{ margin: "10px" }}
             >
               <option value="null" selected>
                 Status
@@ -87,13 +91,11 @@ export default class ListPayments extends React.Component {
         <div
           style={{
             width: "100vw",
-            display: "flex",
-            justifyContent: "center",
             paddingTop: "50px",
-            flexDirection: "row",
+            overflowX: "auto",
           }}
         >
-          <table id="table">
+          <table id="payments-table">
             <tr style={{ fontSize: "20px" }}>
               <th>No.</th>
               <th>Date</th>
@@ -147,6 +149,7 @@ export default class ListPayments extends React.Component {
             justifyContent: "flex-end",
             flexDirection: "row",
             paddingTop: "30px",
+            paddingBottom: "30px",
           }}
         >
           <div>

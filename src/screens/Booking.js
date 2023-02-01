@@ -46,7 +46,7 @@ export default class Booking extends Component {
   render() {
     return (
       <div>
-        <div id="top-bar">
+        <div id="top-bar" style={{ height: "100px" }}>
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
             <p id="hpy">Happiness sustains!</p>
@@ -56,7 +56,7 @@ export default class Booking extends Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Appointment Booking</p>
           </div>
@@ -147,6 +147,7 @@ export default class Booking extends Component {
                 <p style={{ fontWeight: "600" }}>Date and Time </p>
                 <p style={{ fontWeight: "600" }}>Pick the Date</p>
                 <DatePicker
+                  id="booking-date-picker"
                   selected={this.state.startDate}
                   onChange={(date) => this.getDate(date)}
                   minDate={new Date()}
@@ -195,7 +196,7 @@ export default class Booking extends Component {
                       id="booking-input-name"
                       placeholder="Enter full name"
                       type="text"
-                      style={{ padding: "5px" }}
+                      className="padding-details-input"
                     />
                   </div>
 
@@ -203,7 +204,7 @@ export default class Booking extends Component {
                     <p style={{ fontWeight: "600" }}>Phone</p>
                     <input
                       id="booking-input-phone"
-                      style={{ padding: "5px" }}
+                      className="padding-details-input"
                       type="text"
                       placeholder="Enter phone number"
                     />
@@ -214,16 +215,18 @@ export default class Booking extends Component {
                     <input
                       type="text"
                       id="booking-input-email"
-                      style={{ padding: "5px" }}
+                      className="padding-details-input"
                       placeholder="Enter your email"
                     />
                   </div>
                   <div>
                     <p style={{ fontWeight: "600" }}>Notes</p>
                     <textarea
+                      id="booking-notes"
                       name="paragraph_text"
                       cols="30"
                       rows="7"
+                      className="padding-details-input"
                       style={{ resize: "none" }}
                     ></textarea>
                   </div>
@@ -234,6 +237,7 @@ export default class Booking extends Component {
                       selected={this.state.dob}
                       onChange={(date) => this.getDob(date)}
                       dateFormat="d/MM/yyyy"
+                      className="padding-details-input"
                     />
                   </div>
                   <div>
@@ -307,35 +311,31 @@ export default class Booking extends Component {
                 className="tabcontent"
                 style={{ width: "100%" }}
               >
-                <p style={{ fontWeight: "600" }}>Congratulations</p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "row",
-                    width: "25vw",
-                  }}
-                >
+                <p className="done-font-weight">Congratulations</p>
+                <div id="done-container">
                   <div>
-                    <p>Date:</p>
-                    <p>Local Time:</p>
-                    <p>Employee:</p>
-                    <p>Service:</p>
-                    <p>Mode:</p>
-                    <p>Payment:</p>
+                    <p className="done-font-weight">Date:</p>
+                    <p>Jan 19,2023</p>
+                    <p className="done-font-weight">Employee:</p>
+                    <p>Mark P. Daye</p>
+
+                    <p className="done-font-weight">Mode:</p>
+                    <p>Online</p>
+
                     <hr />
-                    <p>Your Name:</p>
-                    <p>Email Address:</p>
+                    <p className="done-font-weight">Your Name:</p>
+                    <p>Mr. Westn howk</p>
                   </div>
                   <div>
-                    <p>Jan 19,2023</p>
+                    <p className="done-font-weight">Local Time:</p>
+
                     <p>10.00 AM</p>
-                    <p>Mark P. Daye</p>
+                    <p className="done-font-weight">Service:</p>
                     <p>Individual therapy</p>
-                    <p>Online</p>
+                    <p className="done-font-weight">Payment:</p>
                     <p>$20</p>
                     <hr />
-                    <p>Mr. Westn howk</p>
+                    <p className="done-font-weight">Email Address:</p>
                     <p>westnhowk@gmail.com</p>
                   </div>
                 </div>

@@ -1,0 +1,30 @@
+#payments-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#payments-table tr {
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid black;
+    text-align: center;
+  }
+  #payments-table tr:nth-child(odd) {
+    background: #ccc;
+  }
+  #payments-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  #payments-table td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  #payment-filter {
+    display: inline-block;
+  }

@@ -124,3 +124,39 @@
     float: right;
     width: 80px;
   }
+
+  @media only screen and (max-width: 600px) {
+
+    #top-bar {
+      height: 100px;
+      flex-direction:column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px;
+    }
+
+    #top-right p{
+      padding-left: 14px;
+
+    }
+
+    .list-appointments-tab div {
+      padding: 10px 12px;
+    }
+
+    #filter {
+      margin: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #list {
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    #list div {
+      padding: 10px;
+    }
+  }

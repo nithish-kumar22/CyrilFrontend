@@ -84,11 +84,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px;
+    text-align: center;
+    
   }
   
   #therapist-list-text {
     font-weight: 650;
+    text-align: center;
   
   }
   
@@ -195,7 +197,7 @@
     padding: 0;
   }
   
-  .therapist-table {
+  .list-therapist-table {
     position: relative;
     margin: 10px auto;
     padding: 0;
@@ -208,30 +210,29 @@
   
   
   #table-div {
-    border-top: 1px solid black;
     border-spacing: 0px;
     max-width: 100vw;
   }
   
   
-  tr:nth-child(odd) > td {
+  .list-therapist-table tr:nth-child(odd) > td {
     background-color: #fff;
     color: #000;
   
   }
   
-  tr > td.therapist-details:last-child {
+  .list-therapist-table tr > td.therapist-details:last-child {
     border: none;
   }
   
-  tr > td.therapist-details {
+  .list-therapist-table tr > td.therapist-details {
     background-color: #fff;
     color: #ddd;
     margin-bottom: 20px;
   }
   
-  tr > td:first-child,
-  tr > th:first-child {
+  .list-therapist-table tr > td:first-child,
+  .list-therapist-table tr > th:first-child {
     padding: 0;
     padding-left: 6px;
   }
@@ -247,10 +248,16 @@
   @media only screen and (max-width: 600px) {
 
     #top-bar {
-      flex-direction: column;
+      height: 100px;
+      flex-direction:column;
       align-items: center;
-      justify-content: space-evenly;
+      justify-content: space-between;
       padding: 5px;
+    }
+
+    #top-right p{
+      padding-left: 14px;
+
     }
 
     .home-modal-content {
@@ -262,7 +269,7 @@
       top: 20vh;
     }
     
-    table, th, td, tr {
+    #list-therapist-table th,#list-therapist-table td,#list-therapist-table tr {
       display: block;
     }
     thead tr {
@@ -270,21 +277,21 @@
       top: -9999px;
       left: -9999px;
     }
-    tr {
+    #list-therapist-table tr {
       margin: 0 0 1rem 0;
       border-bottom: 3px solid black;
       text-align: center;
     }
-    tr:nth-child(odd) {
+    #list-therapist-table tr:nth-child(odd) {
       background: #ccc;
     }
-    td {
+    #list-therapist-table td {
       border: none;
       border-bottom: 1px solid #eee;
       position: relative;
       padding-left: 50%;
     }
-    td:before {
+    #list-therapist-table td:before {
       position: absolute;
       top: 0;
       left: 6px;

@@ -224,7 +224,7 @@ export default class Home extends Component {
     });
 
     return (
-      <table className="therapist-table">
+      <table id="list-therapist-table">
         <tr>
           <th>Name</th>
           <th>Services</th>
@@ -244,17 +244,17 @@ export default class Home extends Component {
   render() {
     return (
       <div className="App">
-        <div id="top-bar">
+        <div id="top-bar" style={{ height: "100px" }}>
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
             <p id="hpy">Happiness sustains!</p>
           </div>
           <div id="top-right">
-            <p>8714772862</p>
+            <p>8714772868</p>
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Appointment Booking</p>
           </div>
@@ -263,7 +263,7 @@ export default class Home extends Component {
           </div>
         </div>
         <div id="empty-space"></div>
-        <div id="book-appointment">
+        <div id="book-appointment" style={{ height: "70px" }}>
           <p id="book-app-text">Book an Appointment</p>
         </div>
         <div id="empty-space"></div>

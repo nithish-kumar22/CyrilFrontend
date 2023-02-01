@@ -25,7 +25,7 @@ export default class ListCustomers extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -44,7 +44,7 @@ export default class ListCustomers extends React.Component {
         >
           <p style={{ fontWeight: "700", fontSize: "30px" }}>Customers</p>
 
-          <div style={{ display: "inline-block" }}>
+          <div id="filter-add-div">
             <input
               id="search"
               type="text"
@@ -57,14 +57,16 @@ export default class ListCustomers extends React.Component {
         </div>
         <div
           style={{
-            width: "100vw",
+            overflowX: "auto",
+            paddingTop: "50px",
+            width: "95%",
             display: "flex",
             justifyContent: "center",
-            paddingTop: "50px",
-            flexDirection: "row",
+            alignItems: "center",
+            marginLeft: "20px",
           }}
         >
-          <table id="table">
+          <table id="customer-table">
             <tr style={{ fontSize: "20px" }}>
               <th>Full Name</th>
               <th>Phone</th>
@@ -75,6 +77,7 @@ export default class ListCustomers extends React.Component {
               <th>Total Appointment</th>
               <th>Payment</th>
             </tr>
+
             <tr>
               <td>cyriljm</td>
               <td>9431309362</td>
@@ -114,6 +117,7 @@ export default class ListCustomers extends React.Component {
             justifyContent: "flex-end",
             flexDirection: "row",
             paddingTop: "30px",
+            paddingBottom: "30px",
           }}
         >
           <div>
@@ -122,14 +126,10 @@ export default class ListCustomers extends React.Component {
         </div>
         <div id="myModal" class="modal">
           <div class="modal-content">
-            <p
-              onClick={() => this.closeModal()}
-              class="close"
-              style={{ position: "relative", bottom: "30px" }}
-            >
+            <p onClick={() => this.closeModal()} class="close">
               <span>&times;</span>
             </p>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div id="customer-modal-div">
               <div>
                 <p>Full name</p>
                 <input
