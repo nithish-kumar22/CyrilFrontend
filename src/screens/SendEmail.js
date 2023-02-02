@@ -76,7 +76,7 @@ export default class SendEmail extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -93,17 +93,15 @@ export default class SendEmail extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "700", fontSize: "30px" }}>
-            Email and SMS notification
-          </p>
+          <p id="email-sms-text">Email and SMS notification</p>
 
-          <div style={{ display: "inline-block" }}>
+          <div id="email-filter-div">
             <input
               id="search"
               type="text"
               placeholder="Quick Search Customer"
             />
-            <button id="add-customer" onClick={() => this.openModal()}>
+            <button id="send-new" onClick={() => this.openModal()}>
               Send New notification
             </button>
           </div>
@@ -115,9 +113,10 @@ export default class SendEmail extends React.Component {
             justifyContent: "center",
             paddingTop: "50px",
             flexDirection: "row",
+            overflowX: "auto",
           }}
         >
-          <table id="table">
+          <table id="email-table">
             <tr style={{ fontSize: "20px" }}>
               <th>Receiver</th>
               <th>Desc</th>
@@ -206,6 +205,7 @@ export default class SendEmail extends React.Component {
             justifyContent: "flex-end",
             flexDirection: "row",
             paddingTop: "30px",
+            paddingBottom: "30px",
           }}
         >
           <div>
@@ -219,11 +219,7 @@ export default class SendEmail extends React.Component {
         </div>
         <div id="myModal" class="modal">
           <div class="modal-content">
-            <p
-              onClick={() => this.closeModal()}
-              class="close"
-              style={{ position: "relative", bottom: "30px" }}
-            >
+            <p onClick={() => this.closeModal()} class="close">
               <span>&times;</span>
             </p>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -257,14 +253,10 @@ export default class SendEmail extends React.Component {
         </div>
         <div id="extraModal" class="modal">
           <div class="modal-content">
-            <p
-              onClick={() => this.closeEditModal()}
-              class="close"
-              style={{ position: "relative", bottom: "30px" }}
-            >
+            <p onClick={() => this.closeEditModal()} class="close">
               <span>&times;</span>
             </p>
-            <p style={{ fontWeight: "600" }}>Edit the mail</p>
+            <p style={{ fontWeight: "600", fontSize: "20px" }}>Edit the mail</p>
             <div
               style={{
                 display: "flex",

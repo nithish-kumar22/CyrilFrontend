@@ -1,13 +1,13 @@
-#container {
-    width: 80vw;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 #staff {
     padding:10px
+}
+
+#staff-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 #search-filter {
@@ -20,11 +20,11 @@
     border-radius: 7px;
     width: 250px;
     padding: 5px;
-    margin-left: 10%;
+    margin-left: 5%;
 }
 
-#search-btn {
-    margin-left: 10%;
+#staff-search-btn {
+    margin-left: 5%;
 }
 
 #staff-table td,#staff-table th {
@@ -33,15 +33,19 @@
 
 #staff-table {
     border: 1px solid black;
+    border-collapse: collapse;
 }
 
 #staff-table tr:nth-child(even) {
     background-color: #CECECE;
 }
 
-#button-div button {
-    padding: 5px;
+#button-bottom-staff-div button {
     margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .modal {
@@ -64,7 +68,7 @@
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 30%;
   }
   
  
@@ -90,13 +94,14 @@
     padding:5px;
   }
 
-  .tab {
+  .staff-tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    padding: -100px;
   }
   
-  .tab button {
+  .staff-tab button {
     background-color: inherit;
     float: left;
     border: none;
@@ -105,13 +110,14 @@
     padding: 14px 16px;
     transition: 0.3s;
     font-size: 17px;
+    margin: 0;
   }
   
-  .tab button:hover {
+  .staff-tab button:hover {
     background-color: #ddd;
   }
   
-  .tab button.active {
+  .staff-tab button.active {
     background-color: #ccc;
   }
   
@@ -132,4 +138,112 @@
     display: flex;
     flex-direction: row;
    padding: 20px;
+}
+
+#edit-staff-details {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+#placeholder-staff-image {
+  
+  position: relative;
+  top: 30px;
+  right: 30px;
+}
+
+#staff-ts-day {
+  padding: 5px;
+  width: 100px;
+}
+
+#staff-ts-start {
+  padding: 5px;
+  width: 100px;
+  margin-left: 20px;
+}
+
+#staff-ts-end {
+  padding: 5px;
+  width: 100px;
+  margin-left: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+#staff-filter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#categories-filter {
+  margin-top: 5%;
+}
+
+#staff-search-btn {
+  margin-top: 5%;
+}
+
+#staff-table {
+  font-size: 13px;
+  margin-left: 200px;
+  margin-right: 10px;
+}
+
+.modal-content {
+  width: 90%;
+}
+
+.staff-tab button {
+  padding: 10px 12px;
+  transition: 0.3s;
+  font-size: 16px;
+  margin-right: -18px;
+}
+
+#edit-staff-details {
+  justify-content: center;
+  flex-direction: column-reverse;
+}
+#edit-staff-details-bottom {
+  margin-top: 30px;
+}
+#placeholder-staff-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#ts-container-staff {
+  display: flex;
+  padding-bottom: 30px;
+  flex-direction: column;
+}
+
+#ts-staff {
+  display: flex;
+  flex-direction: column;
+ padding: 20px;
+}
+#staff-ts-day {
+  padding: 5px;
+  width: 100px;
+}
+
+#staff-ts-start {
+  padding: 5px;
+  width: 100px;
+  margin-left: 0px;
+  margin-top: 10px;
+}
+
+#staff-ts-end {
+  padding: 5px;
+  width: 100px;
+  margin-left: 0px;
+  margin-top: 10px;
+}
 }

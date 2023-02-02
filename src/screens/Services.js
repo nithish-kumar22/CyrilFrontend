@@ -66,7 +66,7 @@ export default class Services extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -85,13 +85,13 @@ export default class Services extends React.Component {
         >
           <p style={{ fontWeight: "700", fontSize: "30px" }}>Services</p>
 
-          <div style={{ display: "inline-block" }}>
+          <div id="service-filter">
             <input
               id="search"
               type="text"
-              placeholder="Quick Search Customer"
+              placeholder="Quick Search services"
             />
-            <button id="add-customer" onClick={() => this.openModal()}>
+            <button id="add-services" onClick={() => this.openModal()}>
               Add services
             </button>
           </div>
@@ -103,9 +103,10 @@ export default class Services extends React.Component {
             justifyContent: "center",
             paddingTop: "50px",
             flexDirection: "row",
+            overflowX: "auto",
           }}
         >
-          <table id="table">
+          <table id="service-table">
             <tr style={{ fontSize: "20px" }}>
               <th>Title</th>
               <th>Category</th>
@@ -211,11 +212,7 @@ export default class Services extends React.Component {
         </div>
         <div id="myModal" class="modal">
           <div class="modal-content">
-            <p
-              onClick={() => this.closeModal()}
-              class="close"
-              style={{ position: "relative", bottom: "30px" }}
-            >
+            <p onClick={() => this.closeModal()} class="close">
               <span>&times;</span>
             </p>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -236,21 +233,11 @@ export default class Services extends React.Component {
         </div>
         <div id="extraModal" class="modal">
           <div class="modal-content">
-            <p
-              onClick={() => this.closeEditModal()}
-              class="close"
-              style={{ position: "relative", bottom: "30px" }}
-            >
+            <p onClick={() => this.closeEditModal()} class="close">
               <span>&times;</span>
             </p>
             <p style={{ fontWeight: "600" }}>Edit the service</p>
-            <div
-              style={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-evenly",
-              }}
-            >
+            <div id="edit-service-popup">
               <div>
                 <p>Title</p>
                 <input
@@ -293,6 +280,9 @@ export default class Services extends React.Component {
                 />
               </div>
             </div>
+            <button onClick={() => this.saveMail()} id="edit-service-btn">
+              Save
+            </button>
           </div>
         </div>
       </div>

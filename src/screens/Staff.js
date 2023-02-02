@@ -32,9 +32,9 @@ export default class Staff extends React.Component {
       <div style={{display: flex;
     
         padding-bottom: 30px;
-        flex-direction: column;}}>
+        flex-direction: row;}}>
       <div style=" display: flex;
-        flex-direction: row;
+        flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
         padding-top: 20px">
     <input
     class="day"
@@ -96,12 +96,12 @@ export default class Staff extends React.Component {
   };
 
   openExtraModal = () => {
-    var extra = document.getElementById("extraModal");
+    var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "block";
   };
 
   closeExtraModal = () => {
-    var extra = document.getElementById("extraModal");
+    var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "none";
   };
 
@@ -144,7 +144,7 @@ export default class Staff extends React.Component {
             <p>cyriljon@yahoo.com</p>
           </div>
         </div>
-        <div id="page-title-div">
+        <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Event Management</p>
           </div>
@@ -161,263 +161,225 @@ export default class Staff extends React.Component {
             flexDirection: "column",
           }}
         >
-          <div id="container">
-            <p style={{ fontWeight: "600", fontSize: "18px" }}>
-              Staff Members ( 1 )
-            </p>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <input
-                id="search-filter"
-                type="text"
-                placeholder="Quick search staff"
-              />
-              <input
-                id="categories-filter"
-                type="text"
-                placeholder="Categories"
-              />
-              <button id="search-btn">Search</button>
-            </div>
-            <div
-              style={{
-                width: "100vw",
-                display: "flex",
-                justifyContent: "center",
-                paddingTop: "50px",
-              }}
-            >
-              <table id="table">
-                <tr style={{ fontSize: "20px" }}>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Services</th>
-                </tr>
-                <tr>
-                  <td>John</td>
-                  <td>cyrilm87@gmail.com</td>
-                  <td>987654289</td>
-                  <td>Individual therapy</td>
-                  <td>
-                    <FaEdit
-                      style={{ cursor: "pointer" }}
-                      onClick={() => this.openExtraModal()}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>John</td>
-                  <td>cyrilm87@gmail.com</td>
-                  <td>987654289</td>
-                  <td>Individual therapy</td>
-                  <td>
-                    <FaEdit
-                      style={{ cursor: "pointer" }}
-                      onClick={() => this.openExtraModal()}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>John</td>
-                  <td>cyrilm87@gmail.com</td>
-                  <td>987654289</td>
-                  <td>Individual therapy</td>
-                  <td>
-                    <FaEdit
-                      style={{ cursor: "pointer" }}
-                      onClick={() => this.openExtraModal()}
-                    />
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div
-              id="button-div"
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                paddingTop: "30px",
-              }}
-            >
-              <button>Delete</button>
-              <button id="create-staff-member" onClick={() => this.openModal()}>
-                Create new staff member
+          <p style={{ fontWeight: "600", fontSize: "18px" }}>
+            Staff Members ( 1 )
+          </p>
+
+          <div id="staff-filter">
+            <input
+              id="search-filter"
+              type="text"
+              placeholder="Quick search staff"
+            />
+            <input
+              id="categories-filter"
+              type="text"
+              placeholder="Categories"
+            />
+            <button id="staff-search-btn">Search</button>
+          </div>
+        </div>
+        <div
+          style={{
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: "50px",
+            overflowX: "auto",
+          }}
+        >
+          <table id="staff-table">
+            <tr style={{ fontSize: "20px" }}>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Services</th>
+            </tr>
+            <tr>
+              <td>John</td>
+              <td>cyrilm87@gmail.com</td>
+              <td>987654289</td>
+              <td>Individual therapy</td>
+              <td>
+                <FaEdit
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.openExtraModal()}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>John</td>
+              <td>cyrilm87@gmail.com</td>
+              <td>987654289</td>
+              <td>Individual therapy</td>
+              <td>
+                <FaEdit
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.openExtraModal()}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>John</td>
+              <td>cyrilm87@gmail.com</td>
+              <td>987654289</td>
+              <td>Individual therapy</td>
+              <td>
+                <FaEdit
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.openExtraModal()}
+                />
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div
+          id="button-bottom-staff-div"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: "30px",
+          }}
+        >
+          <button>Delete</button>
+          <button id="create-staff-member" onClick={() => this.openModal()}>
+            Create new staff member
+          </button>
+          <div id="myModal" class="modal">
+            <div class="modal-content">
+              <p onClick={() => this.closeModal()} class="close">
+                <span>&times;</span>
+              </p>
+              <p style={{ fontWeight: "600" }}>Create a New Staff Member</p>
+              <p>Full name</p>
+              <input id="full-name" type="text" placeholder="Enter full name" />
+              <button onClick={() => this.createStaff()} id="create-staff">
+                Create
               </button>
-              <div id="myModal" class="modal">
-                <div class="modal-content">
-                  <p onClick={() => this.closeModal()} class="close">
-                    <span>&times;</span>
-                  </p>
-                  <p style={{ fontWeight: "600" }}>Create a New Staff Member</p>
-                  <p>Full name</p>
-                  <input
-                    id="full-name"
-                    type="text"
-                    placeholder="Enter full name"
-                  />
-                  <button onClick={() => this.createStaff()} id="create-staff">
-                    Create
-                  </button>
+            </div>
+          </div>
+          <div id="edit-staff-modal" class="modal">
+            <div class="modal-content">
+              <p onClick={() => this.closeExtraModal()} class="close">
+                <span>&times;</span>
+              </p>
+              <p style={{ fontWeight: "600" }}>Create a New Staff Member</p>
+              <div class="staff-tab">
+                <button
+                  class="tablinks"
+                  id="defaultOpen"
+                  onClick={(event) => this.openContent(event, "details")}
+                >
+                  Details
+                </button>
+                <button
+                  class="tablinks"
+                  onClick={(event) => this.openContent(event, "services")}
+                >
+                  Services
+                </button>
+                <button
+                  class="tablinks"
+                  onClick={(event) => this.openContent(event, "schedule")}
+                >
+                  Schedule
+                </button>
+              </div>
+              <div id="details" class="tabcontent">
+                <div id="edit-staff-details">
+                  <div id="edit-staff-details-bottom">
+                    <p>Name</p>
+                    <input
+                      style={{ padding: "5px" }}
+                      type="text"
+                      placeholder="Enter name"
+                    />
+                    <p>Email</p>
+                    <input
+                      style={{ padding: "5px" }}
+                      type="text"
+                      placeholder="Enter email"
+                    />
+                    <p>Phone</p>
+                    <input
+                      style={{ padding: "5px" }}
+                      type="text"
+                      placeholder="Enter phone"
+                    />
+                    <p>Description</p>
+                    <textarea rows={4} />
+                  </div>
+                  <div>
+                    <div id="placeholder-staff-image">
+                      <FaUserCircle size={100} />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div id="extraModal" class="modal">
-                <div class="modal-content">
-                  <p
-                    onClick={() => this.closeExtraModal()}
-                    class="close"
-                    style={{ position: "relative", bottom: "30px" }}
-                  >
-                    <span>&times;</span>
-                  </p>
-                  <p style={{ fontWeight: "600" }}>Create a New Staff Member</p>
-                  <div class="tab">
-                    <button
-                      class="tablinks"
-                      id="defaultOpen"
-                      onClick={(event) => this.openContent(event, "details")}
-                    >
-                      Details
-                    </button>
-                    <button
-                      class="tablinks"
-                      onClick={(event) => this.openContent(event, "services")}
-                    >
-                      Services
-                    </button>
-                    <button
-                      class="tablinks"
-                      onClick={(event) => this.openContent(event, "schedule")}
-                    >
-                      Schedule
-                    </button>
-                  </div>
-                  <div id="details" class="tabcontent">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <div style={{}}>
-                        <p>Name</p>
-                        <input
-                          style={{ padding: "5px" }}
-                          type="text"
-                          placeholder="Enter name"
-                        />
-                        <p>Email</p>
-                        <input
-                          style={{ padding: "5px" }}
-                          type="text"
-                          placeholder="Enter email"
-                        />
-                        <p>Phone</p>
-                        <input
-                          style={{ padding: "5px" }}
-                          type="text"
-                          placeholder="Enter phone"
-                        />
-                        <p>Description</p>
-                        <textarea rows={4} />
-                      </div>
-                      <div>
-                        <div
-                          style={{
-                            position: "relative",
-                            top: "30px",
-                            right: "30px",
-                          }}
-                        >
-                          <FaUserCircle size={100} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div id="services" class="tabcontent">
-                    <table style={{ width: "100%", border: "none" }}>
-                      <tr>
-                        <th style={{ borderBottom: "1px solid black" }}>
-                          All services
-                        </th>
-                        <th style={{ borderBottom: "1px solid black" }}>
-                          Price
-                        </th>
+              <div id="services" class="tabcontent">
+                <table style={{ width: "100%", border: "none" }}>
+                  <tr>
+                    <th style={{ borderBottom: "1px solid black" }}>
+                      All services
+                    </th>
+                    <th style={{ borderBottom: "1px solid black" }}>Price</th>
+                  </tr>
+                  {this.state.data.map((val, key) => {
+                    return (
+                      <tr style={{ textAlign: "center" }} key={key}>
+                        <td>{val.services}</td>
+                        <td>{val.price}</td>
                       </tr>
-                      {this.state.data.map((val, key) => {
-                        return (
-                          <tr style={{ textAlign: "center" }} key={key}>
-                            <td>{val.services}</td>
-                            <td>{val.price}</td>
-                          </tr>
-                        );
-                      })}
-                    </table>
-                  </div>
+                    );
+                  })}
+                </table>
+              </div>
 
-                  <div id="schedule" class="tabcontent">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <div id="ts-container-staff">
-                        <div id="ts-staff">
-                          <input
-                            className="day"
-                            type="text"
-                            placeholder="Enter day"
-                            style={{
-                              padding: "5px",
-                              width: "100px",
-                            }}
-                          />
+              <div id="schedule" class="tabcontent">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <div id="ts-container-staff">
+                    <div id="ts-staff">
+                      <input
+                        id="staff-ts-day"
+                        className="day"
+                        type="text"
+                        placeholder="Enter day"
+                      />
 
-                          <input
-                            className="Start-time"
-                            type="text"
-                            placeholder="Enter start time"
-                            style={{
-                              padding: "5px",
-                              width: "100px",
-                              marginLeft: "20px",
-                            }}
-                          />
-                          <input
-                            className="end-time"
-                            type="text"
-                            placeholder="Enter end time"
-                            style={{
-                              padding: "5px",
-                              width: "100px",
-                              marginLeft: "20px",
-                            }}
-                          />
-                        </div>
-                      </div>
+                      <input
+                        id="staff-ts-start"
+                        className="Start-time"
+                        type="text"
+                        placeholder="Enter start time"
+                      />
+                      <input
+                        id="staff-ts-end"
+                        className="end-time"
+                        type="text"
+                        placeholder="Enter end time"
+                      />
                     </div>
                   </div>
-
-                  <button onClick={() => this.editStaff()} id="create-staff">
-                    Create
-                  </button>
                   <button
-                    style={{ justifyContent: "flex-end" }}
+                    style={{ justifyContent: "center" }}
                     onClick={() => this.addslot()}
                   >
                     Add new slots
                   </button>
                 </div>
               </div>
+
+              <button onClick={() => this.editStaff()} id="create-staff">
+                Create
+              </button>
             </div>
           </div>
         </div>

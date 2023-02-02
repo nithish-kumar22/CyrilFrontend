@@ -26,5 +26,14 @@
   }
 
   #payment-filter {
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  @media only screen and (max-width: 600px) {
+    #payment-filter {
+      flex-direction: column;
+    }
   }

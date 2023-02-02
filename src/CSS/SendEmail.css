@@ -1,0 +1,62 @@
+#send-new {
+    margin-left: 20px;
+}
+
+#email-filter-div {
+    display: inline-block;
+}
+
+#email-sms-text {
+    font-weight: 700;
+    font-size: 30px;
+}
+
+#email-table {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+#email-table tr {
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid black;
+    text-align: center;
+  }
+  #email-table tr:nth-child(odd) {
+    background: #ccc;
+  }
+  #email-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  #email-table td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+@media only screen and (max-width: 600px) {
+    #email-filter-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #send-new {
+        margin-top: 20px;
+    }
+
+    #email-sms-text {
+        font-weight: 600;
+        font-size: 25px;
+    }
+
+    #email-table {
+        margin-left: 300px;
+    }
+}

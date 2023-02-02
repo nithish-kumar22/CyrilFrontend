@@ -5,3 +5,71 @@
 #create-service {
     margin-top: 20px;
 }
+
+#service-filter {
+    display: inline-block;
+}
+
+#add-services {
+    margin-left: 20px;
+}
+
+#service-table {
+    width: 100%;
+    border-collapse: collapse;
+
+  }
+
+  #service-table tr {
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid black;
+    text-align: center;
+  }
+  #service-table tr:nth-child(odd) {
+    background: #ccc;
+  }
+  #service-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  #service-table td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  #edit-service-popup {
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+  }
+
+  #edit-service-btn {
+    margin-top: 10px;
+  }
+
+@media only screen and (max-width: 600px) {
+    #service-filter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #add-services {
+        margin-top: 20px;
+    }
+
+    #service-table {
+        margin-left: 300px;
+    }
+
+    #edit-service-popup {
+        justify-content: center;
+        flex-direction: column;
+    }
+}
