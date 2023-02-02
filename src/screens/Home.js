@@ -23,8 +23,7 @@ export default class Home extends Component {
   loginModal = () => {
     var modal = document.getElementById("loginModal");
     modal.style.display = "block";
-    var modal = document.getElementById("myModal");
-    modal.style.display = "none";
+    document.getElementById("myModal").style.display = "none";
   };
 
   closeModal = () => {
