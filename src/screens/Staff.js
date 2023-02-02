@@ -71,6 +71,43 @@ export default class Staff extends React.Component {
     );
   };
 
+  getHeaderStaffCB = () => {
+    var hcb = document.getElementById("headerstaffcheckbox");
+    var checkbox = document.getElementsByClassName("staffcheckbox");
+
+    if (hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+    }
+    if (!hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+    }
+  };
+
+  getHeaderCB = () => {
+    var hcb = document.getElementById("headercheckbox");
+    var checkbox = document.getElementsByClassName("servicecheckbox");
+
+    if (hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+    }
+    if (!hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+    }
+  };
+
+  deletestaff = () => {
+    alert("Hello");
+    var checkbox = document.getElementsByClassName("staffcheckbox");
+    var table = document.getElementById("staff-table");
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+          alert(table.rows[i].cells[j].innerHTML);
+        }
+      }
+    }
+  };
+
   openContent = (evt, tabName) => {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -95,9 +132,25 @@ export default class Staff extends React.Component {
     modal.style.display = "none";
   };
 
-  openExtraModal = () => {
+  editRow = (event) => {
     var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "block";
+    var index = event.target.parentNode.parentNode.closest("tr").rowIndex;
+
+    var saveStaff = document.getElementById("save-staff");
+    saveStaff.onclick = () => {
+      var checkbox = document.getElementsByClassName("servicecheckbox");
+      var table = document.getElementById("payments-table");
+      for (let i = 0; i < checkbox.length; i++) {
+        if (checkbox[i].checked) {
+          for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+            alert(table.rows[i + 1].cells[j].innerHTML);
+            if (this.state.date.services) {
+            }
+          }
+        }
+      }
+    };
   };
 
   closeExtraModal = () => {
@@ -194,6 +247,14 @@ export default class Staff extends React.Component {
               <th>Email</th>
               <th>Phone</th>
               <th>Services</th>
+              <th>
+                <input
+                  id="headerstaffcheckbox"
+                  type="checkbox"
+                  name="check"
+                  onClick={() => this.getHeaderStaffCB()}
+                />
+              </th>
             </tr>
             <tr>
               <td>John</td>
@@ -201,9 +262,12 @@ export default class Staff extends React.Component {
               <td>987654289</td>
               <td>Individual therapy</td>
               <td>
+                <input type="checkbox" name="check" className="staffcheckbox" />
+              </td>
+              <td>
                 <FaEdit
                   style={{ cursor: "pointer" }}
-                  onClick={() => this.openExtraModal()}
+                  onClick={(event) => this.editRow(event)}
                 />
               </td>
             </tr>
@@ -213,9 +277,12 @@ export default class Staff extends React.Component {
               <td>987654289</td>
               <td>Individual therapy</td>
               <td>
+                <input type="checkbox" name="check" className="staffcheckbox" />
+              </td>
+              <td>
                 <FaEdit
                   style={{ cursor: "pointer" }}
-                  onClick={() => this.openExtraModal()}
+                  onClick={(event) => this.editRow(event)}
                 />
               </td>
             </tr>
@@ -225,9 +292,12 @@ export default class Staff extends React.Component {
               <td>987654289</td>
               <td>Individual therapy</td>
               <td>
+                <input type="checkbox" name="check" className="staffcheckbox" />
+              </td>
+              <td>
                 <FaEdit
                   style={{ cursor: "pointer" }}
-                  onClick={() => this.openExtraModal()}
+                  onClick={(event) => this.editRow(event)}
                 />
               </td>
             </tr>
@@ -241,7 +311,9 @@ export default class Staff extends React.Component {
             paddingTop: "30px",
           }}
         >
-          <button>Delete</button>
+          <button id="delete-staff" onclick={() => this.deletestaff()}>
+            Delete
+          </button>
           <button id="create-staff-member" onClick={() => this.openModal()}>
             Create new staff member
           </button>
@@ -319,15 +391,29 @@ export default class Staff extends React.Component {
 
               <div id="services" class="tabcontent">
                 <table style={{ width: "100%", border: "none" }}>
-                  <tr>
-                    <th style={{ borderBottom: "1px solid black" }}>
-                      All services
+                  <tr style={{ borderBottom: "1px solid black" }}>
+                    <th>
+                      <input
+                        id="headercheckbox"
+                        type="checkbox"
+                        name="check"
+                        className="servicecheckbox"
+                        onClick={() => this.getHeaderCB()}
+                      />
                     </th>
-                    <th style={{ borderBottom: "1px solid black" }}>Price</th>
+                    <th>All services</th>
+                    <th>Price</th>
                   </tr>
                   {this.state.data.map((val, key) => {
                     return (
                       <tr style={{ textAlign: "center" }} key={key}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="check"
+                            className="servicecheckbox"
+                          />
+                        </td>
                         <td>{val.services}</td>
                         <td>{val.price}</td>
                       </tr>
@@ -377,9 +463,7 @@ export default class Staff extends React.Component {
                 </div>
               </div>
 
-              <button onClick={() => this.editStaff()} id="create-staff">
-                Create
-              </button>
+              <button id="save-staff">Create</button>
             </div>
           </div>
         </div>

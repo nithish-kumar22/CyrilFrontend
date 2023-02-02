@@ -33,7 +33,7 @@ export default class Services extends React.Component {
 
   delete = () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
-    var table = document.getElementById("table");
+    var table = document.getElementById("service-table");
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {

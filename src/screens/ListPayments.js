@@ -15,6 +15,30 @@ export default class ListPayments extends React.Component {
     this.setState({ startDate: date });
   };
 
+  getHeaderCB = () => {
+    var hcb = document.getElementById("headercheckbox");
+    var checkbox = document.getElementsByClassName("servicecheckbox");
+
+    if (hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+    }
+    if (!hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+    }
+  };
+
+  deletepayment = () => {
+    var checkbox = document.getElementsByClassName("servicecheckbox");
+    var table = document.getElementById("payments-table");
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+          alert(table.rows[i].cells[j].innerHTML);
+        }
+      }
+    }
+  };
+
   render() {
     return (
       <div>
@@ -106,6 +130,16 @@ export default class ListPayments extends React.Component {
               <th>Appointment Date</th>
               <th>Amount</th>
               <th>Status</th>
+              <td>
+                <input
+                  id="headercheckbox"
+                  type="checkbox"
+                  name="check"
+                  className="servicecheckbox"
+                  onClick={() => this.getHeaderCB()}
+                />
+                &nbsp;
+              </td>
             </tr>
             <tr>
               <td>1.</td>
@@ -117,6 +151,14 @@ export default class ListPayments extends React.Component {
               <td>24.01.23</td>
               <td>$23.00</td>
               <td>Paid</td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="check"
+                  className="servicecheckbox"
+                />
+                &nbsp;
+              </td>
             </tr>
             <tr>
               <td>2.</td>
@@ -128,6 +170,14 @@ export default class ListPayments extends React.Component {
               <td>24.01.23</td>
               <td>$23.00</td>
               <td>Paid</td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="check"
+                  className="servicecheckbox"
+                />
+                &nbsp;
+              </td>
             </tr>
             <tr>
               <td>3.</td>
@@ -139,6 +189,14 @@ export default class ListPayments extends React.Component {
               <td>24.01.23</td>
               <td>$23.00</td>
               <td>Paid</td>
+              <td>
+                <input
+                  type="checkbox"
+                  name="check"
+                  className="servicecheckbox"
+                />
+                &nbsp;
+              </td>
             </tr>
           </table>
         </div>
@@ -154,7 +212,12 @@ export default class ListPayments extends React.Component {
         >
           <div>
             <p style={{ fontWeight: "700", fontSize: "20px" }}>Total $60.00</p>
-            <button style={{ width: "100px", padding: "5px" }}>Delete</button>
+            <button
+              onClick={() => this.deletepayment()}
+              style={{ width: "100px", padding: "5px" }}
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
