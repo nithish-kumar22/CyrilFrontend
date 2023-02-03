@@ -120,6 +120,7 @@ export default class Services extends React.Component {
                   onClick={() => this.getHeaderCB()}
                 />
               </th>
+              <th></th>
             </tr>
             <tr>
               <td>Individual Theraphy</td>

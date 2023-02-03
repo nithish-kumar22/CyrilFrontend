@@ -1,7 +1,39 @@
 import React from "react";
 import "../CSS/ListCustomers.css";
+import { FaEdit } from "react-icons/fa";
 
 export default class ListCustomers extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      customerdata: [
+        {
+          fullname: "Cyril Mathew",
+          phone: "7867545442",
+          email: "cyril@yahoo.com",
+          therapist: "Mark P. Daye",
+          gender: "Male",
+          lastappointment: "24.01.22",
+          totalappointments: 3,
+          payment: "$20",
+          //checkbox: <this.checkboxReactComponent />,
+        },
+        {
+          fullname: "John",
+          phone: "9942824",
+          email: "john@yahoo.com",
+          therapist: "Robo",
+          gender: "Male",
+          lastappointment: "24.01.22",
+          totalappointments: 3,
+          payment: "$30",
+          //checkbox: <this.checkboxReactComponent />,
+        },
+      ],
+    };
+  }
+
   openModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
@@ -10,6 +42,46 @@ export default class ListCustomers extends React.Component {
   closeModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
+  };
+
+  checkboxReactComponent = () => {
+    return (
+      <div>
+        <td>
+          <input type="checkbox" name="check" className="servicecheckbox" />
+        </td>
+        <td>
+          <FaEdit
+            style={{ cursor: "pointer" }}
+            onClick={(event) => this.editRow(event)}
+          />
+        </td>
+      </div>
+    );
+  };
+
+  getHeaderCB = () => {
+    var hcb = document.getElementById("headercheckbox");
+    var checkbox = document.getElementsByClassName("servicecheckbox");
+
+    if (hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+    }
+    if (!hcb.checked) {
+      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+    }
+  };
+
+  deletecustomer = () => {
+    var checkbox = document.getElementsByClassName("servicecheckbox");
+    var table = document.getElementById("customer-table");
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+          alert(table.rows[i].cells[j].innerHTML);
+        }
+      }
+    }
   };
 
   render() {
@@ -76,9 +148,47 @@ export default class ListCustomers extends React.Component {
               <th>Last Appointment</th>
               <th>Total Appointment</th>
               <th>Payment</th>
+              <th>
+                <input
+                  id="headercheckbox"
+                  type="checkbox"
+                  name="check"
+                  className="servicecheckbox"
+                  onClick={() => this.getHeaderCB()}
+                />
+              </th>
+              <th></th>
             </tr>
 
-            <tr>
+            {this.state.customerdata.map((val, key) => {
+              return (
+                <tr style={{ textAlign: "center" }} key={key}>
+                  <td>{val.fullname}</td>
+                  <td>{val.phone}</td>
+                  <td>{val.email}</td>
+                  <td>{val.therapist}</td>
+                  <td>{val.gender}</td>
+                  <td>{val.lastappointment}</td>
+                  <td>{val.totalappointments}</td>
+                  <td>{val.payment}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="check"
+                      className="servicecheckbox"
+                    />
+                  </td>
+                  <td>
+                    <FaEdit
+                      style={{ cursor: "pointer" }}
+                      onClick={(event) => this.editRow(event)}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+
+            {/* <tr>
               <td>cyriljm</td>
               <td>9431309362</td>
               <td>cyriljon@yahoo.com</td>
@@ -107,7 +217,7 @@ export default class ListCustomers extends React.Component {
               <td>24.01.23</td>
               <td>2</td>
               <td>$23.00</td>
-            </tr>
+            </tr> */}
           </table>
         </div>
         <div
@@ -121,7 +231,12 @@ export default class ListCustomers extends React.Component {
           }}
         >
           <div>
-            <button style={{ width: "100px", padding: "5px" }}>Delete</button>
+            <button
+              onClick={() => this.deletecustomer()}
+              style={{ width: "100px", padding: "5px" }}
+            >
+              Delete
+            </button>
           </div>
         </div>
         <div id="myModal" class="modal">

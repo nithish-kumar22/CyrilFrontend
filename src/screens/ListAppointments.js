@@ -2,12 +2,43 @@ import React from "react";
 import "../CSS/ListAppointments.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaEdit } from "react-icons/fa";
 
 export default class ListAppointments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       startDate: new Date(),
+      upcomingdata: [
+        {
+          employee: "Cyril Mathew",
+          customer: "Mark P daye",
+          service: "Individual therapy",
+          event: "One to one",
+          date: "24.01.22",
+          timeslot: "9.00 - 9.30AM",
+        },
+      ],
+      pastdata: [
+        {
+          employee: "Cyril Mathew",
+          customer: "Mark P daye",
+          service: "Individual therapy",
+          event: "One to one",
+          date: "24.01.22",
+          timeslot: "9.00 - 9.30AM",
+        },
+      ],
+      canceldata: [
+        {
+          employee: "Cyril Mathew",
+          customer: "Mark P daye",
+          service: "Individual therapy",
+          event: "One to one",
+          date: "24.01.22",
+          timeslot: "9.00 - 9.30AM",
+        },
+      ],
     };
   }
 
@@ -21,7 +52,7 @@ export default class ListAppointments extends React.Component {
 
   openTab = (event, tabName) => {
     var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementsByClassName("apptabcontent");
 
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
@@ -102,95 +133,127 @@ export default class ListAppointments extends React.Component {
               dateFormat="d/MM/yyyy"
             />
           </div>
-          <div id="upcoming-content" className="tabcontent">
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
+          <div id="upcoming-content" className="apptabcontent">
+            <div
+              style={{
+                overflowX: "auto",
+                paddingTop: "50px",
+                width: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "20px",
+              }}
+            >
+              <table id="customer-table">
+                <tr style={{ fontSize: "20px" }}>
+                  <th>Employee</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Time slot</th>
+                </tr>
+
+                {this.state.upcomingdata.map((val, key) => {
+                  return (
+                    <tr style={{ textAlign: "center" }} key={key}>
+                      <td>{val.employee}</td>
+                      <td>{val.customer}</td>
+                      <td>{val.service}</td>
+                      <td>{val.event}</td>
+                      <td>{val.date}</td>
+                      <td>{val.timeslot}</td>
+                    </tr>
+                  );
+                })}
+              </table>
             </div>
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
-            </div>
-            <button id="create">Create</button>
-          </div>
-          <div id="past-content" className="tabcontent">
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
-            </div>
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
+            <div
+              style={{
+                width: "80vw",
+                display: "flex",
+                justifyContent: "flex-end",
+                flexDirection: "row",
+                paddingTop: "30px",
+                paddingBottom: "30px",
+              }}
+            >
+              <button id="create">Create</button>
             </div>
           </div>
-          <div id="canceled-content" className="tabcontent">
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
+          <div id="past-content" className="apptabcontent">
+            <div
+              style={{
+                overflowX: "auto",
+                paddingTop: "50px",
+                width: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "20px",
+              }}
+            >
+              <table id="customer-table">
+                <tr style={{ fontSize: "20px" }}>
+                  <th>Employee</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Time slot</th>
+                </tr>
+
+                {this.state.pastdata.map((val, key) => {
+                  return (
+                    <tr style={{ textAlign: "center" }} key={key}>
+                      <td>{val.employee}</td>
+                      <td>{val.customer}</td>
+                      <td>{val.service}</td>
+                      <td>{val.event}</td>
+                      <td>{val.date}</td>
+                      <td>{val.timeslot}</td>
+                    </tr>
+                  );
+                })}
+              </table>
             </div>
-            <div id="list">
-              <div>Mr westn howk</div>
-              <div>Mark P. Daye</div>
-              <div>
-                Individual therapy <br /> (pre-booked)
-              </div>
-              <div>One to one</div>
-              <div>
-                22.01.23
-                <br />
-                9.30 - 10.00
-              </div>
-              <div></div>
+          </div>
+          <div id="canceled-content" className="apptabcontent">
+            <div
+              style={{
+                overflowX: "auto",
+                paddingTop: "50px",
+                width: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "20px",
+              }}
+            >
+              <table id="customer-table">
+                <tr style={{ fontSize: "20px" }}>
+                  <th>Employee</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Time slot</th>
+                </tr>
+
+                {this.state.canceldata.map((val, key) => {
+                  return (
+                    <tr style={{ textAlign: "center" }} key={key}>
+                      <td>{val.employee}</td>
+                      <td>{val.customer}</td>
+                      <td>{val.service}</td>
+                      <td>{val.event}</td>
+                      <td>{val.date}</td>
+                      <td>{val.timeslot}</td>
+                    </tr>
+                  );
+                })}
+              </table>
             </div>
           </div>
         </div>

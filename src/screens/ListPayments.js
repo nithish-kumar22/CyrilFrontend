@@ -117,6 +117,9 @@ export default class ListPayments extends React.Component {
             width: "100vw",
             paddingTop: "50px",
             overflowX: "auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <table id="payments-table">
@@ -130,7 +133,8 @@ export default class ListPayments extends React.Component {
               <th>Appointment Date</th>
               <th>Amount</th>
               <th>Status</th>
-              <td>
+
+              <th>
                 <input
                   id="headercheckbox"
                   type="checkbox"
@@ -139,7 +143,7 @@ export default class ListPayments extends React.Component {
                   onClick={() => this.getHeaderCB()}
                 />
                 &nbsp;
-              </td>
+              </th>
             </tr>
             <tr>
               <td>1.</td>

@@ -255,6 +255,7 @@ export default class Staff extends React.Component {
                   onClick={() => this.getHeaderStaffCB()}
                 />
               </th>
+              <th></th>
             </tr>
             <tr>
               <td>John</td>

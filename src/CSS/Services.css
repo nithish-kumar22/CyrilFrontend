@@ -15,8 +15,14 @@
 }
 
 #service-table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
+    border: 1px solid black;
+
+  }
+
+  #service-table th {
+    background-color: #BFD7FF;
 
   }
 
@@ -25,12 +31,12 @@
     border-bottom: 1px solid black;
     text-align: center;
   }
-  #service-table tr:nth-child(odd) {
-    background: #ccc;
+  #service-table tr:nth-child(even) td{
+    background: #f2f2f2;
   }
   #service-table td {
     border: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid black;
     position: relative;
   }
   #service-table td:before {

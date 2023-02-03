@@ -12,9 +12,13 @@
 }
 
 #email-table {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
-    
+    border: 1px solid black;
+}
+
+#email-table th {
+    background-color: #BFD7FF;
 }
 
 #email-table tr {
@@ -22,12 +26,12 @@
     border-bottom: 1px solid black;
     text-align: center;
   }
-  #email-table tr:nth-child(odd) {
-    background: #ccc;
+  #email-table tr:nth-child(even) td{
+    background: #f2f2f2;
   }
   #email-table td {
     border: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid black;
     position: relative;
   }
   #email-table td:before {

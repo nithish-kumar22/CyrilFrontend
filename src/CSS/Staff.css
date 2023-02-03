@@ -27,6 +27,10 @@
     margin-left: 5%;
 }
 
+#staff-table th {
+  background-color: #BFD7FF;
+}
+
 #staff-table td,#staff-table th {
     padding:20px;
 }
@@ -36,8 +40,8 @@
     border-collapse: collapse;
 }
 
-#staff-table tr:nth-child(even) {
-    background-color: #CECECE;
+#staff-table tr:nth-child(even) td{
+    background-color: #f2f2f2;
 }
 
 #button-bottom-staff-div button {

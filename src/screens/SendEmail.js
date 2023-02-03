@@ -129,6 +129,7 @@ export default class SendEmail extends React.Component {
                   onClick={() => this.getHeaderCB()}
                 />
               </th>
+              <th></th>
             </tr>
             <tr>
               <td>abc@gmail.com</td>

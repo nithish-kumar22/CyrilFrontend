@@ -42,8 +42,11 @@
   #customer-table {
     width: 100%;
     border-collapse: collapse;
-   
-  
+    border: 1px solid black;
+  }
+
+  #customer-table th{
+    background-color: #BFD7FF;
   }
   
   
@@ -52,12 +55,12 @@
     border-bottom: 1px solid black;
     text-align: center;
   }
-  #customer-table tr:nth-child(odd) {
-    background: #ccc;
+  #customer-table tr:nth-child(even) td{
+    background: #f2f2f2;
   }
   #customer-table td {
     border: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid black;
     position: relative;
   }
   #customer-table td:before {
