@@ -2,7 +2,6 @@ import React from "react";
 import "../CSS/ListAppointments.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FaEdit } from "react-icons/fa";
 
 export default class ListAppointments extends React.Component {
   constructor(props) {
