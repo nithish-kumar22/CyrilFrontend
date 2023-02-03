@@ -135,7 +135,7 @@ export default class Staff extends React.Component {
   editRow = (event) => {
     var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "block";
-    var index = event.target.parentNode.parentNode.closest("tr").rowIndex;
+    //var index = event.target.parentNode.parentNode.closest("tr").rowIndex;
 
     var saveStaff = document.getElementById("save-staff");
     saveStaff.onclick = () => {
