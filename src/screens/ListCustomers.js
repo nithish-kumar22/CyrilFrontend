@@ -86,13 +86,42 @@ export default class ListCustomers extends React.Component {
   deletecustomer = () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("customer-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-          alert(table.rows[i].cells[j].innerHTML);
+          //alert(table.rows[i].cells[j].innerHTML);
         }
       }
     }
+  };
+
+  editRow = (event) => {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+
+    var fullname = document.getElementById("full-name");
+    var email = document.getElementById("email-customer");
+    var therapist = document.getElementById("therapist-cust");
+    var phone = document.getElementById("phone");
+
+    var table = document.getElementById("customer-table");
+    var id = event.target.parentNode.parentNode.rowIndex;
+
+    fullname.value = table.rows[id].cells[0].innerHTML;
+    email.value = table.rows[id].cells[2].innerHTML;
+    therapist.value = table.rows[id].cells[3].innerHTML;
+    phone.value = table.rows[id].cells[1].innerHTML;
   };
 
   render() {

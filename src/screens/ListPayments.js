@@ -41,10 +41,21 @@ export default class ListPayments extends React.Component {
   deletepayment = () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("payments-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-          alert(table.rows[i].cells[j].innerHTML);
+          //alert(table.rows[i].cells[j].innerHTML);
         }
       }
     }
@@ -91,11 +102,51 @@ export default class ListPayments extends React.Component {
           </p>
 
           <div id="payment-filter">
+            <DatePicker
+              className="lefttorightanim"
+              selected={this.state.startDate}
+              onChange={(date) => this.getDate(date)}
+              dateFormat="d/MM/yyyy"
+            />
+            <select
+              className="lefttorightanim"
+              name="type"
+              id="service-type"
+              style={{ margin: "10px" }}
+            >
+              <option value="null" selected>
+                Type
+              </option>
+              <option value="online">Paytm</option>
+              <option value="offline">PhonePe</option>
+            </select>
+            <select
+              name="customer-type"
+              className="lefttorightanim"
+              id="service-type"
+              style={{ margin: "10px" }}
+            >
+              <option value="null" selected>
+                Customer
+              </option>
+              <option value="1">Mr Westn Howk</option>
+            </select>
+            <select
+              name="provider-type"
+              id="service-type"
+              style={{ margin: "10px" }}
+              className="righttoleftanim"
+            >
+              <option value="null" selected>
+                Provider
+              </option>
+              <option value="1">Mark P Daye</option>
+            </select>
             <select
               name="service-type"
               id="service-type"
               style={{ margin: "10px" }}
-              className="lefttorightanim"
+              className="righttoleftanim"
             >
               <option value="null" selected>
                 Select Service
@@ -103,18 +154,7 @@ export default class ListPayments extends React.Component {
               <option value="individual">Individual therapy</option>
               <option value="couple">Couple therapy</option>
             </select>
-            <select
-              className="lefttorightanim"
-              name="mode-type"
-              id="service-type"
-              style={{ margin: "10px" }}
-            >
-              <option value="null" selected>
-                Select mode
-              </option>
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-            </select>
+
             <select
               className="righttoleftanim"
               name="status-type"
@@ -127,12 +167,6 @@ export default class ListPayments extends React.Component {
               <option value="s">Success</option>
               <option value="f">Failure</option>
             </select>
-            <DatePicker
-              className="righttoleftanim"
-              selected={this.state.startDate}
-              onChange={(date) => this.getDate(date)}
-              dateFormat="d/MM/yyyy"
-            />
           </div>
         </div>
         <div

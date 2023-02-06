@@ -105,7 +105,6 @@ export default class Staff extends React.Component {
   };
 
   deletestaff = () => {
-    alert("Hello");
     var checkbox = document.getElementsByClassName("staffcheckbox");
     var table = document.getElementById("staff-table");
     for (let i = 0; i < checkbox.length; i++) {

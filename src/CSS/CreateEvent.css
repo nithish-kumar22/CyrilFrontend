@@ -7,6 +7,18 @@
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.7);
 }
 
+#create-eve-btn {
+    justify-content: flex-end;
+    position: relative;
+    left: 30px;
+}
+
+#dlt-slot {
+    justify-content: flex-end;
+    position: relative;
+    left: 60px
+}
+
 .text-size {
     font-size: 20px;
 }
@@ -24,6 +36,10 @@
     
 }
 
+#ts-table {
+    border-collapse: collapse;
+}
+
 #ts-container {
     display: flex;
     padding-bottom: 30px;
@@ -37,7 +53,17 @@
     width: 40vw;
 }
 
-@media only screen and (max-width: 1000px) {
+@keyframes fade {
+    from {opacity: 1;position: relative; left: 0px;}
+    to {opacity: 0;position: relative; left: 50px;}
+    
+}
+
+.fadeOut {
+    animation: fade 1s ease forwards;
+}
+
+@media only screen and (max-width: 1270px) {
     #event-container {
         width: 40%;
         justify-content: center;
@@ -53,6 +79,14 @@
       align-items: center;
       justify-content: space-between;
       padding: 5px;
+    }
+
+    input {
+        background-color: #f1f1f1;
+    }
+
+    #ts-table {
+        margin-left: 400px;
     }
 
     #top-right p{
@@ -79,6 +113,16 @@
     #ts {
         flex-direction: column;
         
+    }
+
+    #create-eve-btn {
+        position: relative;
+        left: 10px;
+    }
+    
+    #dlt-slot {
+        position: relative;
+        left: 20px
     }
 
   }

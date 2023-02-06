@@ -226,6 +226,7 @@ export default class ListAppointments extends React.Component {
                 justifyContent: "center",
                 alignItems: "center",
                 paddingBottom: "30px",
+                overflowY: "hidden",
               }}
             >
               <table id="appointments-table">
@@ -262,6 +263,7 @@ export default class ListAppointments extends React.Component {
                 justifyContent: "center",
                 alignItems: "center",
                 paddingBottom: "30px",
+                overflowY: "hidden",
               }}
             >
               <table id="appointments-table">

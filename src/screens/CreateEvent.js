@@ -23,43 +23,133 @@ export default class CreateEvent extends React.Component {
     console.log(day);
   };
 
+  deleteSlot = () => {
+    var checkbox = document.getElementsByClassName("eventcheckbox");
+    var table = document.getElementById("ts-table");
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+  };
+
   addslot = () => {
-    //var tsc = document.getElementById("ts-container");
-    var ts = document.getElementById("ts-container");
-    ts.insertAdjacentHTML(
-      "beforeend",
-      `
-      <div style={{display: flex;
-    
-        padding-bottom: 30px;
-        flex-direction: column;
-        }}>
-      <div style=" display: flex;
-        flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
-        justify-content: space-between;
-        width: 40vw; 
-        padding-top: 30px
-        ">
-    <input
+    var table = document.getElementById("ts-table");
+    var row = table.insertRow(table.rows.length);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+
+    cell1.innerHTML = `<input
     class="day"
     type="text"
     placeholder="Enter day"
-    style=" padding: 5px;"
-  />
-    <input
-    class="start-time"
-    type="text"
-    placeholder="Enter start time"
-    style=" padding: 5px;"
-    />
-    <input
-    class="end-time"
-    type="text"
-    placeholder="Enter end time"
-    style=" padding: 5px;"
-    />
-    </div>
-  </div>`
+    style=" padding: 5px; "
+  />`;
+
+    cell2.innerHTML = ` <input
+  className="Start-time"
+  type="text"
+  placeholder="Enter start time"
+  style=" padding: 5px; "/>`;
+
+    cell3.innerHTML = `<input
+className="end-time"
+type="text"
+placeholder="Enter end time"
+style=" padding: 5px; "/>`;
+
+    cell4.innerHTML = ` <input
+type="checkbox"
+name="check"
+class="eventcheckbox"
+style=" width: 20px; height: 20px; "
+/>`;
+
+    //var tsc = document.getElementById("ts-container");
+    //   var ts = document.getElementById("ts-container");
+    //   ts.insertAdjacentHTML(
+    //     "beforeend",
+    //     `
+    //     <div style={{display: flex;
+    //       padding-bottom: 30px;
+    //       flex-direction: column;
+    //       }}>
+    //     <div style=" display: flex;
+    //       flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
+    //       justify-content: space-between;
+    //       width: 40vw;
+    //       padding-top: 30px
+    //       ">
+    //   <input
+    //   class="day"
+    //   type="text"
+    //   placeholder="Enter day"
+    //   style=" padding: 5px;"
+    // />
+    //   <input
+    //   class="start-time"
+    //   type="text"
+    //   placeholder="Enter start time"
+    //   style=" padding: 5px;"
+    //   />
+    //   <input
+    //   class="end-time"
+    //   type="text"
+    //   placeholder="Enter end time"
+    //   style=" padding: 5px;"
+    //   />
+    //   </div>
+    // </div>`
+    //   );
+  };
+
+  day = () => {
+    return (
+      <input
+        className="day"
+        type="text"
+        placeholder="Enter day"
+        style={{ padding: "5px" }}
+      />
+    );
+  };
+
+  startTime = () => {
+    return (
+      <input
+        className="Start-time"
+        type="text"
+        placeholder="Enter start time"
+        style={{ padding: "5px" }}
+      />
+    );
+  };
+
+  endTime = () => {
+    return (
+      <input
+        className="end-time"
+        type="text"
+        placeholder="Enter end time"
+        style={{ padding: "5px" }}
+      />
+    );
+  };
+
+  checkBox = () => {
+    return (
+      <input
+        type="checkbox"
+        name="check"
+        className="eventcheckbox"
+        style={{ width: "20px", height: "20px" }}
+      />
     );
   };
 
@@ -199,7 +289,80 @@ export default class CreateEvent extends React.Component {
           <p className="text-size" style={{ marginTop: "20px" }}>
             Available Time Slots
           </p>
-          <div id="time-slot-cont">
+          <div
+            style={{
+              overflowX: "auto",
+              paddingTop: "50px",
+              width: "95%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "30px",
+            }}
+          >
+            <table id="ts-table">
+              <tr>
+                <td>
+                  <input
+                    className="day"
+                    type="text"
+                    placeholder="Enter day"
+                    style={{ padding: "5px" }}
+                  />
+                </td>
+                <td>
+                  <input
+                    className="Start-time"
+                    type="text"
+                    placeholder="Enter start time"
+                    style={{ padding: "5px" }}
+                  />
+                </td>
+                <td>
+                  <input
+                    className="end-time"
+                    type="text"
+                    placeholder="Enter end time"
+                    style={{ padding: "5px" }}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="check"
+                    className="eventcheckbox"
+                    style={{ width: "20px", height: "20px" }}
+                  />
+                </td>
+              </tr>
+              ;
+            </table>
+          </div>
+          <div style={{ paddingBottom: "30px" }}>
+            <button
+              className="att-btn"
+              style={{ justifyContent: "flex-end" }}
+              onClick={() => this.addslot()}
+            >
+              Add new slots
+            </button>
+            <button
+              className="att-btn"
+              id="create-eve-btn"
+              onClick={() => this.createEvent()}
+            >
+              Create
+            </button>
+
+            <button
+              className="att-btn"
+              id="dlt-slot"
+              onClick={(event) => this.deleteSlot()}
+            >
+              Delete Slot
+            </button>
+          </div>
+          {/* <div id="time-slot-cont">
             <div id="ts-container">
               <div id="ts">
                 <input
@@ -243,7 +406,7 @@ export default class CreateEvent extends React.Component {
                 Create
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     );

@@ -31,6 +31,15 @@ export default class SendEmail extends React.Component {
     console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
     var extra = document.getElementById("extraModal");
     extra.style.display = "block";
+
+    var fullname = document.getElementById("full-name");
+    var email = document.getElementById("email-customer");
+
+    var table = document.getElementById("customer-table");
+    var id = event.target.parentNode.parentNode.rowIndex;
+
+    fullname.value = table.rows[id].cells[0].innerHTML;
+    email.value = table.rows[id].cells[2].innerHTML;
   };
 
   closeEditModal = () => {
@@ -68,10 +77,21 @@ export default class SendEmail extends React.Component {
   delete = () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("email-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-          alert(table.rows[i + 1].cells[j].innerHTML);
+          //alert(table.rows[i + 1].cells[j].innerHTML);
         }
       }
     }
@@ -125,7 +145,11 @@ export default class SendEmail extends React.Component {
               type="text"
               placeholder="Quick Search Customer"
             />
-            <button id="send-new" onClick={() => this.openModal()}>
+            <button
+              className="att-btn"
+              id="send-new"
+              onClick={() => this.openModal()}
+            >
               Send New notification
             </button>
           </div>
@@ -272,7 +296,11 @@ export default class SendEmail extends React.Component {
               </div>
             </div>
 
-            <button onClick={() => this.sendEmail()} id="create-service">
+            <button
+              className="att-btn"
+              onClick={() => this.sendEmail()}
+              id="create-service"
+            >
               Send
             </button>
           </div>
@@ -293,14 +321,14 @@ export default class SendEmail extends React.Component {
               <div>
                 <p>Description</p>
                 <input
-                  id="service-modal-title"
+                  id="email-description"
                   type="text"
                   className="padding-input"
                   placeholder="Enter description"
                 />
                 <p>State</p>
                 <input
-                  id="category-service-modal"
+                  id="email-state"
                   type="text"
                   className="padding-input"
                   placeholder="State"
