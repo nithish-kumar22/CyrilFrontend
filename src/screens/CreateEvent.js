@@ -32,14 +32,13 @@ export default class CreateEvent extends React.Component {
       <div style={{display: flex;
     
         padding-bottom: 30px;
-        flex-direction: column;}}>
+        flex-direction: column;
+        }}>
       <div style=" display: flex;
         flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
         justify-content: space-between;
         width: 40vw; 
         padding-top: 30px
-        
-
         ">
     <input
     class="day"
@@ -66,7 +65,7 @@ export default class CreateEvent extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar" style={{ height: "100px" }}>
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -94,9 +93,22 @@ export default class CreateEvent extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontSize: "30px", fontWeight: "700" }}>Create an Event</p>
+          <p
+            style={{
+              fontSize: "30px",
+              fontWeight: "700",
+              animation: "book-app 2s ease-in-out forwards",
+            }}
+          >
+            Create an Event
+          </p>
 
-          <div id="event-container">
+          <div
+            id="event-container"
+            style={{
+              animation: "book-app 2s ease-in-out forwards",
+            }}
+          >
             <div>
               <p className="text-size">Name of Event</p>
               <select name="event-type" id="event-type" className="dropdown">
@@ -184,7 +196,9 @@ export default class CreateEvent extends React.Component {
               </select>
             </div>
           </div>
-          <p className="text-size">Available Time Slots</p>
+          <p className="text-size" style={{ marginTop: "20px" }}>
+            Available Time Slots
+          </p>
           <div id="time-slot-cont">
             <div id="ts-container">
               <div id="ts">
@@ -211,12 +225,14 @@ export default class CreateEvent extends React.Component {
             </div>
             <div style={{ paddingBottom: "30px" }}>
               <button
+                className="att-btn"
                 style={{ justifyContent: "flex-end" }}
                 onClick={() => this.addslot()}
               >
                 Add new slots
               </button>
               <button
+                className="att-btn"
                 style={{
                   justifyContent: "flex-end",
                   position: "relative",

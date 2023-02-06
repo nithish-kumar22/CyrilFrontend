@@ -2,6 +2,8 @@
     width: 90%;
     border-collapse: collapse;
     border: 1px solid black;
+    animation: book-app 1s ease-in-out forwards;
+    
 }
 
 #payments-table th {
@@ -14,7 +16,7 @@
     text-align: center;
   }
   #payments-table tr:nth-child(even) td{
-    background: #f2f2f2;
+    background-color: #f2f2f2;
   }
   #payments-table td {
     border: none;
@@ -37,8 +39,35 @@
     flex-direction: row;
   }
 
+  @keyframes lefttoright {
+    from {position: relative; right: 50px}
+    to {position: relative; right: 0px;}
+  }
+
+  .lefttorightanim {
+    animation: lefttoright 2s ease-in-out forwards;
+    background-color: #fff;
+  }
+
+  @keyframes righttoleft {
+    from {position: relative; left: 50px;}
+    to {position: relative; left: 0px}
+  }
+
+  .righttoleftanim {
+    animation: righttoleft 2s ease-in-out forwards;
+    background-color: #fff;
+  }
+
   @media only screen and (max-width: 600px) {
     #payment-filter {
       flex-direction: column;
+    }
+    #payments-table {
+      margin-left: 500px;
+      margin-right: 20px;
+    }
+    #payments-table tr td, #payments-table tr th{
+      padding: 10px;
     }
   }

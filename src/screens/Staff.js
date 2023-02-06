@@ -21,6 +21,15 @@ export default class Staff extends React.Component {
     for (let i = 0; i < day.length; i++) {
       day[i].value = "Hello";
     }
+
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
   }
 
   addslot = () => {
@@ -145,7 +154,7 @@ export default class Staff extends React.Component {
         if (checkbox[i].checked) {
           for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
             alert(table.rows[i + 1].cells[j].innerHTML);
-            if (this.state.date.services) {
+            if (this.state.data.services) {
             }
           }
         }
@@ -186,7 +195,7 @@ export default class Staff extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -214,7 +223,13 @@ export default class Staff extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "600", fontSize: "18px" }}>
+          <p
+            style={{
+              fontWeight: "600",
+              fontSize: "18px",
+              animation: "book-app 2s ease-in-out forwards",
+            }}
+          >
             Staff Members ( 1 )
           </p>
 
@@ -229,7 +244,9 @@ export default class Staff extends React.Component {
               type="text"
               placeholder="Categories"
             />
-            <button id="staff-search-btn">Search</button>
+            <button id="staff-search-btn" className="att-btn">
+              Search
+            </button>
           </div>
         </div>
         <div
@@ -312,10 +329,18 @@ export default class Staff extends React.Component {
             paddingTop: "30px",
           }}
         >
-          <button id="delete-staff" onclick={() => this.deletestaff()}>
+          <button
+            className="att-btn"
+            id="delete-staff"
+            onclick={() => this.deletestaff()}
+          >
             Delete
           </button>
-          <button id="create-staff-member" onClick={() => this.openModal()}>
+          <button
+            className="att-btn"
+            id="create-staff-member"
+            onClick={() => this.openModal()}
+          >
             Create new staff member
           </button>
           <div id="myModal" class="modal">
@@ -391,7 +416,7 @@ export default class Staff extends React.Component {
               </div>
 
               <div id="services" class="tabcontent">
-                <table style={{ width: "100%", border: "none" }}>
+                <table style={{ width: "100%" }}>
                   <tr style={{ borderBottom: "1px solid black" }}>
                     <th>
                       <input

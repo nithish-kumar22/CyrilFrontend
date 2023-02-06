@@ -1,5 +1,22 @@
 #send-new {
     margin-left: 20px;
+    animation: search 2s ease-in-out forwards;
+}
+
+@keyframes modalAnim {
+
+    from {width: 0; height: 0;}
+    to {width: 80%; height: auto;}
+    
+}
+#quick-search {
+    border-radius: 7px;
+    width: 250px;
+    height: 45px;
+    padding: 5px;
+    box-shadow: 0px 2px 4px black;
+    background-color: #f1f1f1;
+    animation: search-btn 2s ease-in-out forwards;
 }
 
 #email-filter-div {
@@ -9,6 +26,7 @@
 #email-sms-text {
     font-weight: 700;
     font-size: 30px;
+    animation: book-app ease-in-out 2s forwards;
 }
 
 #email-table {
@@ -61,6 +79,11 @@
     }
 
     #email-table {
-        margin-left: 300px;
+        margin-left: 80px;
+        margin-right: 10px;
+    }
+
+    #email-table tr td {
+        padding: 10px
     }
 }

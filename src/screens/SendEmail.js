@@ -2,7 +2,31 @@ import React from "react";
 import "../CSS/SendEmail.css";
 import { FaEdit } from "react-icons/fa";
 
+import $ from "jquery";
+
 export default class SendEmail extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    $("#email-table tr").hide();
+    $("#email-table tr").each(function (index) {
+      $(this)
+        .delay(index * 300)
+        .show(1000);
+    });
+
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
+  }
+
   editRow = (event) => {
     console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
     var extra = document.getElementById("extraModal");
@@ -65,7 +89,7 @@ export default class SendEmail extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -97,7 +121,7 @@ export default class SendEmail extends React.Component {
 
           <div id="email-filter-div">
             <input
-              id="search"
+              id="quick-search"
               type="text"
               placeholder="Quick Search Customer"
             />
@@ -211,8 +235,9 @@ export default class SendEmail extends React.Component {
         >
           <div>
             <button
+              className="att-btn"
               onClick={() => this.delete()}
-              style={{ width: "100px", padding: "5px" }}
+              style={{ width: "100px", padding: "5px", marginBottom: "20px" }}
             >
               Delete
             </button>

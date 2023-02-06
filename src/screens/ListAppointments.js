@@ -43,6 +43,15 @@ export default class ListAppointments extends React.Component {
 
   componentDidMount() {
     document.getElementById("defaultOpen").click();
+
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
   }
 
   getDate = (date) => {
@@ -66,7 +75,7 @@ export default class ListAppointments extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -94,8 +103,16 @@ export default class ListAppointments extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "700", fontSize: "30px" }}>Appointments</p>
-          <div className="list-appointments-tab">
+          <p
+            style={{
+              fontWeight: "700",
+              fontSize: "30px",
+              animation: "book-app 1s ease-in-out",
+            }}
+          >
+            Appointments
+          </p>
+          <div className="list-appointments-tab" style={{ zIndex: 1 }}>
             <div
               id="defaultOpen"
               className="tablinks"
@@ -117,18 +134,37 @@ export default class ListAppointments extends React.Component {
             </div>
           </div>
           <div id="filter">
-            <select name="service-type" id="service-type">
+            <select name="employee-type" id="appointment-service-type">
+              <option value="null" selected>
+                Employee
+              </option>
+              <option value="1">Mr Westn Howk</option>
+            </select>
+            <select name="customer-type" id="appointment-service-type">
+              <option value="null" selected>
+                Customer
+              </option>
+              <option value="1">Mark P Daye</option>
+            </select>
+            <select name="service-type" id="appointment-service-type">
               <option value="null" selected>
                 Service
               </option>
               <option value="individual">Individual therapy</option>
               <option value="couple">Couple therapy</option>
             </select>
+            <select name="event-type" id="appointment-service-type">
+              <option value="null" selected>
+                Event
+              </option>
+              <option value="individual">One-to-One</option>
+            </select>
             <DatePicker
+              id="appointment-date-picker"
+              portalId="root-portal"
               selected={this.state.startDate}
               onChange={(date) => this.getDate(date)}
               minDate={new Date()}
-              style={{ width: "100px" }}
               dateFormat="d/MM/yyyy"
             />
           </div>
@@ -137,14 +173,13 @@ export default class ListAppointments extends React.Component {
               style={{
                 overflowX: "auto",
                 paddingTop: "50px",
-                width: "95%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: "20px",
+                overflowY: "hidden",
               }}
             >
-              <table id="customer-table">
+              <table id="appointments-table">
                 <tr style={{ fontSize: "20px" }}>
                   <th>Employee</th>
                   <th>Customer</th>
@@ -170,7 +205,6 @@ export default class ListAppointments extends React.Component {
             </div>
             <div
               style={{
-                width: "80vw",
                 display: "flex",
                 justifyContent: "flex-end",
                 flexDirection: "row",
@@ -178,7 +212,9 @@ export default class ListAppointments extends React.Component {
                 paddingBottom: "30px",
               }}
             >
-              <button id="create">Create</button>
+              <button className="att-btn" id="create">
+                Create
+              </button>
             </div>
           </div>
           <div id="past-content" className="apptabcontent">
@@ -186,14 +222,13 @@ export default class ListAppointments extends React.Component {
               style={{
                 overflowX: "auto",
                 paddingTop: "50px",
-                width: "95%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: "20px",
+                paddingBottom: "30px",
               }}
             >
-              <table id="customer-table">
+              <table id="appointments-table">
                 <tr style={{ fontSize: "20px" }}>
                   <th>Employee</th>
                   <th>Customer</th>
@@ -223,14 +258,13 @@ export default class ListAppointments extends React.Component {
               style={{
                 overflowX: "auto",
                 paddingTop: "50px",
-                width: "95%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: "20px",
+                paddingBottom: "30px",
               }}
             >
-              <table id="customer-table">
+              <table id="appointments-table">
                 <tr style={{ fontSize: "20px" }}>
                   <th>Employee</th>
                   <th>Customer</th>

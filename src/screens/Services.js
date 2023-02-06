@@ -3,6 +3,17 @@ import "../CSS/Services.css";
 import { FaEdit } from "react-icons/fa";
 
 export default class Services extends React.Component {
+  componentDidMount() {
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
+  }
+
   editRow = (event) => {
     console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
     var extra = document.getElementById("extraModal");
@@ -55,7 +66,7 @@ export default class Services extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -83,15 +94,27 @@ export default class Services extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "700", fontSize: "30px" }}>Services</p>
+          <p
+            style={{
+              fontWeight: "700",
+              fontSize: "30px",
+              animation: "book-app 2s ease-in-out forwards",
+            }}
+          >
+            Services
+          </p>
 
           <div id="service-filter">
             <input
-              id="search"
+              id="quick-search"
               type="text"
               placeholder="Quick Search services"
             />
-            <button id="add-services" onClick={() => this.openModal()}>
+            <button
+              className="att-btn"
+              id="add-services"
+              onClick={() => this.openModal()}
+            >
               Add services
             </button>
           </div>
@@ -104,6 +127,7 @@ export default class Services extends React.Component {
             paddingTop: "50px",
             flexDirection: "row",
             overflowX: "auto",
+            overflowY: "hidden",
           }}
         >
           <table id="service-table">
@@ -202,8 +226,9 @@ export default class Services extends React.Component {
             paddingTop: "30px",
           }}
         >
-          <div>
+          <div style={{ marginBottom: "20px" }}>
             <button
+              className="att-btn"
               onClick={() => this.delete()}
               style={{ width: "100px", padding: "5px" }}
             >

@@ -34,6 +34,17 @@ export default class ListCustomers extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
+  }
+
   openModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
@@ -86,7 +97,7 @@ export default class ListCustomers extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -114,11 +125,19 @@ export default class ListCustomers extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "700", fontSize: "30px" }}>Customers</p>
+          <p
+            style={{
+              fontWeight: "700",
+              fontSize: "30px",
+              animation: "book-app 1s ease-in-out forwards",
+            }}
+          >
+            Customers
+          </p>
 
           <div id="filter-add-div">
             <input
-              id="search"
+              id="search-customer"
               type="text"
               placeholder="Quick Search Customer"
             />
@@ -232,6 +251,7 @@ export default class ListCustomers extends React.Component {
         >
           <div>
             <button
+              className="att-btn"
               onClick={() => this.deletecustomer()}
               style={{ width: "100px", padding: "5px" }}
             >

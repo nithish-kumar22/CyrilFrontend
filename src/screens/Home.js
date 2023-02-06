@@ -2,6 +2,10 @@ import React from "react";
 import { Component } from "react";
 import "../CSS/Home.css";
 import axios from "axios";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
+import $ from "jquery";
 
 export default class Home extends Component {
   constructor(props) {
@@ -12,8 +16,22 @@ export default class Home extends Component {
       username: "",
       email: "",
       passw: "",
+      isExpand: false,
     };
   }
+
+  expand = () => {
+    this.setState({ isExpand: !this.state.isExpand });
+  };
+
+  //componentDidMount() {
+  // $("#list-therapist-table tr").hide();
+  // $("#list-therapist-table tr").each(function (index) {
+  //   $(this)
+  //     .delay(index * 300)
+  //     .show(1000);
+  // });
+  //}
 
   openModal = () => {
     var modal = document.getElementById("myModal");
@@ -242,17 +260,24 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div id="top-bar" style={{ height: "100px" }}>
+      <div id="container">
+        <header id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
             <p id="hpy">Happiness sustains!</p>
           </div>
           <div id="top-right">
-            <p>8714772868</p>
-            <p>cyriljon@yahoo.com</p>
+            <div>
+              <FaPhoneAlt color="#000" size={17} />
+              <p>8714772868</p>
+            </div>
+            <div>
+              <MdEmail color="#000" size={17} />
+              <p>cyriljon@yahoo.com</p>
+            </div>
           </div>
-        </div>
+        </header>
+
         <div id="page-title-div" style={{ height: "70px" }}>
           <div id="left-page-title">
             <p id="appointment-booking">Appointment Booking</p>
@@ -288,8 +313,12 @@ export default class Home extends Component {
               placeholder="Search Available Therapist"
               type="text"
             />
+            <div className="att-btn" id="search-btn">
+              Search
+            </div>
           </div>
         </div>
+
         <div id="table-div">{this.gettherapistTable(this.therapists)}</div>
 
         <div id="myModal" class="modal">

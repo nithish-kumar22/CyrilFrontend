@@ -12,13 +12,15 @@
 
 #add-services {
     margin-left: 20px;
+    animation: search 2s ease-in-out forwards;
+
 }
 
 #service-table {
     width: 90%;
     border-collapse: collapse;
     border: 1px solid black;
-
+    animation: book-app 2s ease-in-out forwards;
   }
 
   #service-table th {
@@ -71,7 +73,16 @@
     }
 
     #service-table {
-        margin-left: 300px;
+      margin-left: 90px;
+      margin-right: 10px;
+    }
+
+    #service-table tr th{
+      padding: 10px;
+    }
+
+    #service-table tr td{
+      padding: 10px;
     }
 
     #edit-service-popup {

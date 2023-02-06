@@ -17,6 +17,21 @@ export default class Booking extends Component {
     //document.getElementById("defaultOpen").click();
 
     this.tabClicked("service", "service-content");
+
+    const boxes = document.querySelectorAll(".tablinks");
+
+    for (let i = 0; i < boxes.length; i++) {
+      boxes[i].style.animationDelay = `${i * 0.5}s`;
+    }
+
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
   }
 
   getDate = (date) => {
@@ -45,8 +60,8 @@ export default class Booking extends Component {
 
   render() {
     return (
-      <div>
-        <div id="top-bar" style={{ height: "100px" }}>
+      <div id="container">
+        <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
             <p id="hpy">Happiness sustains!</p>
@@ -133,6 +148,7 @@ export default class Booking extends Component {
                   <option value="offline">Offline</option>
                 </select>
                 <div
+                  className="att-btn"
                   onClick={(event) => this.tabClicked("time", "time-content")}
                   id="next-btn"
                 >
@@ -175,6 +191,7 @@ export default class Booking extends Component {
                   </div>
                 </div>
                 <div
+                  className="att-btn"
                   onClick={(event) =>
                     this.tabClicked("details", "details-content")
                   }
@@ -254,6 +271,7 @@ export default class Booking extends Component {
                 </div>
 
                 <div
+                  className="att-btn"
                   onClick={(event) =>
                     this.tabClicked("payment", "payment-content")
                   }
@@ -300,6 +318,7 @@ export default class Booking extends Component {
                   </div>
                 </div>
                 <div
+                  className="att-btn"
                   onClick={(event) => this.tabClicked("done", "done-content")}
                   id="next-btn"
                 >

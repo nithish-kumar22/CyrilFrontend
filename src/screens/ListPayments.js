@@ -11,6 +11,17 @@ export default class ListPayments extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const content = document.getElementById("container");
+    const viewportHeight = window.innerHeight;
+
+    if (content.offsetHeight > viewportHeight) {
+      content.style.height = "100%";
+    } else {
+      content.style.height = "100vh";
+    }
+  }
+
   getDate = (date) => {
     this.setState({ startDate: date });
   };
@@ -41,7 +52,7 @@ export default class ListPayments extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="container">
         <div id="top-bar">
           <div id="top-left">
             <p id="cyril">Cyril John Mathew | </p>
@@ -69,13 +80,22 @@ export default class ListPayments extends React.Component {
             flexDirection: "column",
           }}
         >
-          <p style={{ fontWeight: "700", fontSize: "30px" }}>Payments</p>
+          <p
+            style={{
+              fontWeight: "700",
+              fontSize: "30px",
+              animation: "book-app 2s ease-in-out forwards",
+            }}
+          >
+            Payments
+          </p>
 
           <div id="payment-filter">
             <select
               name="service-type"
               id="service-type"
               style={{ margin: "10px" }}
+              className="lefttorightanim"
             >
               <option value="null" selected>
                 Select Service
@@ -84,6 +104,7 @@ export default class ListPayments extends React.Component {
               <option value="couple">Couple therapy</option>
             </select>
             <select
+              className="lefttorightanim"
               name="mode-type"
               id="service-type"
               style={{ margin: "10px" }}
@@ -95,6 +116,7 @@ export default class ListPayments extends React.Component {
               <option value="offline">Offline</option>
             </select>
             <select
+              className="righttoleftanim"
               name="status-type"
               id="service-type"
               style={{ margin: "10px" }}
@@ -106,6 +128,7 @@ export default class ListPayments extends React.Component {
               <option value="f">Failure</option>
             </select>
             <DatePicker
+              className="righttoleftanim"
               selected={this.state.startDate}
               onChange={(date) => this.getDate(date)}
               dateFormat="d/MM/yyyy"
@@ -120,6 +143,7 @@ export default class ListPayments extends React.Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            overflowY: "hidden",
           }}
         >
           <table id="payments-table">
@@ -217,6 +241,7 @@ export default class ListPayments extends React.Component {
           <div>
             <p style={{ fontWeight: "700", fontSize: "20px" }}>Total $60.00</p>
             <button
+              className="att-btn"
               onClick={() => this.deletepayment()}
               style={{ width: "100px", padding: "5px" }}
             >

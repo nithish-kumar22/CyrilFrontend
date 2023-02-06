@@ -1,4 +1,4 @@
-#top-bar {
+/* #top-bar {
     height: 40px;
     display: flex;
     justify-content: space-around;
@@ -61,7 +61,62 @@
   
   #empty-space {
     height: 50px;
+  } */
+
+  #appointment-service-type {
+    margin-left: 20px;
+    border: none;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0,0.8);
+    border-radius: 5px;
+    background-color: #BFD7FF;
+  
   }
+
+  #appointment-date-picker {
+    padding: 5px;
+    border: none;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0,0.8);
+    border-radius: 5px;
+    background-color: #BFD7FF;
+
+  }
+
+  #appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    animation: book-app 2s ease-in-out forwards;
+  
+
+  }
+
+  #appointments-table th{
+    background-color: #BFD7FF;
+  }
+  
+  
+  #appointments-table tr {
+    margin: 0 0 1rem 0;
+    border-bottom: 1px solid black;
+    text-align: center;
+  }
+  #appointments-table tr:nth-child(even) td{
+    background: #f2f2f2;
+  }
+  #appointments-table td {
+    border: none;
+    border-bottom: 1px solid black;
+    position: relative;
+  }
+  #appointments-table td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
 
   .list-appointments-tab {
     overflow: hidden;
@@ -90,6 +145,7 @@
   .apptabcontent {
     display: none;
     padding: 6px 12px;
+    width: 100%;
   }
 
   #service-type {
@@ -147,7 +203,6 @@
     #filter {
       margin: 10px;
       justify-content: center;
-      align-items: center;
       flex-direction: column;
     }
 
@@ -157,6 +212,24 @@
     }
 
     #list div {
+      padding: 10px;
+    }
+
+    #appointments-table {
+      margin-left: 200px;
+      width: 100vw;
+    }
+    #appointment-service-type {background-color: #BFD7FF;
+      padding: 5px;
+      margin-top: 10px;
+    }
+
+    #appointment-date-picker {    background-color: #BFD7FF;
+
+      margin-top: 20px;
+    }
+
+    #appointments-table tr td, #appointments-table tr th{
       padding: 10px;
     }
   }
