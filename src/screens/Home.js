@@ -5,7 +5,7 @@ import axios from "axios";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-import $ from "jquery";
+//import $ from "jquery";
 
 export default class Home extends Component {
   constructor(props) {

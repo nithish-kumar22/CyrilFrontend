@@ -5,9 +5,9 @@ import { FaEdit } from "react-icons/fa";
 import $ from "jquery";
 
 export default class SendEmail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
     $("#email-table tr").hide();
