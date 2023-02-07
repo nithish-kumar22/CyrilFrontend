@@ -12,7 +12,12 @@
 
 #add-services {
     margin-left: 20px;
-    animation: search 2s ease-in-out forwards;
+
+}
+
+#search-services {
+  margin-left: 20px;
+  animation: search 2s ease-in-out forwards;
 
 }
 
@@ -32,9 +37,10 @@
     margin: 0 0 1rem 0;
     border-bottom: 1px solid black;
     text-align: center;
+
   }
   #service-table tr:nth-child(even) td{
-    background: #f2f2f2;
+    background-color: #f2f2f2;
   }
   #service-table td {
     border: none;
@@ -58,6 +64,15 @@
 
   #edit-service-btn {
     margin-top: 10px;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  .fadeInAnim {
+    animation: fadeIn 2s ease-in-out forwards;
   }
 
 @media only screen and (max-width: 600px) {

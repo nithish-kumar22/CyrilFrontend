@@ -213,9 +213,16 @@
 }
 
 #staff-table {
-  font-size: 13px;
-  margin-left: 260px;
+  margin-left: 230px;
   margin-right: 10px;
+}
+
+#staff-table tr td{
+  font-size: 13px;
+}
+
+#staff-search-btn {
+  animation: book-app 2s ease-in-out;
 }
 
 .modal-content {

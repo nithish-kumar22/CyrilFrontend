@@ -1,5 +1,6 @@
 import React from "react";
 import "../CSS/Staff.css";
+import ReactDOM from "react-dom";
 import { FaEdit } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 
@@ -12,6 +13,22 @@ export default class Staff extends React.Component {
         { services: "Individual therapy", price: "$19" },
         { services: "Couple therapy", price: "$19" },
       ],
+      staffData: [
+        {
+          name: "John",
+          email: "cyrilm87@gmail.com",
+          phone: "908765567",
+          services: "Individual therapy",
+        },
+        {
+          name: "Jack",
+          email: "jack@gmail.com",
+          phone: "908765567",
+          services: "Couple therapy",
+        },
+      ],
+      filteredData: [],
+      searchTerm: "",
     };
   }
 
@@ -107,13 +124,36 @@ export default class Staff extends React.Component {
   deletestaff = () => {
     var checkbox = document.getElementsByClassName("staffcheckbox");
     var table = document.getElementById("staff-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-          alert(table.rows[i].cells[j].innerHTML);
+          //alert(table.rows[i].cells[j].innerHTML);
         }
       }
     }
+  };
+
+  filterTable = () => {
+    var searchTerm = document.getElementById("staff-search").value;
+    var staffcat = document.getElementById("staff-categories").value;
+    const filteredData = this.state.staffData.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        row.services.toLowerCase().includes(staffcat.toLowerCase())
+      );
+    });
+    this.setState({ filteredData: filteredData });
   };
 
   openContent = (evt, tabName) => {
@@ -167,29 +207,45 @@ export default class Staff extends React.Component {
   };
 
   createStaff = () => {
-    var table = document.getElementById("table");
-
-    var row = table.insertRow(-1);
-
-    var fullnamecell = row.insertCell(0);
-
-    //var editBtn = row.insertCell(1);
-    // ReactDOM.render(
-    //   <FaEdit
-    //     style={{ cursor: "pointer" }}
-    //     onClick={() => this.openExtraModal()}
-    //   />,
-    //   editBtn
-    // );
-    // editBtn.innerHTML = (
-
-    // );
-
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
-    var name = document.getElementById("full-name");
-    fullnamecell.innerHTML = `<p>${name.value}</p>`;
-    name.value = "";
+
+    var table = document.getElementById("staff-table");
+    var fullname = document.getElementById("staff-full-name");
+    var row = table.insertRow(table.rows.length);
+
+    row.className = "fadeInAnim";
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+
+    cell1.innerHTML = fullname.value;
+    cell2.innerHTML = "";
+    cell3.innerHTML = "";
+    cell4.innerHTML = "";
+    cell5.innerHTML = ` <input
+      type="checkbox"
+      name="check"
+      class="staffcheckbox"
+    />`;
+    ReactDOM.render(
+      <FaEdit
+        class="edit"
+        size={20}
+        color="#000"
+        style={{ cursor: "pointer" }}
+        onClick={(event) => this.editRow(event)}
+      />,
+      cell6
+    );
+
+    // this.setState((prevState) => ({
+    //   staffData: [...prevState.staffData, { name: fullname.value }],
+    // }));
   };
 
   render() {
@@ -234,16 +290,16 @@ export default class Staff extends React.Component {
 
           <div id="staff-filter">
             <input
-              id="search-filter"
+              id="staff-search"
               type="text"
               placeholder="Quick search staff"
             />
-            <input
-              id="categories-filter"
-              type="text"
-              placeholder="Categories"
-            />
-            <button id="staff-search-btn" className="att-btn">
+            <input id="staff-categories" type="text" placeholder="Categories" />
+            <button
+              id="staff-search-btn"
+              className="att-btn"
+              onClick={() => this.filterTable()}
+            >
               Search
             </button>
           </div>
@@ -258,13 +314,14 @@ export default class Staff extends React.Component {
           }}
         >
           <table id="staff-table">
-            <tr style={{ fontSize: "20px" }}>
+            <tr>
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
               <th>Services</th>
               <th>
                 <input
+                  className="staffcheckbox"
                   id="headerstaffcheckbox"
                   type="checkbox"
                   name="check"
@@ -273,51 +330,53 @@ export default class Staff extends React.Component {
               </th>
               <th></th>
             </tr>
-            <tr>
-              <td>John</td>
-              <td>cyrilm87@gmail.com</td>
-              <td>987654289</td>
-              <td>Individual therapy</td>
-              <td>
-                <input type="checkbox" name="check" className="staffcheckbox" />
-              </td>
-              <td>
-                <FaEdit
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>John</td>
-              <td>cyrilm87@gmail.com</td>
-              <td>987654289</td>
-              <td>Individual therapy</td>
-              <td>
-                <input type="checkbox" name="check" className="staffcheckbox" />
-              </td>
-              <td>
-                <FaEdit
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>John</td>
-              <td>cyrilm87@gmail.com</td>
-              <td>987654289</td>
-              <td>Individual therapy</td>
-              <td>
-                <input type="checkbox" name="check" className="staffcheckbox" />
-              </td>
-              <td>
-                <FaEdit
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
+            {this.state.filteredData.length > 0
+              ? this.state.filteredData.map((val, key) => {
+                  return (
+                    <tr>
+                      <td>{val.name}</td>
+                      <td>{val.email}</td>
+                      <td>{val.phone}</td>
+                      <td>{val.services}</td>
+                      <td>
+                        <input
+                          className="staffcheckbox"
+                          type="checkbox"
+                          name="check"
+                        />
+                      </td>
+                      <td>
+                        <FaEdit
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              : this.state.staffData.map((val, key) => {
+                  return (
+                    <tr style={{ fontSize: "20px" }}>
+                      <td>{val.name}</td>
+                      <td>{val.email}</td>
+                      <td>{val.phone}</td>
+                      <td>{val.services}</td>
+                      <td>
+                        <input
+                          className="staffcheckbox"
+                          type="checkbox"
+                          name="check"
+                        />
+                      </td>
+                      <td>
+                        <FaEdit
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
           </table>
         </div>
         <div
@@ -331,7 +390,7 @@ export default class Staff extends React.Component {
           <button
             className="att-btn"
             id="delete-staff"
-            onclick={() => this.deletestaff()}
+            onClick={() => this.deletestaff()}
           >
             Delete
           </button>
@@ -349,8 +408,16 @@ export default class Staff extends React.Component {
               </p>
               <p style={{ fontWeight: "600" }}>Create a New Staff Member</p>
               <p>Full name</p>
-              <input id="full-name" type="text" placeholder="Enter full name" />
-              <button onClick={() => this.createStaff()} id="create-staff">
+              <input
+                id="staff-full-name"
+                type="text"
+                placeholder="Enter full name"
+              />
+              <button
+                className="att-btn"
+                onClick={() => this.createStaff()}
+                id="create-staff"
+              >
                 Create
               </button>
             </div>
@@ -480,6 +547,7 @@ export default class Staff extends React.Component {
                     </div>
                   </div>
                   <button
+                    className="att-btn"
                     style={{ justifyContent: "center" }}
                     onClick={() => this.addslot()}
                   >
@@ -488,7 +556,9 @@ export default class Staff extends React.Component {
                 </div>
               </div>
 
-              <button id="save-staff">Create</button>
+              <button className="att-btn" id="save-staff">
+                Create
+              </button>
             </div>
           </div>
         </div>

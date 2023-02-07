@@ -1,8 +1,32 @@
 import React from "react";
+import ReactDOM from "react-dom";
+
 import "../CSS/Services.css";
 import { FaEdit } from "react-icons/fa";
 
 export default class Services extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      serviceData: [
+        {
+          title: "Individual therapy",
+          category: "Small",
+          duration: "20.00min",
+          price: "$20",
+        },
+        {
+          title: "Couple therapy",
+          category: "Large",
+          duration: "30.00min",
+          price: "$40",
+        },
+      ],
+      filteredData: [],
+    };
+  }
+
   componentDidMount() {
     const content = document.getElementById("container");
     const viewportHeight = window.innerHeight;
@@ -18,6 +42,21 @@ export default class Services extends React.Component {
     console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
     var extra = document.getElementById("extraModal");
     extra.style.display = "block";
+
+    var title = document.getElementById("service-modal-title");
+    var category = document.getElementById("category-service-modal");
+    var provider = document.getElementById("service-provier");
+    var duration = document.getElementById("service-duration");
+    var price = document.getElementById("service-price");
+
+    var table = document.getElementById("service-table");
+    var id = event.target.parentNode.parentNode.rowIndex;
+
+    title.value = table.rows[id].cells[0].innerHTML;
+    category.value = table.rows[id].cells[1].innerHTML;
+    //provider.value = table.rows[id].cells[3].innerHTML;
+    duration.value = table.rows[id].cells[2].innerHTML;
+    price.value = table.rows[id].cells[3].innerHTML;
   };
 
   closeEditModal = () => {
@@ -26,8 +65,55 @@ export default class Services extends React.Component {
   };
 
   createService = () => {
-    var serviceTitle = document.getElementById("service-title");
-    alert(serviceTitle.value);
+    var serviceTitle = document.getElementById("service-title-modal");
+    var table = document.getElementById("service-table");
+
+    var row = table.insertRow(table.rows.length);
+
+    row.className = "fadeInAnim";
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+
+    cell1.innerHTML = serviceTitle.value;
+    cell2.innerHTML = "";
+    cell3.innerHTML = "";
+    cell4.innerHTML = "";
+    cell5.innerHTML = ` <input
+    type="checkbox"
+    name="check"
+    class="servicecheckbox"
+  />`;
+    ReactDOM.render(
+      <FaEdit
+        class="edit"
+        size={20}
+        color="#000"
+        style={{ cursor: "pointer" }}
+        onClick={(event) => this.editRow(event)}
+      />,
+      cell6
+    );
+
+    // this.setState((prevState) => ({
+    //   serviceData: [...prevState.data, { title: serviceTitle.value }],
+    // }));
+  };
+
+  filterTable = () => {
+    var searchTerm = document.getElementById("service-search").value;
+    var staffcat = document.getElementById("service-categories").value;
+    const filteredData = this.state.serviceData.filter((row) => {
+      return (
+        row.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        row.category.toLowerCase().includes(staffcat.toLowerCase())
+      );
+    });
+    this.setState({ filteredData: filteredData });
   };
 
   getHeaderCB = () => {
@@ -45,10 +131,21 @@ export default class Services extends React.Component {
   delete = () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("service-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
+    }
+
     for (let i = 0; i < checkbox.length; i++) {
       if (checkbox[i].checked) {
         for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-          alert(table.rows[i + 1].cells[j].innerHTML);
+          //alert(table.rows[i + 1].cells[j].innerHTML);
         }
       }
     }
@@ -106,16 +203,24 @@ export default class Services extends React.Component {
 
           <div id="service-filter">
             <input
-              id="quick-search"
+              id="service-search"
               type="text"
               placeholder="Quick Search services"
+              style={{ animation: "search-btn 2s ease-in-out forwards" }}
             />
+            <input
+              id="service-categories"
+              type="text"
+              placeholder="Categories"
+              style={{ animation: "search 2s ease-in-out forwards" }}
+            />
+
             <button
               className="att-btn"
-              id="add-services"
-              onClick={() => this.openModal()}
+              id="search-services"
+              onClick={() => this.filterTable()}
             >
-              Add services
+              Search
             </button>
           </div>
         </div>
@@ -138,6 +243,7 @@ export default class Services extends React.Component {
               <th>Price</th>
               <th>
                 <input
+                  className="servicecheckbox"
                   type="checkbox"
                   name="check"
                   id="headercheckbox"
@@ -146,75 +252,61 @@ export default class Services extends React.Component {
               </th>
               <th></th>
             </tr>
-            <tr>
-              <td>Individual Theraphy</td>
-              <td>Small</td>
-              <td>20.00 min</td>
-              <td>$ 20.00 </td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Couple Theraphy</td>
-              <td>Small</td>
-              <td>30.00 min</td>
-              <td>$ 60.00 </td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Individual Theraphy</td>
-              <td>Large</td>
-              <td>50.00 min</td>
-              <td>$ 70.00 </td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
+            {this.state.filteredData.length > 0
+              ? this.state.filteredData.map((val, key) => {
+                  return (
+                    <tr>
+                      <td>{val.title}</td>
+                      <td>{val.category}</td>
+                      <td>{val.duration}</td>
+                      <td>{val.price}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                        />
+                        &nbsp;
+                      </td>
+                      <td>
+                        <FaEdit
+                          className="edit"
+                          size={20}
+                          color="#000"
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              : this.state.serviceData.map((val, key) => {
+                  return (
+                    <tr>
+                      <td>{val.title}</td>
+                      <td>{val.category}</td>
+                      <td>{val.duration}</td>
+                      <td>{val.price}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                        />
+                        &nbsp;
+                      </td>
+                      <td>
+                        <FaEdit
+                          className="edit"
+                          size={20}
+                          color="#000"
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
           </table>
         </div>
         <div
@@ -234,6 +326,13 @@ export default class Services extends React.Component {
             >
               Delete
             </button>
+            <button
+              className="att-btn"
+              id="add-services"
+              onClick={() => this.openModal()}
+            >
+              Add services
+            </button>
           </div>
         </div>
         <div id="myModal" class="modal">
@@ -245,14 +344,18 @@ export default class Services extends React.Component {
               <div>
                 <p>Title</p>
                 <input
-                  id="service-title"
+                  id="service-title-modal"
                   type="text"
                   placeholder="Enter title"
                 />
               </div>
             </div>
 
-            <button onClick={() => this.createService()} id="create-service">
+            <button
+              className="att-btn"
+              onClick={() => this.createService()}
+              id="create-service"
+            >
               Create
             </button>
           </div>

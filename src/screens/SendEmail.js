@@ -5,9 +5,29 @@ import { FaEdit } from "react-icons/fa";
 import $ from "jquery";
 
 export default class SendEmail extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      emailData: [
+        {
+          receiver: "abc@gmail.com",
+          desc: "Appointment approved to customer",
+          status: "Enabled",
+        },
+        {
+          receiver: "xyz@gmail.com",
+          desc: "Appointment approved to customer",
+          status: "Failed",
+        },
+        {
+          receiver: "cba@gmail.com",
+          desc: "Appointment approved to customer",
+          status: "Enables",
+        },
+      ],
+      filteredData: [],
+    };
+  }
 
   componentDidMount() {
     $("#email-table tr").hide();
@@ -25,6 +45,21 @@ export default class SendEmail extends React.Component {
     } else {
       content.style.height = "100vh";
     }
+
+    document
+      .getElementById("email-search")
+      .addEventListener("keyup", function (event) {
+        if (event.key === "Enter") {
+          var searchTerm = document.getElementById("email-search").value;
+
+          const filteredData = this.state.emailData.filter((row) => {
+            return row.receiver
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          });
+          this.setState({ filteredData: filteredData });
+        }
+      });
   }
 
   editRow = (event) => {
@@ -141,9 +176,10 @@ export default class SendEmail extends React.Component {
 
           <div id="email-filter-div">
             <input
-              id="quick-search"
+              id="email-search"
               type="text"
-              placeholder="Quick Search Customer"
+              placeholder="Quick Search Notification"
+              style={{ animation: "search-btn 2s ease-in-out forwards" }}
             />
             <button
               className="att-btn"
@@ -179,72 +215,60 @@ export default class SendEmail extends React.Component {
               </th>
               <th></th>
             </tr>
-            <tr>
-              <td>abc@gmail.com</td>
-              <td>Appointment approval to customer</td>
-              <td>Enabled</td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>xyz@gmail.com</td>
-              <td>Appointment approval to customer</td>
-              <td>Enabled</td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>abc@gmail.com</td>
-              <td>Appointment approval to customer</td>
-              <td>Enabled</td>
-              <td>
-                <input
-                  type="checkbox"
-                  name="check"
-                  className="servicecheckbox"
-                />
-                &nbsp;
-              </td>
-              <td>
-                <FaEdit
-                  className="edit"
-                  size={20}
-                  color="#000"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => this.editRow(event)}
-                />
-              </td>
-            </tr>
+
+            {this.state.filteredData.length > 0
+              ? this.state.filteredData.map((val, key) => {
+                  return (
+                    <tr>
+                      <td>{val.receiver}</td>
+                      <td>{val.desc}</td>
+                      <td>{val.status}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                        />
+                        &nbsp;
+                      </td>
+                      <td>
+                        <FaEdit
+                          className="edit"
+                          size={20}
+                          color="#000"
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              : this.state.emailData.map((val, key) => {
+                  return (
+                    <tr>
+                      <td>{val.receiver}</td>
+                      <td>{val.desc}</td>
+                      <td>{val.status}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                        />
+                        &nbsp;
+                      </td>
+                      <td>
+                        <FaEdit
+                          className="edit"
+                          size={20}
+                          color="#000"
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => this.editRow(event)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
           </table>
         </div>
         <div
