@@ -45,7 +45,7 @@ export default class Services extends React.Component {
 
     var title = document.getElementById("service-modal-title");
     var category = document.getElementById("category-service-modal");
-    var provider = document.getElementById("service-provier");
+    //var provider = document.getElementById("service-provier");
     var duration = document.getElementById("service-duration");
     var price = document.getElementById("service-price");
 
