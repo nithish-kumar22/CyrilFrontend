@@ -1,6 +1,6 @@
 import React from "react";
 import "../CSS/Staff.css";
-import ReactDOM from "react-dom";
+//import ReactDOM from "react-dom";
 import { FaEdit } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 
