@@ -32,6 +32,23 @@ export default class Staff extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    const tableRows = document.querySelectorAll(
+      "#staff-table tr:nth-child(even)"
+    );
+    tableRows.forEach((row) => {
+      row.className = "fadeInAnim";
+      const computedStyles = window.getComputedStyle(row);
+      console.log(computedStyles.backgroundColor);
+      const styleToApply = {
+        backgroundColor: computedStyles.backgroundColor,
+
+        // and so on
+      };
+      Object.assign(row.style, styleToApply);
+    });
+  }
+
   componentDidMount() {
     document.getElementById("defaultOpen").click();
     var day = document.getElementsByClassName("day");
@@ -216,36 +233,36 @@ export default class Staff extends React.Component {
 
     row.className = "fadeInAnim";
 
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
+    // var cell1 = row.insertCell(0);
+    // var cell2 = row.insertCell(1);
+    // var cell3 = row.insertCell(2);
+    // var cell4 = row.insertCell(3);
+    // var cell5 = row.insertCell(4);
+    // var cell6 = row.insertCell(5);
 
-    cell1.innerHTML = fullname.value;
-    cell2.innerHTML = "";
-    cell3.innerHTML = "";
-    cell4.innerHTML = "";
-    cell5.innerHTML = ` <input
-      type="checkbox"
-      name="check"
-      class="staffcheckbox"
-    />`;
-    ReactDOM.render(
-      <FaEdit
-        class="edit"
-        size={20}
-        color="#000"
-        style={{ cursor: "pointer" }}
-        onClick={(event) => this.editRow(event)}
-      />,
-      cell6
-    );
+    // cell1.innerHTML = fullname.value;
+    // cell2.innerHTML = "";
+    // cell3.innerHTML = "";
+    // cell4.innerHTML = "";
+    // cell5.innerHTML = ` <input
+    //   type="checkbox"
+    //   name="check"
+    //   class="staffcheckbox"
+    // />`;
+    // ReactDOM.render(
+    //   <FaEdit
+    //     class="edit"
+    //     size={20}
+    //     color="#000"
+    //     style={{ cursor: "pointer" }}
+    //     onClick={(event) => this.editRow(event)}
+    //   />,
+    //   cell6
+    // );
 
-    // this.setState((prevState) => ({
-    //   staffData: [...prevState.staffData, { name: fullname.value }],
-    // }));
+    this.setState((prevState) => ({
+      staffData: [...prevState.staffData, { name: fullname.value }],
+    }));
   };
 
   render() {
