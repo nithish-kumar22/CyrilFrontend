@@ -39,6 +39,7 @@ function Calendarpage() {
   return (
     <div className="calendar-height">
       <BigCalendar
+        id="calendar"
         localizer={localizer}
         events={events}
         startAccessor="start"

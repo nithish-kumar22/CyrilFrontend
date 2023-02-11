@@ -1,3 +1,13 @@
 .calendar-height {
     height: 100vh;
+    animation: calendar-anim 2s ease-in-out forwards;
+
+}
+
+@keyframes calendar-anim {
+    from {opacity: 0;width: 0vw;height: 0vh;}
+    to {opacity: 1;width: 100vw;height: 100vh;}
+}
+
+#calendar {
 }
