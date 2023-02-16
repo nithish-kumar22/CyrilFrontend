@@ -366,7 +366,7 @@ export default class Home extends Component {
                 <li onClick={() => this.logout()}>LogOut</li>
               </ul>
             )}
-            {this.state.showMenu && this.state.loggedIn == false && (
+            {this.state.showMenu && this.state.loggedIn === false && (
               <ul ref={this.state.dropdownRef}>
                 <li onClick={() => this.openModal()}>Signup</li>
               </ul>
