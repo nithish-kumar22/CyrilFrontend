@@ -3,6 +3,7 @@ import { Component } from "react";
 import "../CSS/Home.css";
 import axios from "axios";
 import { FaPhoneAlt } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 //import $ from "jquery";
@@ -17,6 +18,9 @@ export default class Home extends Component {
       email: "",
       passw: "",
       isExpand: false,
+      showMenu: false,
+      loggedIn: false,
+      adminLogin: true,
     };
   }
 
@@ -32,6 +36,37 @@ export default class Home extends Component {
   //     .show(1000);
   // });
   //}
+
+  componentDidMount() {
+    document.addEventListener("click", (event) =>
+      this.handleClickOutside(event)
+    );
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", (event) =>
+      this.handleClickOutside(event)
+    );
+  }
+
+  handleClickOutside = (event) => {
+    if (!event.target.matches("#dropbtn")) {
+      this.setState({ showMenu: false });
+    }
+
+    // if (
+    //   this.dropdownRef.current &&
+    //   !this.dropdownRef.current.contains(event.target)
+    // ) {
+    //   this.setState({ isOpen: false });
+    // }
+  };
+
+  handleMenu = () => {
+    this.setState((prevState) => ({
+      showMenu: !prevState.showMenu,
+    }));
+  };
 
   openModal = () => {
     var modal = document.getElementById("myModal");
@@ -55,16 +90,33 @@ export default class Home extends Component {
   };
 
   login = () => {
-    alert("login");
-    axios.post("http://localhost:1337/api/users", {
-      headers: {
-        "content-type": "text/json",
-      },
-      body: {
-        email: this.state.email,
-        passw: this.state.passw,
-      },
-    });
+    const radioButtons = document.getElementsByName("login");
+
+    for (let i = 0; i < radioButtons.length; i++) {
+      if (radioButtons[i].checked) {
+        const selectedValue = radioButtons[i].value;
+        if (selectedValue === "customer") {
+          window.location.href = `http://localhost:3000/dashboard`;
+        }
+        if (selectedValue === "therapist") {
+          window.location.href = `http://localhost:3000/therapistdashboard`;
+        }
+        if (selectedValue === "admin") {
+          window.location.href = `http://localhost:3000/admindashboard`;
+        }
+      }
+    }
+
+    // alert("login");
+    // axios.post("http://localhost:1337/api/users", {
+    //   headers: {
+    //     "content-type": "text/json",
+    //   },
+    //   body: {
+    //     email: this.state.email,
+    //     passw: this.state.passw,
+    //   },
+    // });
   };
 
   signUp = () => {
@@ -134,7 +186,9 @@ export default class Home extends Component {
     //navigate("/booking",{replace: true})
   };
 
-  signup = () => {};
+  signup = () => {
+    window.location.href = `https://clinicfrontend.netlify.app/booking`;
+  };
 
   handleExpand = (therapist) => {
     let newExpandedRows = [...this.state.expandedRows];
@@ -276,6 +330,48 @@ export default class Home extends Component {
               <p>cyriljon@yahoo.com</p>
             </div>
           </div>
+          <div>
+            {this.state.adminLogin && (
+              <select
+                id="quick"
+                style={{ backgroundColor: "transparent", marginRight: "20px" }}
+                name="Quick"
+              >
+                <option value="select" selected>
+                  Quick
+                </option>
+                <option
+                  value="email"
+                  onClick={() =>
+                    (window.location.href = `https://clinicfrontend.netlify.app/sendemail`)
+                  }
+                >
+                  Email and SMS
+                </option>
+                <option value="calendar">Calendar</option>
+                <option value="payment">Payment</option>
+                <option value="service">Service</option>
+              </select>
+            )}
+            <FaUserCircle
+              id="dropbtn"
+              onClick={() => this.handleMenu()}
+              color="#000"
+              size={25}
+              style={{ cursor: "pointer" }}
+            />
+            {this.state.showMenu && this.state.loggedIn && (
+              <ul ref={this.state.dropdownRef}>
+                <li onClick={() => this.profile()}>Mark P Daye</li>
+                <li onClick={() => this.logout()}>LogOut</li>
+              </ul>
+            )}
+            {this.state.showMenu && this.state.loggedIn == false && (
+              <ul ref={this.state.dropdownRef}>
+                <li onClick={() => this.openModal()}>Signup</li>
+              </ul>
+            )}
+          </div>
         </header>
 
         <div id="page-title-div" style={{ height: "70px" }}>
@@ -343,6 +439,36 @@ export default class Home extends Component {
                 flexDirection: "column",
               }}
             >
+              {/* <p>Are you an</p> */}
+              {/* <div style={{ display: "flex", flexDirection: "row" }}>
+                <div>
+                  <input
+                    id="customer-signup"
+                    type="radio"
+                    name="login"
+                    value="customer"
+                  />
+                  <label for="customer-radio">Customer</label>
+                </div>
+                {/* <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="therapist-signup"
+                    type="radio"
+                    name="login"
+                    value="therapist"
+                  />
+                  <label for="therapist-radio">therapist</label>
+                </div>
+                <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="admin-signup"
+                    type="radio"
+                    name="login"
+                    value="Admin"
+                  />
+                  <label for="admin-radio">Admin</label>
+                </div> 
+              </div> */}
               <p>Username</p>
               <input
                 id="email-customer"
@@ -406,6 +532,7 @@ export default class Home extends Component {
             >
               Login
             </p>
+
             <div
               style={{
                 display: "flex",
@@ -413,6 +540,36 @@ export default class Home extends Component {
                 flexDirection: "column",
               }}
             >
+              <p>Are you an</p>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div>
+                  <input
+                    id="customer-login"
+                    type="radio"
+                    name="login"
+                    value="customer"
+                  />
+                  <label for="customer-radio">Customer</label>
+                </div>
+                <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="therapist-login"
+                    type="radio"
+                    name="login"
+                    value="therapist"
+                  />
+                  <label for="therapist-radio">therapist</label>
+                </div>
+                <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="admin-login"
+                    type="radio"
+                    name="login"
+                    value="admin"
+                  />
+                  <label for="admin-radio">Admin</label>
+                </div>
+              </div>
               <p>Email</p>
               <input
                 id="email-customer"

@@ -11,6 +11,9 @@ import ListCustomers from "./screens/ListCustomers";
 import Services from "./screens/Services";
 import SendEmail from "./screens/SendEmail";
 import Calendarpage from "./screens/Calendarpage";
+import Admindashboard from "./screens/Admindashboard";
+import Customerdashboard from "./screens/Customerdashboard";
+import Therapistdashboard from "./screens/Therapistdashboard";
 
 export default class App extends React.Component {
   render() {
@@ -27,6 +30,9 @@ export default class App extends React.Component {
           <Route path="/services" element={<Services />} />
           <Route path="/sendemail" element={<SendEmail />} />
           <Route path="/calendar" element={<Calendarpage />} />
+          <Route path="/admindashboard" element={<Admindashboard />} />
+          <Route path="/therapistdashboard" element={<Therapistdashboard />} />
+          <Route path="/dashboard" element={<Customerdashboard />} />
         </Routes>
       </Router>
     );

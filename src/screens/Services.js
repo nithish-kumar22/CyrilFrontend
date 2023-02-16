@@ -376,23 +376,24 @@ export default class Services extends React.Component {
                   placeholder="Enter title"
                 />
                 <p>Category</p>
-                <input
-                  id="category-service-modal"
-                  type="text"
-                  className="padding-input"
-                  placeholder="Enter category"
-                />
+                <select name="category-type" id="appointment-category-type">
+                  <option value="null" selected>
+                    Select
+                  </option>
+                  <option value="small">Small</option>
+                  <option value="large">Large</option>
+                </select>
                 <p>Notes</p>
                 <textarea id="service-notes" rows={4} />
               </div>
               <div>
                 <p>Provider</p>
-                <input
-                  id="service-provier"
-                  className="padding-input"
-                  type="text"
-                  placeholder="Enter provider"
-                />
+                <select name="provider-type" id="appointment-provider-type">
+                  <option value="null" selected>
+                    Select
+                  </option>
+                  <option value="pA">Mark P Daye</option>
+                </select>
                 <p>Duration</p>
                 <input
                   id="service-duration"
@@ -409,7 +410,11 @@ export default class Services extends React.Component {
                 />
               </div>
             </div>
-            <button onClick={() => this.saveMail()} id="edit-service-btn">
+            <button
+              className="att-btn"
+              onClick={() => this.saveMail()}
+              id="edit-service-btn"
+            >
               Save
             </button>
           </div>
