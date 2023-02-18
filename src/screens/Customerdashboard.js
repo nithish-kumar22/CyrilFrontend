@@ -191,7 +191,6 @@ export default class Therapistdashboard extends React.Component {
           <div
             id="payment-container-div"
             style={{
-              backgroundColor: "#fff",
               marginTop: " 60px",
               backgroundColor: "#eee",
             }}
