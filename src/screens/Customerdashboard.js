@@ -5,7 +5,38 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaMale } from "react-icons/fa";
 
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
+
 export default class Therapistdashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      paymentData: [
+        {
+          date: "15.02.2023",
+          amount: "20",
+        },
+        {
+          date: "10.02.2023",
+          amount: "15",
+        },
+        {
+          date: "09.02.2023",
+          amount: "30",
+        },
+        {
+          date: "06.02.2023",
+          amount: "10",
+        },
+        {
+          date: "02.02.2023",
+          amount: "20",
+        },
+      ],
+    };
+  }
+
   componentDidMount() {
     const content = document.getElementById("container");
     const viewportHeight = window.innerHeight;
@@ -156,6 +187,46 @@ export default class Therapistdashboard extends React.Component {
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            id="payment-container-div"
+            style={{
+              backgroundColor: "#fff",
+              marginTop: " 60px",
+              backgroundColor: "#eee",
+            }}
+          >
+            <table id="therapist-dashboard-table">
+              <th>
+                <td>Payments</td>
+              </th>
+              {this.state.paymentData.map((val, key) => {
+                return (
+                  <tr>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaRegCalendarAlt
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "10px" }}>{val.date}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaDollarSign
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "5px" }}>{val.amount}</p>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
           </div>
         </div>
         <div id="myModal" class="modal">

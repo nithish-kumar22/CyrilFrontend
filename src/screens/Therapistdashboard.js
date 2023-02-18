@@ -67,27 +67,27 @@ export default class Therapistdashboard extends React.Component {
         {
           date: "15.02.2023",
           amount: "20",
-          paytype: "paytm",
+          customer: "Customer 1",
         },
         {
           date: "10.02.2023",
           amount: "15",
-          paytype: "Gpay",
+          customer: "Customer 2",
         },
         {
           date: "09.02.2023",
           amount: "30",
-          paytype: "PhonePe",
+          customer: "Customer 3",
         },
         {
           date: "06.02.2023",
           amount: "10",
-          paytype: "paytm",
+          customer: "Customer 1",
         },
         {
           date: "02.02.2023",
           amount: "20",
-          paytype: "PhonePe",
+          customer: "Customer 4",
         },
       ],
     };
@@ -252,7 +252,7 @@ export default class Therapistdashboard extends React.Component {
                     </td>
                     <td>
                       <div>
-                        <p>{val.paytype}</p>
+                        <p>{val.customer}</p>
                       </div>
                     </td>
                   </tr>
