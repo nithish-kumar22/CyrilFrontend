@@ -1,5 +1,4 @@
 import React from "react";
-import Chart from "react-google-charts";
 import "../CSS/Customerdashboard.css";
 import { FaUserAlt } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
