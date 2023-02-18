@@ -2,8 +2,8 @@ import React from "react";
 import { Component } from "react";
 import "../CSS/Home.css";
 import axios from "axios";
-import { FaPhoneAlt } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
+import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 //import $ from "jquery";

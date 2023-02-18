@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 
 import "../CSS/Services.css";
 import { FaEdit } from "react-icons/fa";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 export default class Services extends React.Component {
   constructor(props) {
@@ -170,8 +172,14 @@ export default class Services extends React.Component {
             <p id="hpy">Happiness sustains!</p>
           </div>
           <div id="top-right">
-            <p>8714772862</p>
-            <p>cyriljon@yahoo.com</p>
+            <div>
+              <FaPhoneAlt color="#000" size={17} />
+              <p>8714772868</p>
+            </div>
+            <div>
+              <MdEmail color="#000" size={17} />
+              <p>cyriljon@yahoo.com</p>
+            </div>
           </div>
         </div>
         <div id="page-title-div" style={{ height: "70px" }}>

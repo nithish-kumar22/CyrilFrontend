@@ -1,7 +1,7 @@
 import React from "react";
 import "../CSS/AdminDashboard.css";
 import Chart from "react-google-charts";
-const LineData = [
+const AppointmentData = [
   ["Month", "Therapist 1", "Therapist 2"],
   ["Jan", 9, 0],
   ["Feb", 10, 5],
@@ -14,12 +14,39 @@ const LineData = [
   ["Nov", 0, 9],
   ["Dec", 0, 9],
 ];
-const LineChartOptions = {
+const AppointmentChartOptions = {
+  title: "Appointments",
   hAxis: {
     title: "Month",
   },
   vAxis: {
     title: "Appointments",
+  },
+  series: {
+    1: { curveType: "function" },
+  },
+};
+
+const PaymentData = [
+  ["Month", "Amount"],
+  ["Jan", 9],
+  ["Feb", 10],
+  ["Mar", 23],
+  ["May", 17],
+  ["Jun", 17],
+  ["Jul", 17],
+  ["Aug", 10],
+  ["Sep", 13],
+  ["Nov", 8],
+  ["Dec", 24],
+];
+const PaymentChartOptions = {
+  title: "Payments",
+  hAxis: {
+    title: "Month",
+  },
+  vAxis: {
+    title: "Amount",
   },
   series: {
     1: { curveType: "function" },
@@ -121,16 +148,16 @@ export default class Admindashboard extends React.Component {
           )}
         </div>
         <div id="admin-page-stats-div">
-          <div style={{ animation: "search-btn 2s ease-in-out" }}>
-            <p style={{ fontSize: "27px", fontWeight: "bold" }}>
-              Total no of therapists: 5
-            </p>
-            <p style={{ fontSize: "27px", fontWeight: "bold" }}>
-              Total no of appointments: 20
-            </p>
+          <div
+            id="stats-div-left"
+            style={{ animation: "search-btn 2s ease-in-out" }}
+          >
+            <p style={{ fontWeight: "bold" }}>Total no of therapists: 5</p>
+            <p style={{ fontWeight: "bold" }}>Total no of appointments: 20</p>
+            <p style={{ fontWeight: "bold" }}>Total amounts earned: $150</p>
           </div>
           <div style={{ animation: "search 2s ease-in-out" }}>
-            <p style={{ fontSize: "27px", fontWeight: "bold" }}>
+            <p id="stats-div-left" style={{ fontWeight: "bold" }}>
               Upcoming appointment:
             </p>
             <div
@@ -177,8 +204,17 @@ export default class Admindashboard extends React.Component {
             height={"410px"}
             chartType="LineChart"
             loader={<div>Loading Chart</div>}
-            data={LineData}
-            options={LineChartOptions}
+            data={AppointmentData}
+            options={AppointmentChartOptions}
+            rootProps={{ "data-testid": "2" }}
+          />
+          <Chart
+            width={"100%"}
+            height={"410px"}
+            chartType="LineChart"
+            loader={<div>Loading Chart</div>}
+            data={PaymentData}
+            options={PaymentChartOptions}
             rootProps={{ "data-testid": "2" }}
           />
         </div>
