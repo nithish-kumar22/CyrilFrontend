@@ -1,6 +1,8 @@
 import React from "react";
 import Chart from "react-google-charts";
 import "../CSS/Therapistdashboard.css";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
 
 const LineData = [
   ["Month", "Therapist"],
@@ -61,6 +63,33 @@ export default class Therapistdashboard extends React.Component {
 
     this.state = {
       showMenu: false,
+      paymentData: [
+        {
+          date: "15.02.2023",
+          amount: "20",
+          paytype: "paytm",
+        },
+        {
+          date: "10.02.2023",
+          amount: "15",
+          paytype: "Gpay",
+        },
+        {
+          date: "09.02.2023",
+          amount: "30",
+          paytype: "PhonePe",
+        },
+        {
+          date: "06.02.2023",
+          amount: "10",
+          paytype: "paytm",
+        },
+        {
+          date: "02.02.2023",
+          amount: "20",
+          paytype: "PhonePe",
+        },
+      ],
     };
   }
 
@@ -162,6 +191,7 @@ export default class Therapistdashboard extends React.Component {
                 backgroundColor: "#fff",
                 borderTopRightRadius: "20px",
                 borderTopLeftRadius: "20px",
+                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.7)",
               }}
             >
               <div
@@ -191,6 +221,44 @@ export default class Therapistdashboard extends React.Component {
                 <p>22 (10.30AM)</p>
               </div>
             </div>
+          </div>
+          <div id="payment-container-div" style={{ backgroundColor: "#fff" }}>
+            <table id="therapist-dashboard-table">
+              <th>
+                <td>Payments</td>
+              </th>
+              {this.state.paymentData.map((val, key) => {
+                return (
+                  <tr>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaRegCalendarAlt
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "10px" }}>{val.date}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaDollarSign
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "5px" }}>{val.amount}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <p>{val.paytype}</p>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
           </div>
         </div>
         <div id="adminchart">

@@ -32,6 +32,25 @@
 }
 
 
+#payment-admin-div {
+    background-color: #eee;
+    width: 35%; 
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.7);
+    animation: book-app 2s ease-in-out forwards;
+    border-radius: 20px;
+}
+
+#admin-dashboard-table {
+    border-collapse: separate;
+    border-spacing: 5px;
+  }
+  #admin-dashboard-table td {
+    padding: 5px;
+  }
+
 
 @media only screen and (max-width: 600px) {
 
@@ -48,6 +67,17 @@
     #stats-div-left {
         font-size: 20px;
     }
+
+    #payment-admin-div {
+        width: 90vw;
+        margin-top: 60px;
+    }
+
+    #admin-dashboard-table td {
+        padding: 0px;
+      }
+    
+
 
     
 

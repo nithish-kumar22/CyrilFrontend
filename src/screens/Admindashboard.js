@@ -1,6 +1,9 @@
 import React from "react";
 import "../CSS/AdminDashboard.css";
 import Chart from "react-google-charts";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
+
 const AppointmentData = [
   ["Month", "Therapist 1", "Therapist 2"],
   ["Jan", 9, 0],
@@ -59,6 +62,38 @@ export default class Admindashboard extends React.Component {
 
     this.state = {
       showMenu: false,
+      paymentData: [
+        {
+          date: "15.02.2023",
+          amount: "20",
+          paytype: "paytm",
+          therapist: "Therapist 1",
+        },
+        {
+          date: "10.02.2023",
+          amount: "15",
+          paytype: "Gpay",
+          therapist: "Therapist 1",
+        },
+        {
+          date: "09.02.2023",
+          amount: "30",
+          paytype: "PhonePe",
+          therapist: "Therapist 1",
+        },
+        {
+          date: "06.02.2023",
+          amount: "10",
+          paytype: "paytm",
+          therapist: "Therapist 1",
+        },
+        {
+          date: "02.02.2023",
+          amount: "20",
+          paytype: "PhonePe",
+          therapist: "Therapist 1",
+        },
+      ],
     };
   }
 
@@ -196,6 +231,49 @@ export default class Admindashboard extends React.Component {
                 <p>Therapist 2: 22 (10.30AM)</p>
               </div>
             </div>
+          </div>
+          <div id="payment-admin-div" style={{ backgroundColor: "#fff" }}>
+            <table id="admin-dashboard-table">
+              <th>
+                <td>Payments</td>
+              </th>
+              {this.state.paymentData.map((val, key) => {
+                return (
+                  <tr>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaRegCalendarAlt
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "10px" }}>{val.date}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <FaDollarSign
+                          size={20}
+                          color="#000"
+                          style={{ marginTop: "5px" }}
+                        />
+                        <p style={{ marginLeft: "5px" }}>{val.amount}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <p>{val.paytype}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div>
+                        <p>{val.therapist}</p>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
           </div>
         </div>
         <div id="adminchart">
