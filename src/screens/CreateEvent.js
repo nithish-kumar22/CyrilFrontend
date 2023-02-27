@@ -2,27 +2,203 @@ import React from "react";
 import "../CSS/CreateEvent.css";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default class CreateEvent extends React.Component {
-  createEvent = () => {
-    var days = document.getElementsByClassName("day").value;
-    var start = document.getElementsByClassName("start-time").value;
-    var end = document.getElementsByClassName("end-time").value;
+  constructor(props) {
+    super(props);
+    this.state = {
+      serviceOptions: [],
+      selectedTherapistOption: "",
+      therapistOptions: [],
+      token: Cookies.get("jwtToken") || "",
+    };
+  }
+
+  handleServiceChange = async (event) => {
+    this.setState({
+      selectedServiceOption: event.target.value,
+    });
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var tOptions = ["Select"];
+        for (var i = 0; i < res.data.data.length; i++) {
+          for (
+            var j = 0;
+            j < res.data.data[i].attributes.services.length;
+            j++
+          ) {
+            if (
+              res.data.data[i].attributes.services[j].service ===
+              event.target.value
+            ) {
+              tOptions.push(res.data.data[i].attributes.name);
+            }
+          }
+        }
+        this.setState({ therapistOptions: tOptions });
+      })
+      .catch((err) => console.log(err));
+
+    if (event.target.value == "Select") {
+      await axios
+        .get("http://localhost:1337/api/therapists", {
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+        .then((res) => {
+          var tOptions = ["Select"];
+          for (var i = 0; i < res.data.data.length; i++) {
+            tOptions.push(res.data.data[i].attributes.name);
+          }
+          this.setState({ therapistOptions: tOptions });
+          console.log(this.state.therapistOptions);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  handleTherapistChange = async (event) => {
+    this.setState({
+      selectedTherapistOption: event.target.value,
+    });
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var sOptions = ["Select"];
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].attributes.name === event.target.value) {
+            for (
+              var j = 0;
+              j < res.data.data[i].attributes.services.length;
+              j++
+            ) {
+              sOptions.push(res.data.data[i].attributes.services[j].service);
+            }
+          }
+        }
+        this.setState({ serviceOptions: sOptions });
+        console.log(this.state.serviceOptions);
+      })
+      .catch((err) => console.log(err));
+
+    if (event.target.value == "Select") {
+      await axios
+        .get("http://localhost:1337/api/services", {
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+        .then((res) => {
+          var sOptions = ["Select"];
+          for (var i = 0; i < res.data.data.length; i++) {
+            sOptions.push(res.data.data[i].attributes.title);
+          }
+          this.setState({ serviceOptions: sOptions });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  async componentDidMount() {
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var tOptions = ["Select"];
+        for (var i = 0; i < res.data.data.length; i++) {
+          tOptions.push(res.data.data[i].attributes.name);
+        }
+        this.setState({ therapistOptions: tOptions });
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get("http://localhost:1337/api/services", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var sOptions = ["Select"];
+        for (var i = 0; i < res.data.data.length; i++) {
+          sOptions.push(res.data.data[i].attributes.title);
+        }
+        this.setState({ serviceOptions: sOptions });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  createEvent = async () => {
+    var days = document.getElementsByClassName("day");
+    var start = document.getElementsByClassName("start-time");
+    var end = document.getElementsByClassName("end-time");
+    var name = document.getElementById("event-name").value;
+    var service = this.state.selectedServiceOption;
+    var living = document.getElementById("living-type").value;
+    var duration = document.getElementById("duration-type").value;
+    var period = document.getElementById("period").value;
+    var therapist = this.state.selectedTherapistOption;
+    var mode = document.getElementById("event-mode-type");
+    var booking = document.getElementById("event-booking-type");
+    var fee = document.getElementById("event-fee-type");
+    console.log(start[0]);
     var day = [];
     var starttime = [];
     var endtime = [];
-    for (let i = 0; i < days.length; i++) {
-      if (days[i].value !== "") {
-        day.push(days[i]);
-      }
-      if (start[i].value !== "") {
-        starttime.push(start[i]);
-      }
-      if (end[i].value !== "") {
-        endtime.push(end[i].value);
+    var ts = [];
+    for (var i = 0; i < days.length; i++) {
+      if (
+        days[i].value !== "" &&
+        start[i].value !== "" &&
+        end[i].value !== ""
+      ) {
+        ts = [{ day: days[i].value, start: start[i].value, end: end[i].value }];
       }
     }
-    console.log(day);
+
+    await fetch(`http://localhost:1337/api/events/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          name: name,
+          therapist: therapist,
+          mode: mode,
+          bookingtype: booking,
+          period: period,
+          duration: duration,
+          fee: fee,
+          service: [{ service: service }],
+          timeslot: ts,
+        },
+      }),
+    })
+      .then((r) => {
+        console.log(r);
+        alert("New service added");
+        this.closeModal();
+      })
+      .catch((e) => alert(e.error.message));
   };
 
   deleteSlot = () => {
@@ -55,13 +231,13 @@ export default class CreateEvent extends React.Component {
   />`;
 
     cell2.innerHTML = ` <input
-  className="Start-time"
+  class="Start-time"
   type="text"
   placeholder="Enter start time"
   style=" padding: 5px; "/>`;
 
     cell3.innerHTML = `<input
-className="end-time"
+class="end-time"
 type="text"
 placeholder="Enter end time"
 style=" padding: 5px; "/>`;
@@ -209,25 +385,33 @@ style=" width: 20px; height: 20px; "
           >
             <div>
               <p className="text-size">Name of Event</p>
-              <select name="event-type" id="event-type" className="dropdown">
+              <input
+                id="event-name"
+                className="padding-input"
+                type="text"
+                placeholder="Enter event name"
+              />
+              {/* <select name="event-type" id="event-type" className="dropdown">
                 <option value="null" selected>
                   Select
                 </option>
                 <option value="1to1">One to One meeting</option>
-              </select>
+              </select> */}
               <p className="text-size">Service</p>
               <select
                 name="service-type"
-                id="service-type"
-                style={{ width: "200px" }}
+                id="event-service-type"
                 className="dropdown"
+                value={this.state.selectedServiceOption}
+                onChange={(event) => this.handleServiceChange(event)}
               >
-                <option value="null" selected>
-                  Service
-                </option>
-                <option value="individual">Individual therapy</option>
-                <option value="couple">Couple therapy</option>
+                {this.state.serviceOptions.map((option, index) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
               </select>
+
               <p className="text-size">Within India</p>
               <select name="living" id="living-type" className="dropdown">
                 <option value="null" selected>
@@ -246,7 +430,7 @@ style=" width: 20px; height: 20px; "
                 <option value="90">1 hr 30 mins</option>
               </select>
               <p className="text-size">Period</p>
-              <select name="therapist" id="therapist" className="dropdown">
+              <select name="therapist" id="period" className="dropdown">
                 <option value="null" selected>
                   Select
                 </option>
@@ -255,15 +439,26 @@ style=" width: 20px; height: 20px; "
             </div>
             <div>
               <p className="text-size">Therapist:</p>
-              <select name="therapist" id="therapist" className="dropdown">
-                <option value="null" selected>
-                  Select
-                </option>
-                <option value="mark">Mark P. Daye</option>
-                <option value="linora">Linora C. Hickson</option>
+              <select
+                name="therapist-type"
+                id="event-therapist-type"
+                className="dropdown"
+                value={this.state.selectedTherapistOption}
+                onChange={(event) => this.handleTherapistChange(event)}
+              >
+                {this.state.therapistOptions.map((option, index) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
               </select>
+
               <p className="text-size">Mode</p>
-              <select name="mode-type" id="mode-type" className="dropdown">
+              <select
+                name="mode-type"
+                id="event-mode-type"
+                className="dropdown"
+              >
                 <option value="null" selected>
                   Select mode
                 </option>
@@ -273,7 +468,7 @@ style=" width: 20px; height: 20px; "
               <p className="text-size">Booking type</p>
               <select
                 name="category-type"
-                id="booking-type"
+                id="event-booking-type"
                 className="dropdown"
               >
                 <option value="null" selected>
@@ -283,7 +478,7 @@ style=" width: 20px; height: 20px; "
                 <option value="instant">Instant booking</option>
               </select>
               <p className="text-size">Fee</p>
-              <select name="fee" id="fee-type" className="dropdown">
+              <select name="fee" id="event-fee-type" className="dropdown">
                 <option value="null" selected>
                   Select
                 </option>
@@ -343,7 +538,6 @@ style=" width: 20px; height: 20px; "
                   />
                 </td>
               </tr>
-              ;
             </table>
           </div>
           <div style={{ paddingBottom: "30px" }}>

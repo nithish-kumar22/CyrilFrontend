@@ -2,7 +2,9 @@ import React from "react";
 import Chart from "react-google-charts";
 import "../CSS/Therapistdashboard.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const LineData = [
   ["Month", "Therapist"],
@@ -63,6 +65,8 @@ export default class Therapistdashboard extends React.Component {
 
     this.state = {
       showMenu: false,
+      showDropMenu: false,
+      token: Cookies.get("jwtToken") || "",
       paymentData: [
         {
           date: "15.02.2023",
@@ -94,15 +98,17 @@ export default class Therapistdashboard extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener("click", (event) =>
-      this.handleClickOutside(event)
-    );
+    document.addEventListener("click", (event) => {
+      this.handleClickOutside(event);
+      this.handleDropClickOutside(event);
+    });
   }
 
   componentWillUnmount() {
-    document.removeEventListener("click", (event) =>
-      this.handleClickOutside(event)
-    );
+    document.removeEventListener("click", (event) => {
+      this.handleClickOutside(event);
+      this.handleDropClickOutside(event);
+    });
   }
 
   handleClickOutside = (event) => {
@@ -114,6 +120,33 @@ export default class Therapistdashboard extends React.Component {
   handleMenu = () => {
     this.setState((prevState) => ({
       showMenu: !prevState.showMenu,
+    }));
+  };
+
+  logout = () => {
+    this.setState({ token: "" });
+    Cookies.remove("jwtToken");
+    Cookies.remove("email");
+    Cookies.remove("usertype");
+    window.location.replace("http://localhost:3000/");
+  };
+
+  handleDropClickOutside = (event) => {
+    if (!event.target.matches("#dropbtn")) {
+      this.setState({ showDropMenu: false });
+    }
+
+    // if (
+    //   this.dropdownRef.current &&
+    //   !this.dropdownRef.current.contains(event.target)
+    // ) {
+    //   this.setState({ isOpen: false });
+    // }
+  };
+
+  handleDropMenu = () => {
+    this.setState((prevState) => ({
+      showDropMenu: !prevState.showDropMenu,
     }));
   };
 
@@ -131,6 +164,7 @@ export default class Therapistdashboard extends React.Component {
           >
             Quick
           </button>
+
           {this.state.showMenu && (
             <ul>
               <li
@@ -171,6 +205,20 @@ export default class Therapistdashboard extends React.Component {
               </li>
             </ul>
           )}
+          <div>
+            <FaUserCircle
+              id="dropbtn"
+              onClick={() => this.handleDropMenu()}
+              color="#000"
+              size={25}
+              style={{ cursor: "pointer", marginRight: "20px" }}
+            />
+            {this.state.showDropMenu && this.state.token && (
+              <ul ref={this.state.dropdownRef}>
+                <li onClick={() => this.logout()}>LogOut</li>
+              </ul>
+            )}
+          </div>
         </div>
         <div id="admin-page-stats-div">
           <div

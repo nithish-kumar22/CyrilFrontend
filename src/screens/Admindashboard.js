@@ -3,6 +3,7 @@ import "../CSS/AdminDashboard.css";
 import Chart from "react-google-charts";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const AppointmentData = [
   ["Month", "Therapist 1", "Therapist 2"],
@@ -101,6 +102,10 @@ export default class Admindashboard extends React.Component {
     document.addEventListener("click", (event) =>
       this.handleClickOutside(event)
     );
+    // this.setState({ token: "" });
+    // Cookies.remove("jwtToken");
+    // Cookies.remove("email");
+    // Cookies.remove("usertype");
   }
 
   componentWillUnmount() {

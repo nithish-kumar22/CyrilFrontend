@@ -1,36 +1,27 @@
 import React from "react";
 import "../CSS/Staff.css";
-//import ReactDOM from "react-dom";
+import ReactDOM from "react-dom";
 import { FaEdit } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default class Staff extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: [
-        { services: "Individual therapy", price: "$19" },
-        { services: "Couple therapy", price: "$19" },
-      ],
-      staffData: [
-        {
-          name: "John",
-          email: "cyrilm87@gmail.com",
-          phone: "908765567",
-          services: "Individual therapy",
-        },
-        {
-          name: "Jack",
-          email: "jack@gmail.com",
-          phone: "908765567",
-          services: "Couple therapy",
-        },
-      ],
+      data: [],
+      staffData: [],
       filteredData: [],
       searchTerm: "",
+      id: null,
+      token: Cookies.get("jwtToken") || "",
+      selectedRows: [],
+      selectedServiceRows: [],
+      tsdata: [],
     };
   }
 
@@ -51,12 +42,8 @@ export default class Staff extends React.Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.getElementById("defaultOpen").click();
-    var day = document.getElementsByClassName("day");
-    for (let i = 0; i < day.length; i++) {
-      day[i].value = "Hello";
-    }
 
     const content = document.getElementById("container");
     const viewportHeight = window.innerHeight;
@@ -66,54 +53,100 @@ export default class Staff extends React.Component {
     } else {
       content.style.height = "100vh";
     }
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+        for (var i = 0; i < res.data.data.length; i++) {
+          resArray.push(res.data.data[i]);
+        }
+        this.setState({ staffData: resArray });
+      })
+      .catch((err) => console.log(err));
   }
 
   addslot = () => {
-    //var tsc = document.getElementById("ts-container");
-    var ts = document.getElementById("ts-container-staff");
-    ts.insertAdjacentHTML(
-      "beforeend",
-      `
-      <div style={{display: flex;
-    
-        padding-bottom: 30px;
-        flex-direction: row;}}>
-      <div style=" display: flex;
-        flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
-        padding-top: 20px">
-    <input
+    var table = document.getElementById("ts-table");
+    var row = table.insertRow(table.rows.length);
+
+    row.className = "fadeInAnim";
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+
+    cell1.innerHTML = `<input
+    id="staff-ts-day"
     class="day"
     type="text"
     placeholder="Enter day"
-    style="
-      padding: 5px;
-      width: 100px;
-      margin-left: 20px;
-    "
-  />
-    <input
+    
+  />`;
+    cell2.innerHTML = ` <input
+    id="staff-ts-start"
     class="start-time"
     type="text"
     placeholder="Enter start time"
-    style="
-      padding: 5px;
-      width: 100px;
-      margin-left: 20px;
-    "
-    />
-    <input
+    
+  />`;
+    cell3.innerHTML = `<input
+    id="staff-ts-end"
     class="end-time"
     type="text"
     placeholder="Enter end time"
-    style="
-      padding: 5px;
-      width: 100px;
-      margin-left: 20px;
-    "
-    />
-    </div>
-  </div>`
-    );
+    
+  />`;
+
+    //var tsc = document.getElementById("ts-container");
+    //   var ts = document.getElementById("ts-container-staff");
+    //   ts.insertAdjacentHTML(
+    //     "beforeend",
+    //     `
+    //     <div style={{display: flex;
+
+    //       padding-bottom: 30px;
+    //       flex-direction: row;}}>
+    //     <div style=" display: flex;
+    //       flex-direction: ${window.screen.width <= 600 ? "column" : "row"};
+    //       padding-top: 20px">
+    //   <input
+    //   class="day"
+    //   type="text"
+    //   placeholder="Enter day"
+    //   style="
+    //     padding: 5px;
+    //     width: 100px;
+    //     margin-left: 20px;
+    //   "
+    // />
+    //   <input
+    //   class="start-time"
+    //   type="text"
+    //   placeholder="Enter start time"
+    //   style="
+    //     padding: 5px;
+    //     width: 100px;
+    //     margin-left: 20px;
+    //   "
+    //   />
+    //   <input
+    //   class="end-time"
+    //   type="text"
+    //   placeholder="Enter end time"
+    //   style="
+    //     padding: 5px;
+    //     width: 100px;
+    //     margin-left: 20px;
+    //   "
+    //   />
+    //   </div>
+    // </div>`
+    //   );
   };
 
   getHeaderStaffCB = () => {
@@ -128,19 +161,42 @@ export default class Staff extends React.Component {
     }
   };
 
-  getHeaderCB = () => {
-    var hcb = document.getElementById("headercheckbox");
-    var checkbox = document.getElementsByClassName("servicecheckbox");
+  // getHeaderCB = () => {
+  //   var hcb = document.getElementById("headercheckbox");
+  //   var checkbox = document.getElementsByClassName("servicecheckbox");
 
-    if (hcb.checked) {
-      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+  //   if (hcb.checked) {
+  //     for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = true;
+  //   }
+  //   if (!hcb.checked) {
+  //     for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+  //   }
+  // };
+
+  deleteService = async () => {
+    var checkbox = document.getElementsByClassName("servicemodalcheckbox");
+    var table = document.getElementById("staff-service-table");
+
+    for (let i = 1; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        table.rows[i].className = "fadeOut";
+
+        setTimeout(() => {
+          table.rows[i].remove();
+        }, 2000);
+      }
     }
-    if (!hcb.checked) {
-      for (let i = 0; i < checkbox.length; i++) checkbox[i].checked = false;
+
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+          //alert(table.rows[i].cells[j].innerHTML);
+        }
+      }
     }
   };
 
-  deletestaff = () => {
+  deletestaff = async () => {
     var checkbox = document.getElementsByClassName("staffcheckbox");
     var table = document.getElementById("staff-table");
 
@@ -160,6 +216,24 @@ export default class Staff extends React.Component {
           //alert(table.rows[i].cells[j].innerHTML);
         }
       }
+    }
+
+    var ids = this.state.selectedRows;
+
+    for (let j = 0; j < ids.length; j++) {
+      await fetch(`http://localhost:1337/api/therapists/${ids[j]}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          console.log("Customer deleted");
+        })
+        .catch((e) => {
+          alert(e.error.message);
+        });
     }
   };
 
@@ -189,6 +263,28 @@ export default class Staff extends React.Component {
     evt.currentTarget.className += " active";
   };
 
+  handleRowSelect = (id) => {
+    const { selectedRows } = this.state;
+    const index = selectedRows.indexOf(id);
+    if (index !== -1) {
+      selectedRows.splice(index, 1);
+    } else {
+      selectedRows.push(id);
+    }
+    this.setState({ selectedRows });
+  };
+
+  handleServiceRowSelect = (id) => {
+    const { selectedServiceRows } = this.state;
+    const index = selectedServiceRows.indexOf(id);
+    if (index !== -1) {
+      selectedServiceRows.splice(index, 1);
+    } else {
+      selectedServiceRows.push(id);
+    }
+    this.setState({ selectedServiceRows });
+  };
+
   openModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
@@ -199,25 +295,118 @@ export default class Staff extends React.Component {
     modal.style.display = "none";
   };
 
-  editRow = (event) => {
+  editRow = async (event) => {
     var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "block";
     //var index = event.target.parentNode.parentNode.closest("tr").rowIndex;
 
-    var saveStaff = document.getElementById("save-staff");
-    saveStaff.onclick = () => {
-      var checkbox = document.getElementsByClassName("servicecheckbox");
-      var table = document.getElementById("payments-table");
-      for (let i = 0; i < checkbox.length; i++) {
-        if (checkbox[i].checked) {
-          for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-            alert(table.rows[i + 1].cells[j].innerHTML);
-            if (this.state.data.services) {
+    var name = document.getElementById("edit-staff-name");
+    var email = document.getElementById("edit-staff-email");
+    var phone = document.getElementById("edit-staff-phone");
+    var desc = document.getElementById("edit-desc");
+
+    var table = document.getElementById("staff-table");
+    var id = event.target.parentNode.parentNode.rowIndex;
+
+    name.value = table.rows[id].cells[0].innerHTML;
+    email.value = table.rows[id].cells[1].innerHTML;
+    desc.value = table.rows[id].cells[2].innerHTML;
+    phone.value = table.rows[id].cells[2].innerHTML;
+
+    await axios
+      .get("http://localhost:1337/api/events", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+        var tsArray = [];
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].attributes.therapist === name.value) {
+            for (
+              let j = 0;
+              j < res.data.data[i].attributes.service.length;
+              j++
+            ) {
+              resArray.push(res.data.data[i].attributes.service[j]);
+            }
+            for (
+              let j = 0;
+              j < res.data.data[i].attributes.timeslot.length;
+              j++
+            ) {
+              tsArray.push(res.data.data[i].attributes.timeslot[j]);
             }
           }
         }
-      }
-    };
+        this.setState({ data: resArray });
+        this.setState({ tsdata: tsArray });
+      })
+      .catch((err) => console.log(err));
+
+    // var saveStaff = document.getElementById("save-staff");
+    // saveStaff.onclick = () => {
+    //   var checkbox = document.getElementsByClassName("servicecheckbox");
+    //   var table = document.getElementById("payments-table");
+    //   for (let i = 0; i < checkbox.length; i++) {
+    //     if (checkbox[i].checked) {
+    //       for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+    //         alert(table.rows[i + 1].cells[j].innerHTML);
+    //         if (this.state.data.services) {
+    //         }
+    //       }
+    //     }
+    //   }
+    // };
+  };
+
+  updateStaff = async () => {
+    var name = document.getElementById("edit-staff-name");
+    var email = document.getElementById("edit-staff-email");
+    var phone = document.getElementById("edit-staff-phone");
+    var desc = document.getElementById("edit-desc");
+
+    var day = document.getElementsByClassName("day");
+    var start = document.getElementsByClassName("start-time");
+    var end = document.getElementsByClassName("end-time");
+
+    var array = [];
+    for (let i = 0; i < day.length; i++) {
+      array.push({
+        day: day[i].value,
+        start: start[i].value,
+        end: end[i].value,
+      });
+    }
+
+    this.setState({ data: array });
+
+    console.log(this.state.id);
+
+    await fetch(`http://localhost:1337/api/therapists/${this.state.id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          name: name.value,
+          email: email.value,
+          phone: phone.value,
+          description: desc.value,
+          timeslot: array,
+        },
+      }),
+    })
+      .then((res) => {
+        alert("Staff details updated");
+        this.closeExtraModal();
+      })
+      .catch((e) => {
+        alert(e.error.message);
+      });
   };
 
   closeExtraModal = () => {
@@ -225,7 +414,7 @@ export default class Staff extends React.Component {
     extra.style.display = "none";
   };
 
-  createStaff = () => {
+  createStaff = async () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
 
@@ -235,36 +424,61 @@ export default class Staff extends React.Component {
 
     row.className = "fadeInAnim";
 
-    // var cell1 = row.insertCell(0);
-    // var cell2 = row.insertCell(1);
-    // var cell3 = row.insertCell(2);
-    // var cell4 = row.insertCell(3);
-    // var cell5 = row.insertCell(4);
-    // var cell6 = row.insertCell(5);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
 
-    // cell1.innerHTML = fullname.value;
-    // cell2.innerHTML = "";
-    // cell3.innerHTML = "";
-    // cell4.innerHTML = "";
-    // cell5.innerHTML = ` <input
-    //   type="checkbox"
-    //   name="check"
-    //   class="staffcheckbox"
-    // />`;
-    // ReactDOM.render(
-    //   <FaEdit
-    //     class="edit"
-    //     size={20}
-    //     color="#000"
-    //     style={{ cursor: "pointer" }}
-    //     onClick={(event) => this.editRow(event)}
-    //   />,
-    //   cell6
-    // );
+    cell1.innerHTML = fullname.value;
+    cell2.innerHTML = "";
+    cell3.innerHTML = "";
+    cell4.innerHTML = "";
+    cell5.innerHTML = ` <input
+      type="checkbox"
+      name="check"
+      class="staffcheckbox"
+    />`;
+    ReactDOM.render(
+      <FaEdit
+        class="edit"
+        size={20}
+        color="#000"
+        style={{ cursor: "pointer" }}
+        onClick={(event) => {
+          this.editRow(event);
+          //this.setState({ id: val.id });
+        }}
+      />,
+      cell6
+    );
 
-    this.setState((prevState) => ({
-      staffData: [...prevState.staffData, { name: fullname.value }],
-    }));
+    // this.setState((prevState) => ({
+    //   staffData: [
+    //     ...prevState.staffData,
+    //     { attributes: { name: fullname.value } },
+    //   ],
+    // }));
+
+    await fetch(`http://localhost:1337/api/therapists/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          name: fullname.value,
+        },
+      }),
+    })
+      .then((r) => {
+        console.log(r);
+        alert("New staff created");
+        this.closeModal();
+      })
+      .catch((e) => alert(e.error.message));
   };
 
   render() {
@@ -336,6 +550,7 @@ export default class Staff extends React.Component {
             justifyContent: "center",
             paddingTop: "50px",
             overflowX: "auto",
+            overflowY: "hidden",
           }}
         >
           <table id="staff-table">
@@ -359,10 +574,10 @@ export default class Staff extends React.Component {
               ? this.state.filteredData.map((val, key) => {
                   return (
                     <tr>
-                      <td>{val.name}</td>
-                      <td>{val.email}</td>
-                      <td>{val.phone}</td>
-                      <td>{val.services}</td>
+                      <td>{val.attributes.name}</td>
+                      <td>{val.attributes.email}</td>
+                      <td>{val.attributes.phone}</td>
+                      <td>{val.attributes.services}</td>
                       <td>
                         <input
                           className="staffcheckbox"
@@ -373,7 +588,10 @@ export default class Staff extends React.Component {
                       <td>
                         <FaEdit
                           style={{ cursor: "pointer" }}
-                          onClick={(event) => this.editRow(event)}
+                          onClick={(event) => {
+                            this.editRow(event);
+                            this.setState({ id: val.id });
+                          }}
                         />
                       </td>
                     </tr>
@@ -382,21 +600,40 @@ export default class Staff extends React.Component {
               : this.state.staffData.map((val, key) => {
                   return (
                     <tr style={{ fontSize: "20px" }}>
-                      <td>{val.name}</td>
-                      <td>{val.email}</td>
-                      <td>{val.phone}</td>
-                      <td>{val.services}</td>
+                      <td>
+                        {val.attributes.name == null ? "" : val.attributes.name}
+                      </td>
+                      <td>
+                        {val.attributes.email == null
+                          ? ""
+                          : val.attributes.email}
+                      </td>
+                      <td>
+                        {val.attributes.phone == null
+                          ? ""
+                          : val.attributes.phone}
+                      </td>
+                      <td>
+                        {val.attributes.services == null
+                          ? ""
+                          : val.attributes.services[0].service}
+                      </td>
                       <td>
                         <input
                           className="staffcheckbox"
                           type="checkbox"
                           name="check"
+                          checked={this.state.selectedRows.includes(val.id)}
+                          onClick={() => this.handleRowSelect(val.id)}
                         />
                       </td>
                       <td>
                         <FaEdit
                           style={{ cursor: "pointer" }}
-                          onClick={(event) => this.editRow(event)}
+                          onClick={(event) => {
+                            this.editRow(event);
+                            this.setState({ id: val.id });
+                          }}
                         />
                       </td>
                     </tr>
@@ -479,24 +716,27 @@ export default class Staff extends React.Component {
                   <div id="edit-staff-details-bottom">
                     <p>Name</p>
                     <input
+                      id="edit-staff-name"
                       style={{ padding: "5px" }}
                       type="text"
                       placeholder="Enter name"
                     />
                     <p>Email</p>
                     <input
+                      id="edit-staff-email"
                       style={{ padding: "5px" }}
                       type="text"
                       placeholder="Enter email"
                     />
                     <p>Phone</p>
                     <input
+                      id="edit-staff-phone"
                       style={{ padding: "5px" }}
                       type="text"
                       placeholder="Enter phone"
                     />
                     <p>Description</p>
-                    <textarea rows={4} />
+                    <textarea id="edit-desc" rows={4} />
                   </div>
                   <div>
                     <div id="placeholder-staff-image">
@@ -507,16 +747,16 @@ export default class Staff extends React.Component {
               </div>
 
               <div id="services" class="tabcontent">
-                <table style={{ width: "100%" }}>
+                <table style={{ width: "100%" }} id="staff-service-table">
                   <tr style={{ borderBottom: "1px solid black" }}>
                     <th>
-                      <input
+                      {/* <input
                         id="headercheckbox"
                         type="checkbox"
                         name="check"
                         className="servicecheckbox"
                         onClick={() => this.getHeaderCB()}
-                      />
+                      /> */}
                     </th>
                     <th>All services</th>
                     <th>Price</th>
@@ -528,15 +768,25 @@ export default class Staff extends React.Component {
                           <input
                             type="checkbox"
                             name="check"
-                            className="servicecheckbox"
+                            className="servicemodalcheckbox"
+                            checked={this.state.selectedServiceRows.includes(
+                              val.id
+                            )}
+                            onClick={() => this.handleServiceRowSelect(val.id)}
                           />
                         </td>
-                        <td>{val.services}</td>
+                        <td>{val.service}</td>
                         <td>{val.price}</td>
                       </tr>
                     );
                   })}
                 </table>
+                <button
+                  className="att-btn"
+                  onClick={() => this.deleteService()}
+                >
+                  Delete
+                </button>
               </div>
 
               <div id="schedule" class="tabcontent">
@@ -548,29 +798,45 @@ export default class Staff extends React.Component {
                     flexDirection: "column",
                   }}
                 >
-                  <div id="ts-container-staff">
-                    <div id="ts-staff">
-                      <input
-                        id="staff-ts-day"
-                        className="day"
-                        type="text"
-                        placeholder="Enter day"
-                      />
-
-                      <input
-                        id="staff-ts-start"
-                        className="Start-time"
-                        type="text"
-                        placeholder="Enter start time"
-                      />
-                      <input
-                        id="staff-ts-end"
-                        className="end-time"
-                        type="text"
-                        placeholder="Enter end time"
-                      />
-                    </div>
-                  </div>
+                  {/* <div id="ts-container-staff">
+                    <div id="ts-staff"> */}
+                  <table id="ts-table">
+                    {this.state.tsdata.map((val, key) => {
+                      return (
+                        <tr>
+                          <td>
+                            <input
+                              id="staff-ts-day"
+                              className="day"
+                              type="text"
+                              placeholder="Enter day"
+                              value={val.day}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              id="staff-ts-start"
+                              className="start-time"
+                              type="text"
+                              placeholder="Enter start time"
+                              value={val.start}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              id="staff-ts-end"
+                              className="end-time"
+                              type="text"
+                              placeholder="Enter end time"
+                              value={val.end}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </table>
+                  {/* </div>
+                  </div> */}
                   <button
                     className="att-btn"
                     style={{ justifyContent: "center" }}
@@ -581,8 +847,12 @@ export default class Staff extends React.Component {
                 </div>
               </div>
 
-              <button className="att-btn" id="save-staff">
-                Create
+              <button
+                className="att-btn"
+                id="save-staff"
+                onClick={() => this.updateStaff()}
+              >
+                Save
               </button>
             </div>
           </div>

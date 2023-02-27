@@ -5,6 +5,7 @@ import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import Cookies from "js-cookie";
 
 //import $ from "jquery";
 
@@ -19,8 +20,7 @@ export default class Home extends Component {
       passw: "",
       isExpand: false,
       showMenu: false,
-      loggedIn: false,
-      adminLogin: true,
+      token: Cookies.get("jwtToken") || "",
     };
   }
 
@@ -41,6 +41,23 @@ export default class Home extends Component {
     document.addEventListener("click", (event) =>
       this.handleClickOutside(event)
     );
+    var jwt = Cookies.get("jwtToken");
+    console.log(jwt);
+  }
+
+  componentWillMount() {
+    var userType = Cookies.get("usertype");
+    if (userType) {
+      if (userType == "customer") {
+        // window.location.replace("http://localhost:3000/dashboard");
+      }
+      if (userType == "therapist") {
+        window.location.replace("http://localhost:3000/therapistdashboard");
+      }
+      if (userType == "admin") {
+        window.location.replace("http://localhost:3000/admindashboard");
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -89,20 +106,124 @@ export default class Home extends Component {
     modal.style.display = "none";
   };
 
-  login = () => {
+  login = async () => {
     const radioButtons = document.getElementsByName("login");
+
+    const url = "http://localhost:1337";
 
     for (let i = 0; i < radioButtons.length; i++) {
       if (radioButtons[i].checked) {
         const selectedValue = radioButtons[i].value;
         if (selectedValue === "customer") {
-          window.location.href = `http://localhost:3000/dashboard`;
+          const requestConfig = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              identifier: this.state.email.trim(),
+              password: this.state.passw.trim(),
+              user_type: "customer",
+            }),
+          };
+
+          try {
+            const res = await fetch(
+              `${url}/api/auth/local`,
+              requestConfig
+            ).catch((e) => alert(e));
+            const json = await res.json();
+            if (json.error) {
+              alert(json.error.message);
+            } else {
+              console.log("Result" + json);
+              this.setState({ token: json.jwt });
+              Cookies.set("jwtToken", json.jwt);
+              Cookies.set("email", this.state.email);
+              Cookies.set("usertype", "customer");
+              this.closeLoginModal();
+            }
+          } catch (err) {
+            console.log("Authentication failed  " + err);
+          }
         }
         if (selectedValue === "therapist") {
-          window.location.href = `http://localhost:3000/therapistdashboard`;
+          const requestConfig = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              identifier: this.state.email.trim(),
+              password: this.state.passw.trim(),
+              user_type: "customer",
+            }),
+          };
+
+          try {
+            const res = await fetch(
+              `${url}/api/auth/local`,
+              requestConfig
+            ).catch((e) => alert(e));
+            console.log(res);
+            const json = await res.json();
+            if (json.error) {
+              alert(json.error.message);
+            } else {
+              console.log("Result" + json);
+              this.setState({ token: json.jwt });
+              Cookies.set("jwtToken", json.jwt);
+              Cookies.set("email", this.state.email);
+              Cookies.set("usertype", "therapist");
+
+              this.closeLoginModal();
+              window.location.replace(
+                `http://localhost:3000/therapistdashboard`
+              );
+            }
+          } catch (err) {
+            console.log("Authentication failed  " + err);
+          }
         }
         if (selectedValue === "admin") {
-          window.location.href = `http://localhost:3000/admindashboard`;
+          const requestConfig = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              identifier: this.state.email.trim(),
+              password: this.state.passw.trim(),
+              user_type: "customer",
+            }),
+          };
+
+          try {
+            const res = await fetch(
+              `${url}/api/auth/local`,
+              requestConfig
+            ).catch((e) => alert(e));
+            console.log(res);
+            const json = await res.json();
+            if (json.error) {
+              alert(json.error.message);
+            } else {
+              console.log("Result" + json);
+              this.setState({ token: json.jwt });
+              Cookies.set("jwtToken", json.jwt, {
+                path: "/",
+              });
+              Cookies.set("email", this.state.email, {
+                path: "/",
+              });
+              Cookies.set("usertype", "admin", { path: "/" });
+
+              this.closeLoginModal();
+              window.location.replace(`http://localhost:3000/admindashboard`);
+            }
+          } catch (err) {
+            console.log("Authentication failed  " + err);
+          }
         }
       }
     }
@@ -119,25 +240,54 @@ export default class Home extends Component {
     // });
   };
 
-  signUp = () => {
-    alert(this.state.email);
-    alert(this.state.passw);
-    axios
-      .post("http://localhost:1337/api/auth/local/register", {
-        headers: {
-          "content-type": "text/json",
-        },
-        body: {
-          email: this.state.email,
-          username: this.state.username,
-          password: this.state.passw,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        alert("Success");
-      })
-      .catch((err) => console.log(err));
+  profile = () => {
+    window.location.href = `http://localhost:3000/dashboard`;
+  };
+
+  signUp = async () => {
+    const url = "http://localhost:1337";
+
+    const requestConfig = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: this.state.username.trim(),
+        email: this.state.email.trim(),
+        password: this.state.passw.trim(),
+        user_type: "customer",
+      }),
+    };
+
+    try {
+      const res = await fetch(
+        `${url}/api/auth/local/register`,
+        requestConfig
+      ).catch((e) => alert(e));
+      console.log(res);
+      const json = await res.json();
+      if (json.error) {
+        alert(json.error.message);
+      } else {
+        console.log("Result" + json);
+        this.setState({ token: json.jwt });
+        Cookies.set("jwtToken", json.jwt);
+        Cookies.set("email", this.state.email);
+        Cookies.set("usertype", "customer");
+
+        this.closeModal();
+      }
+    } catch (err) {
+      console.log("Authentication failed  " + err);
+    }
+  };
+
+  logout = () => {
+    this.setState({ token: "" });
+    Cookies.remove("jwtToken");
+    Cookies.remove("email");
+    Cookies.remove("usertype");
   };
 
   therapists = [
@@ -176,7 +326,7 @@ export default class Home extends Component {
   ];
 
   goToBooking = () => {
-    if (this.state.user !== "") {
+    if (this.state.token) {
       window.location.href = `https://clinicfrontend.netlify.app/booking`;
     } else {
       this.openModal();
@@ -331,28 +481,6 @@ export default class Home extends Component {
             </div>
           </div>
           <div>
-            {this.state.adminLogin && (
-              <select
-                id="quick"
-                style={{ backgroundColor: "transparent", marginRight: "20px" }}
-                name="Quick"
-              >
-                <option value="select" selected>
-                  Quick
-                </option>
-                <option
-                  value="email"
-                  onClick={() =>
-                    (window.location.href = `https://clinicfrontend.netlify.app/sendemail`)
-                  }
-                >
-                  Email and SMS
-                </option>
-                <option value="calendar">Calendar</option>
-                <option value="payment">Payment</option>
-                <option value="service">Service</option>
-              </select>
-            )}
             <FaUserCircle
               id="dropbtn"
               onClick={() => this.handleMenu()}
@@ -360,13 +488,13 @@ export default class Home extends Component {
               size={25}
               style={{ cursor: "pointer" }}
             />
-            {this.state.showMenu && this.state.loggedIn && (
+            {this.state.showMenu && this.state.token && (
               <ul ref={this.state.dropdownRef}>
-                <li onClick={() => this.profile()}>Mark P Daye</li>
+                <li onClick={() => this.profile()}>{Cookies.get("email")}</li>
                 <li onClick={() => this.logout()}>LogOut</li>
               </ul>
             )}
-            {this.state.showMenu && this.state.loggedIn === false && (
+            {this.state.showMenu && !this.state.token && (
               <ul ref={this.state.dropdownRef}>
                 <li onClick={() => this.openModal()}>Signup</li>
               </ul>
@@ -490,7 +618,7 @@ export default class Home extends Component {
               <p>Password</p>
               <input
                 id="therapist-cust"
-                type="text"
+                type="password"
                 className="padding-input"
                 placeholder="Enter password"
                 onChange={(text) => this.setState({ passw: text.target.value })}
@@ -576,13 +704,15 @@ export default class Home extends Component {
                 type="text"
                 className="padding-input"
                 placeholder="Enter email"
+                onChange={(text) => this.setState({ email: text.target.value })}
               />
               <p>Password</p>
               <input
                 id="therapist-cust"
-                type="text"
+                type="password"
                 className="padding-input"
                 placeholder="Enter password"
+                onChange={(text) => this.setState({ passw: text.target.value })}
               />
 
               <div

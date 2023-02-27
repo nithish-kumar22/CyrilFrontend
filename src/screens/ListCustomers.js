@@ -3,40 +3,23 @@ import "../CSS/ListCustomers.css";
 import { FaEdit } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default class ListCustomers extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      customerdata: [
-        {
-          fullname: "Cyril Mathew",
-          phone: "7867545442",
-          email: "cyril@yahoo.com",
-          therapist: "Mark P. Daye",
-          gender: "Male",
-          lastappointment: "24.01.22",
-          totalappointments: 3,
-          payment: "$20",
-          //checkbox: <this.checkboxReactComponent />,
-        },
-        {
-          fullname: "John",
-          phone: "9942824",
-          email: "john@yahoo.com",
-          therapist: "Robo",
-          gender: "Male",
-          lastappointment: "24.01.22",
-          totalappointments: 3,
-          payment: "$30",
-          //checkbox: <this.checkboxReactComponent />,
-        },
-      ],
+      token: Cookies.get("jwtToken") || "",
+      customerdata: [],
+      id: null,
+      selectedRows: [],
+      filteredData: [],
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const content = document.getElementById("container");
     const viewportHeight = window.innerHeight;
 
@@ -45,7 +28,32 @@ export default class ListCustomers extends React.Component {
     } else {
       content.style.height = "100vh";
     }
+
+    await axios
+      .get("http://localhost:1337/api/customers", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+        for (var i = 0; i < res.data.data.length; i++) {
+          resArray.push(res.data.data[i]);
+        }
+        this.setState({ customerdata: resArray });
+      })
+      .catch((err) => console.log(err));
   }
+
+  opennewModal = () => {
+    var modal = document.getElementById("addnewModal");
+    modal.style.display = "block";
+  };
+
+  closeaddnewModal = () => {
+    var modal = document.getElementById("addnewModal");
+    modal.style.display = "none";
+  };
 
   openModal = () => {
     var modal = document.getElementById("myModal");
@@ -55,6 +63,68 @@ export default class ListCustomers extends React.Component {
   closeModal = () => {
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
+  };
+
+  createCustomer = async () => {
+    var fullname = document.getElementById("new-name");
+    var email = document.getElementById("email-new");
+    var gender = document.getElementById("gender-new");
+    var phone = document.getElementById("phone-new");
+    var age = document.getElementById("age-new");
+
+    fetch(`http://localhost:1337/api/customers/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          name: fullname.value,
+          email: email.value,
+          phone: phone.value,
+          age: age.value,
+          gender: gender.value,
+        },
+      }),
+    })
+      .then((r) => {
+        alert("New customer created");
+        this.closeaddnewModal();
+      })
+      .catch((e) => alert(e.error.message));
+  };
+
+  updateCustomer = async () => {
+    var fullname = document.getElementById("full-name");
+    var email = document.getElementById("email-customer");
+    var gender = document.getElementById("gender-customer");
+    var phone = document.getElementById("phone");
+    var age = document.getElementById("age");
+
+    await fetch(`http://localhost:1337/api/customers/${this.state.id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          name: fullname.value,
+          email: email.value,
+          phone: phone.value,
+          age: age.value,
+          gender: gender.value,
+        },
+      }),
+    })
+      .then((res) => {
+        alert("Customer details updated");
+        this.closeModal();
+      })
+      .catch((e) => {
+        alert(e.error.message);
+      });
   };
 
   checkboxReactComponent = () => {
@@ -85,7 +155,7 @@ export default class ListCustomers extends React.Component {
     }
   };
 
-  deletecustomer = () => {
+  deletecustomer = async (event) => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("customer-table");
 
@@ -106,6 +176,47 @@ export default class ListCustomers extends React.Component {
         }
       }
     }
+
+    var ids = this.state.selectedRows;
+
+    for (let j = 0; j < ids.length; j++) {
+      await fetch(`http://localhost:1337/api/customers/${ids[j]}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          console.log("Customer deleted");
+        })
+        .catch((e) => {
+          alert(e.error.message);
+        });
+    }
+  };
+
+  handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      var searchTerm = document.getElementById("search-customer").value;
+      const filteredData = this.state.customerdata.filter((row) => {
+        return row.attributes.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      });
+      this.setState({ filteredData: filteredData });
+    }
+  };
+
+  handleRowSelect = (id) => {
+    const { selectedRows } = this.state;
+    const index = selectedRows.indexOf(id);
+    if (index !== -1) {
+      selectedRows.splice(index, 1);
+    } else {
+      selectedRows.push(id);
+    }
+    this.setState({ selectedRows });
   };
 
   editRow = (event) => {
@@ -114,16 +225,18 @@ export default class ListCustomers extends React.Component {
 
     var fullname = document.getElementById("full-name");
     var email = document.getElementById("email-customer");
-    var therapist = document.getElementById("therapist-cust");
+    var gender = document.getElementById("gender-customer");
     var phone = document.getElementById("phone");
+    var age = document.getElementById("age");
 
     var table = document.getElementById("customer-table");
     var id = event.target.parentNode.parentNode.rowIndex;
 
     fullname.value = table.rows[id].cells[0].innerHTML;
     email.value = table.rows[id].cells[2].innerHTML;
-    therapist.value = table.rows[id].cells[3].innerHTML;
+    gender.value = table.rows[id].cells[4].innerHTML;
     phone.value = table.rows[id].cells[1].innerHTML;
+    age.value = table.rows[id].cells[3].innerHTML;
   };
 
   render() {
@@ -177,8 +290,13 @@ export default class ListCustomers extends React.Component {
               id="search-customer"
               type="text"
               placeholder="Quick Search Customer"
+              onKeyDown={(event) => this.handleKeyDown(event)}
             />
-            <button id="add-customer" onClick={() => this.openModal()}>
+            <button
+              className="att-btn"
+              id="add-customer"
+              onClick={() => this.opennewModal()}
+            >
               Add new customer
             </button>
           </div>
@@ -186,6 +304,7 @@ export default class ListCustomers extends React.Component {
         <div
           style={{
             overflowX: "auto",
+            overflowY: "hidden",
             paddingTop: "50px",
             width: "95%",
             display: "flex",
@@ -199,7 +318,7 @@ export default class ListCustomers extends React.Component {
               <th>Full Name</th>
               <th>Phone</th>
               <th>Email</th>
-              <th>Therapist</th>
+              <th>Age</th>
               <th>Gender</th>
               <th>Last Appointment</th>
               <th>Total Appointment</th>
@@ -216,33 +335,71 @@ export default class ListCustomers extends React.Component {
               <th></th>
             </tr>
 
-            {this.state.customerdata.map((val, key) => {
-              return (
-                <tr style={{ textAlign: "center" }} key={key}>
-                  <td>{val.fullname}</td>
-                  <td>{val.phone}</td>
-                  <td>{val.email}</td>
-                  <td>{val.therapist}</td>
-                  <td>{val.gender}</td>
-                  <td>{val.lastappointment}</td>
-                  <td>{val.totalappointments}</td>
-                  <td>{val.payment}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      name="check"
-                      className="servicecheckbox"
-                    />
-                  </td>
-                  <td>
-                    <FaEdit
-                      style={{ cursor: "pointer" }}
-                      onClick={(event) => this.editRow(event)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
+            {this.state.filteredData.length > 0
+              ? this.state.filteredData.map((val, key) => {
+                  return (
+                    <tr key={val.id} style={{ textAlign: "center" }}>
+                      <td>{val.attributes.name}</td>
+                      <td>{val.attributes.phone}</td>
+                      <td>{val.attributes.email}</td>
+                      <td>{val.attributes.age}</td>
+                      <td>{val.attributes.gender}</td>
+                      <td>{val.attributes.lastappointment}</td>
+                      <td>{val.attributes.totalappointment}</td>
+                      <td>{val.attributes.payment}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                          checked={this.state.selectedRows.includes(val.id)}
+                          onClick={() => this.handleRowSelect(val.id)}
+                        />
+                      </td>
+                      <td>
+                        <FaEdit
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => {
+                            this.editRow(event);
+                            this.setState({ id: val.id });
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              : this.state.customerdata.map((val, key) => {
+                  return (
+                    <tr key={val.id} style={{ textAlign: "center" }}>
+                      <td>{val.attributes.name}</td>
+                      <td>{val.attributes.phone}</td>
+                      <td>{val.attributes.email}</td>
+                      <td>{val.attributes.age}</td>
+                      <td>{val.attributes.gender}</td>
+                      <td>{val.attributes.lastappointment}</td>
+                      <td>{val.attributes.totalappointment}</td>
+                      <td>{val.attributes.payment}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="check"
+                          className="servicecheckbox"
+                          checked={this.state.selectedRows.includes(val.id)}
+                          onClick={() => this.handleRowSelect(val.id)}
+                        />
+                      </td>
+                      <td>
+                        <FaEdit
+                          style={{ cursor: "pointer" }}
+                          onClick={(event) => {
+                            this.editRow(event);
+                            this.setState({ id: val.id });
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
 
             {/* <tr>
               <td>cyriljm</td>
@@ -289,10 +446,65 @@ export default class ListCustomers extends React.Component {
           <div>
             <button
               className="att-btn"
-              onClick={() => this.deletecustomer()}
+              onClick={(event) => this.deletecustomer(event)}
               style={{ width: "100px", padding: "5px" }}
             >
               Delete
+            </button>
+          </div>
+        </div>
+        <div id="addnewModal" class="modal">
+          <div class="modal-content">
+            <p onClick={() => this.closeaddnewModal()} class="close">
+              <span>&times;</span>
+            </p>
+            <div id="customer-modal-div">
+              <div>
+                <p>Full name</p>
+                <input
+                  id="new-name"
+                  type="text"
+                  placeholder="Enter full name"
+                />
+                <p>Email</p>
+                <input
+                  id="email-new"
+                  type="text"
+                  className="padding-input"
+                  placeholder="Enter email"
+                />
+                <p>Gender</p>
+                <input
+                  id="gender-new"
+                  type="text"
+                  className="padding-input"
+                  placeholder="Enter gender"
+                />
+              </div>
+              <div>
+                <p>Phone</p>
+                <input
+                  id="phone-new"
+                  className="padding-input"
+                  type="number"
+                  placeholder="Enter phone number"
+                />
+                <p>Age</p>
+                <input
+                  id="age-new"
+                  className="padding-input"
+                  type="number"
+                  placeholder="Enter age"
+                />
+              </div>
+            </div>
+
+            <button
+              className="att-btn"
+              onClick={() => this.createCustomer()}
+              id="create-staff"
+            >
+              Create
             </button>
           </div>
         </div>
@@ -316,12 +528,12 @@ export default class ListCustomers extends React.Component {
                   className="padding-input"
                   placeholder="Enter email"
                 />
-                <p>Therapist</p>
+                <p>Gender</p>
                 <input
-                  id="therapist-cust"
+                  id="gender-customer"
                   type="text"
                   className="padding-input"
-                  placeholder="Enter therapist name"
+                  placeholder="Enter gender"
                 />
               </div>
               <div>
@@ -342,8 +554,12 @@ export default class ListCustomers extends React.Component {
               </div>
             </div>
 
-            <button onClick={() => this.createStaff()} id="create-staff">
-              Create
+            <button
+              className="att-btn"
+              onClick={() => this.updateCustomer()}
+              id="create-staff"
+            >
+              Save
             </button>
           </div>
         </div>

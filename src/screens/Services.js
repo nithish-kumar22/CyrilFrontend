@@ -5,31 +5,27 @@ import "../CSS/Services.css";
 import { FaEdit } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default class Services extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: "",
-      serviceData: [
-        {
-          title: "Individual therapy",
-          category: "Small",
-          duration: "20.00min",
-          price: "$20",
-        },
-        {
-          title: "Couple therapy",
-          category: "Large",
-          duration: "30.00min",
-          price: "$40",
-        },
-      ],
+      token: Cookies.get("jwtToken") || "",
+      serviceData: [],
       filteredData: [],
+      options: [],
+      selectedProviderOption: "",
+      selectedCategoryOption: "",
+      id: null,
+      rowId: null,
+      selectedRows: [],
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const content = document.getElementById("container");
     const viewportHeight = window.innerHeight;
 
@@ -38,27 +34,138 @@ export default class Services extends React.Component {
     } else {
       content.style.height = "100vh";
     }
+
+    await axios
+      .get("http://localhost:1337/api/services", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+        for (var i = 0; i < res.data.data.length; i++) {
+          resArray.push(res.data.data[i]);
+        }
+        this.setState({ serviceData: resArray });
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = ["Select"];
+        for (var i = 0; i < res.data.data.length; i++) {
+          resArray.push(res.data.data[i].attributes.name);
+        }
+        this.setState({ options: resArray });
+      })
+      .catch((err) => console.log(err));
   }
 
-  editRow = (event) => {
-    console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
-    var extra = document.getElementById("extraModal");
-    extra.style.display = "block";
+  handleRowSelect = (id) => {
+    const { selectedRows } = this.state;
+    const index = selectedRows.indexOf(id);
+    if (index !== -1) {
+      selectedRows.splice(index, 1);
+    } else {
+      selectedRows.push(id);
+    }
+    this.setState({ selectedRows });
+  };
+
+  handleProviderChange = (event) => {
+    this.setState({
+      selectedProviderOption: event.target.value,
+    });
+  };
+
+  handleCategoryChange = (event) => {
+    this.setState({
+      selectedCategoryOption: event.target.value,
+    });
+  };
+
+  addService = async () => {
+    this.openModal();
+  };
+
+  updateService = async () => {
+    var title = document.getElementById("service-modal-title");
+    var category = document.getElementById("category-service-modal");
+    var provider = document.getElementById("service-provier");
+    var duration = document.getElementById("service-duration");
+    var price = document.getElementById("service-price");
+    var notes = document.getElementById("service-notes");
+
+    await fetch(`http://localhost:1337/api/services/${this.state.id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          title: title.value,
+          provider: this.state.selectedProviderOption,
+          category: this.state.selectedCategoryOption,
+          duration: duration.value,
+          notes: notes.value,
+          price: price.value,
+        },
+      }),
+    })
+      .then((res) => {
+        alert("Staff details updated");
+        this.closeEditModal();
+      })
+      .catch((e) => {
+        alert(e.error.message);
+      });
+  };
+
+  editRow = async (event) => {
+    var table = document.getElementById("service-table");
+
+    const row = event.target.closest("tr");
+    const id = row.rowIndex;
+    console.log("Row Index: " + id);
 
     var title = document.getElementById("service-modal-title");
     var category = document.getElementById("category-service-modal");
-    //var provider = document.getElementById("service-provier");
+    var provider = document.getElementById("service-provier");
     var duration = document.getElementById("service-duration");
     var price = document.getElementById("service-price");
+    var notes = document.getElementById("service-notes");
 
-    var table = document.getElementById("service-table");
-    var id = event.target.parentNode.parentNode.rowIndex;
+    await axios
+      .get(`http://localhost:1337/api/services/${this.state.id}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        notes.value = res.data.data.attributes.notes;
+        this.setState({
+          selectedProviderOption: res.data.data.attributes.provider,
+        });
+      })
+      .catch((err) => console.log(err));
 
     title.value = table.rows[id].cells[0].innerHTML;
-    category.value = table.rows[id].cells[1].innerHTML;
+    this.setState({
+      selectedCategoryOption: table.rows[id].cells[1].innerHTML,
+    });
+
     //provider.value = table.rows[id].cells[3].innerHTML;
     duration.value = table.rows[id].cells[2].innerHTML;
     price.value = table.rows[id].cells[3].innerHTML;
+
+    var extra = document.getElementById("extraModal");
+    extra.style.display = "block";
   };
 
   closeEditModal = () => {
@@ -66,7 +173,7 @@ export default class Services extends React.Component {
     extra.style.display = "none";
   };
 
-  createService = () => {
+  createService = async () => {
     var serviceTitle = document.getElementById("service-title-modal");
     var table = document.getElementById("service-table");
 
@@ -104,6 +211,25 @@ export default class Services extends React.Component {
     // this.setState((prevState) => ({
     //   serviceData: [...prevState.data, { title: serviceTitle.value }],
     // }));
+
+    await fetch(`http://localhost:1337/api/services/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.state.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          title: serviceTitle.value,
+        },
+      }),
+    })
+      .then((r) => {
+        console.log(r);
+        alert("New service added");
+        this.closeModal();
+      })
+      .catch((e) => alert(e.error.message));
   };
 
   filterTable = () => {
@@ -130,7 +256,7 @@ export default class Services extends React.Component {
     }
   };
 
-  delete = () => {
+  delete = async () => {
     var checkbox = document.getElementsByClassName("servicecheckbox");
     var table = document.getElementById("service-table");
 
@@ -150,6 +276,24 @@ export default class Services extends React.Component {
           //alert(table.rows[i + 1].cells[j].innerHTML);
         }
       }
+    }
+
+    var ids = this.state.selectedRows;
+
+    for (let j = 0; j < ids.length; j++) {
+      await fetch(`http://localhost:1337/api/services/${ids[j]}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          console.log("Service deleted");
+        })
+        .catch((e) => {
+          alert(e.error.message);
+        });
     }
   };
 
@@ -264,10 +408,10 @@ export default class Services extends React.Component {
               ? this.state.filteredData.map((val, key) => {
                   return (
                     <tr>
-                      <td>{val.title}</td>
-                      <td>{val.category}</td>
-                      <td>{val.duration}</td>
-                      <td>{val.price}</td>
+                      <td>{val.attributes.title}</td>
+                      <td>{val.attributes.category}</td>
+                      <td>{val.attributes.duration}</td>
+                      <td>{val.attributes.price}</td>
                       <td>
                         <input
                           type="checkbox"
@@ -282,7 +426,11 @@ export default class Services extends React.Component {
                           size={20}
                           color="#000"
                           style={{ cursor: "pointer" }}
-                          onClick={(event) => this.editRow(event)}
+                          onClick={(event) => {
+                            this.setState({ id: val.id });
+
+                            this.editRow(event);
+                          }}
                         />
                       </td>
                     </tr>
@@ -291,15 +439,17 @@ export default class Services extends React.Component {
               : this.state.serviceData.map((val, key) => {
                   return (
                     <tr>
-                      <td>{val.title}</td>
-                      <td>{val.category}</td>
-                      <td>{val.duration}</td>
-                      <td>{val.price}</td>
+                      <td>{val.attributes.title}</td>
+                      <td>{val.attributes.category}</td>
+                      <td>{val.attributes.duration}</td>
+                      <td>{val.attributes.price}</td>
                       <td>
                         <input
                           type="checkbox"
                           name="check"
                           className="servicecheckbox"
+                          checked={this.state.selectedRows.includes(val.id)}
+                          onClick={() => this.handleRowSelect(val.id)}
                         />
                         &nbsp;
                       </td>
@@ -309,7 +459,10 @@ export default class Services extends React.Component {
                           size={20}
                           color="#000"
                           style={{ cursor: "pointer" }}
-                          onClick={(event) => this.editRow(event)}
+                          onClick={(event) => {
+                            this.setState({ id: val.id });
+                            this.editRow(event);
+                          }}
                         />
                       </td>
                     </tr>
@@ -337,7 +490,7 @@ export default class Services extends React.Component {
             <button
               className="att-btn"
               id="add-services"
-              onClick={() => this.openModal()}
+              onClick={() => this.addService()}
             >
               Add services
             </button>
@@ -384,7 +537,12 @@ export default class Services extends React.Component {
                   placeholder="Enter title"
                 />
                 <p>Category</p>
-                <select name="category-type" id="appointment-category-type">
+                <select
+                  name="category-type"
+                  id="appointment-category-type"
+                  value={this.state.selectedCategoryOption}
+                  onChange={(event) => this.handleCategoryChange(event)}
+                >
                   <option value="null" selected>
                     Select
                   </option>
@@ -396,12 +554,19 @@ export default class Services extends React.Component {
               </div>
               <div>
                 <p>Provider</p>
-                <select name="provider-type" id="appointment-provider-type">
-                  <option value="null" selected>
-                    Select
-                  </option>
-                  <option value="pA">Mark P Daye</option>
+                <select
+                  name="provider-type"
+                  id="appointment-provider-type"
+                  value={this.state.selectedProviderOption}
+                  onChange={(event) => this.handleProviderChange(event)}
+                >
+                  {this.state.options.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
+
                 <p>Duration</p>
                 <input
                   id="service-duration"
@@ -420,7 +585,7 @@ export default class Services extends React.Component {
             </div>
             <button
               className="att-btn"
-              onClick={() => this.saveMail()}
+              onClick={() => this.updateService()}
               id="edit-service-btn"
             >
               Save
