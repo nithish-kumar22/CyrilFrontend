@@ -7,6 +7,8 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import axios from "axios";
 import Cookies from "js-cookie";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Staff extends React.Component {
   constructor(props) {
@@ -22,6 +24,8 @@ export default class Staff extends React.Component {
       selectedRows: [],
       selectedServiceRows: [],
       tsdata: [],
+      dates: [],
+      selectedDate: new Date(),
     };
   }
 
@@ -32,7 +36,7 @@ export default class Staff extends React.Component {
     tableRows.forEach((row) => {
       row.className = "fadeInAnim";
       const computedStyles = window.getComputedStyle(row);
-      console.log(computedStyles.backgroundColor);
+
       const styleToApply = {
         backgroundColor: computedStyles.backgroundColor,
 
@@ -62,6 +66,7 @@ export default class Staff extends React.Component {
       })
       .then((res) => {
         var resArray = [];
+
         for (var i = 0; i < res.data.data.length; i++) {
           resArray.push(res.data.data[i]);
         }
@@ -80,13 +85,23 @@ export default class Staff extends React.Component {
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
 
-    cell1.innerHTML = `<input
-    id="staff-ts-day"
-    class="day"
-    type="text"
-    placeholder="Enter day"
-    
-  />`;
+    ReactDOM.render(
+      <DatePicker
+        id="staff-date-picker"
+        className="staff-date"
+        selected={this.state.selectedDate}
+        onChange={(date) => {
+          this.setState({ selectedDate: date });
+          // this.setState((prevState) => ({
+          //   dates: [...prevState.dates, { date: date }],
+          // }));
+        }}
+        minDate={new Date()}
+        dateFormat="dd/MM/yyyy"
+      />,
+      cell1
+    );
+
     cell2.innerHTML = ` <input
     id="staff-ts-start"
     class="start-time"
@@ -295,6 +310,12 @@ export default class Staff extends React.Component {
     modal.style.display = "none";
   };
 
+  handleDateChange = (index, date) => {
+    const newDates = [...this.state.dates];
+    newDates[index].date = new Date(date);
+    this.setState({ dates: newDates });
+  };
+
   editRow = async (event) => {
     var extra = document.getElementById("edit-staff-modal");
     extra.style.display = "block";
@@ -306,12 +327,36 @@ export default class Staff extends React.Component {
     var desc = document.getElementById("edit-desc");
 
     var table = document.getElementById("staff-table");
-    var id = event.target.parentNode.parentNode.rowIndex;
-
+    //var id = event.target.parentNode.parentNode.rowIndex;
+    var id = event.target.parentNode.parentNode.closest("tr").rowIndex;
     name.value = table.rows[id].cells[0].innerHTML;
     email.value = table.rows[id].cells[1].innerHTML;
     desc.value = table.rows[id].cells[2].innerHTML;
     phone.value = table.rows[id].cells[2].innerHTML;
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].attributes.name === name.value) {
+            for (
+              var j = 0;
+              j < res.data.data[i].attributes.timeslot.length;
+              j++
+            )
+              resArray.push(res.data.data[i].attributes.timeslot[j]);
+          }
+        }
+
+        this.setState({ dates: resArray });
+      })
+      .catch((err) => console.log(err));
 
     await axios
       .get("http://localhost:1337/api/events", {
@@ -341,7 +386,7 @@ export default class Staff extends React.Component {
           }
         }
         this.setState({ data: resArray });
-        this.setState({ tsdata: tsArray });
+        //this.setState({ tsdata: tsArray });
       })
       .catch((err) => console.log(err));
 
@@ -367,14 +412,16 @@ export default class Staff extends React.Component {
     var phone = document.getElementById("edit-staff-phone");
     var desc = document.getElementById("edit-desc");
 
-    var day = document.getElementsByClassName("day");
     var start = document.getElementsByClassName("start-time");
     var end = document.getElementsByClassName("end-time");
-
+    var dates = document.getElementsByClassName("staff-date");
     var array = [];
-    for (let i = 0; i < day.length; i++) {
+
+    for (let i = 0; i < start.length; i++) {
+      const [day, month, year] = dates[i].value.split("/");
+      const dateObject = new Date(year, month - 1, day);
       array.push({
-        day: day[i].value,
+        date: String(dateObject),
         start: start[i].value,
         end: end[i].value,
       });
@@ -382,7 +429,7 @@ export default class Staff extends React.Component {
 
     this.setState({ data: array });
 
-    console.log(this.state.id);
+    console.log(array);
 
     await fetch(`http://localhost:1337/api/therapists/${this.state.id}`, {
       method: "PUT",
@@ -769,9 +816,7 @@ export default class Staff extends React.Component {
                             type="checkbox"
                             name="check"
                             className="servicemodalcheckbox"
-                            checked={this.state.selectedServiceRows.includes(
-                              val.id
-                            )}
+                            checked={this.state.selectedServiceRows[key]}
                             onClick={() => this.handleServiceRowSelect(val.id)}
                           />
                         </td>
@@ -801,35 +846,77 @@ export default class Staff extends React.Component {
                   {/* <div id="ts-container-staff">
                     <div id="ts-staff"> */}
                   <table id="ts-table">
-                    {this.state.tsdata.map((val, key) => {
+                    {this.state.dates.map((val, key) => {
+                      //console.log(val.date);
+                      const timeString = val.start;
+
+                      const time = new Date(`${val.date} ${timeString}`);
+
+                      console.log(time);
                       return (
                         <tr>
                           <td>
-                            <input
+                            <DatePicker
+                              id="staff-date-picker"
+                              className="staff-date"
+                              selected={new Date(val.date)}
+                              onChange={(date) => {
+                                this.handleDateChange(key, date);
+                                // this.setState((prevState) => ({
+                                //   selectedDates: [
+                                //     ...prevState.selectedDates,
+                                //     date,
+                                //   ],
+                                // }));
+                              }}
+                              minDate={new Date()}
+                              dateFormat="h:mm aa"
+                            />
+                            {/* <input
                               id="staff-ts-day"
                               className="day"
                               type="text"
                               placeholder="Enter day"
                               value={val.day}
-                            />
+                            /> */}
                           </td>
                           <td>
-                            <input
+                            {/* <DatePicker
+                              id="staff-start-picker"
+                              className="staff-start"
+                              selected={timeObject}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeIntervals={15}
+                              dateFormat="h:mm aa"
+                              timeCaption="Time"
+                            /> */}
+                            {/* <input
                               id="staff-ts-start"
                               className="start-time"
                               type="text"
                               placeholder="Enter start time"
                               value={val.start}
-                            />
+                            /> */}
                           </td>
                           <td>
-                            <input
+                            {/* <DatePicker
+                              id="staff-end-picker"
+                              className="staff-end"
+                              selected={val.end}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeIntervals={15}
+                              dateFormat="h:mm aa"
+                              timeCaption="Time"
+                            /> */}
+                            {/* <input
                               id="staff-ts-end"
                               className="end-time"
                               type="text"
                               placeholder="Enter end time"
                               value={val.end}
-                            />
+                            /> */}
                           </td>
                         </tr>
                       );

@@ -149,16 +149,16 @@ export default class CreateEvent extends React.Component {
     var days = document.getElementsByClassName("day");
     var start = document.getElementsByClassName("start-time");
     var end = document.getElementsByClassName("end-time");
-    var name = document.getElementById("event-name").value;
+    var name = document.getElementById("event-name");
     var service = this.state.selectedServiceOption;
-    var living = document.getElementById("living-type").value;
-    var duration = document.getElementById("duration-type").value;
-    var period = document.getElementById("period").value;
+    var living = document.getElementById("living-type");
+    var duration = document.getElementById("duration-type");
+    var period = document.getElementById("period");
     var therapist = this.state.selectedTherapistOption;
     var mode = document.getElementById("event-mode-type");
     var booking = document.getElementById("event-booking-type");
     var fee = document.getElementById("event-fee-type");
-    console.log(start[0]);
+
     var day = [];
     var starttime = [];
     var endtime = [];
@@ -181,13 +181,13 @@ export default class CreateEvent extends React.Component {
       },
       body: JSON.stringify({
         data: {
-          name: name,
+          name: name.value,
           therapist: therapist,
-          mode: mode,
-          bookingtype: booking,
-          period: period,
-          duration: duration,
-          fee: fee,
+          mode: mode.value,
+          bookingtype: booking.value,
+          period: period.value,
+          duration: duration.value,
+          fee: fee.value,
           service: [{ service: service }],
           timeslot: ts,
         },
@@ -195,7 +195,7 @@ export default class CreateEvent extends React.Component {
     })
       .then((r) => {
         console.log(r);
-        alert("New service added");
+        alert("New event created");
         this.closeModal();
       })
       .catch((e) => alert(e.error.message));
@@ -231,7 +231,7 @@ export default class CreateEvent extends React.Component {
   />`;
 
     cell2.innerHTML = ` <input
-  class="Start-time"
+  class="start-time"
   type="text"
   placeholder="Enter start time"
   style=" padding: 5px; "/>`;
@@ -515,7 +515,7 @@ style=" width: 20px; height: 20px; "
                 </td>
                 <td>
                   <input
-                    className="Start-time"
+                    className="start-time"
                     type="text"
                     placeholder="Enter start time"
                     style={{ padding: "5px" }}

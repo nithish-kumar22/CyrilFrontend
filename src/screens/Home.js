@@ -138,9 +138,15 @@ export default class Home extends Component {
             } else {
               console.log("Result" + json);
               this.setState({ token: json.jwt });
-              Cookies.set("jwtToken", json.jwt);
-              Cookies.set("email", this.state.email);
-              Cookies.set("usertype", "customer");
+              Cookies.set("jwtToken", json.jwt, {
+                path: "/",
+              });
+              Cookies.set("email", this.state.email, {
+                path: "/",
+              });
+              Cookies.set("usertype", "customer", {
+                path: "/",
+              });
               this.closeLoginModal();
             }
           } catch (err) {
@@ -276,6 +282,26 @@ export default class Home extends Component {
         Cookies.set("email", this.state.email);
         Cookies.set("usertype", "customer");
 
+        await fetch(`http://localhost:1337/api/customers/`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              name: this.state.username,
+              email: this.state.email,
+            },
+          }),
+        })
+          .then((r) => {
+            console.log(r);
+            console.log("New customer added");
+            this.closeModal();
+          })
+          .catch((e) => alert(e.error.message));
+
         this.closeModal();
       }
     } catch (err) {
@@ -325,9 +351,10 @@ export default class Home extends Component {
     },
   ];
 
-  goToBooking = () => {
+  goToBooking = (event) => {
     if (this.state.token) {
-      window.location.href = `https://clinicfrontend.netlify.app/booking`;
+      console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
+      // window.location.href = `http://localhost:3000/booking`;
     } else {
       this.openModal();
     }
@@ -337,7 +364,7 @@ export default class Home extends Component {
   };
 
   signup = () => {
-    window.location.href = `https://clinicfrontend.netlify.app/booking`;
+    window.location.href = `http://localhost:3000//booking`;
   };
 
   handleExpand = (therapist) => {
@@ -355,8 +382,8 @@ export default class Home extends Component {
       newExpandedRows.push(therapist.id);
     }
 
-    console.log("Expanded rows");
-    console.log(newExpandedRows);
+    // console.log("Expanded rows");
+    // console.log(newExpandedRows);
 
     this.setState({ expandedRows: [...newExpandedRows] });
   };
@@ -426,7 +453,10 @@ export default class Home extends Component {
             </li>
           </td>
           <td>
-            <button id="book-button" onClick={() => this.goToBooking()}>
+            <button
+              id="book-button"
+              onClick={(event) => this.goToBooking(event)}
+            >
               Book Appointment now
             </button>
           </td>
@@ -463,112 +493,114 @@ export default class Home extends Component {
   };
 
   render() {
-    return (
-      <div id="container">
-        <header id="top-bar">
-          <div id="top-left">
-            <p id="cyril">Cyril John Mathew | </p>
-            <p id="hpy">Happiness sustains!</p>
-          </div>
-          <div id="top-right">
-            <div>
-              <FaPhoneAlt color="#000" size={17} />
-              <p>8714772868</p>
+    var userType = Cookies.get("usertype");
+    if (userType === "customer") {
+      return (
+        <div id="container">
+          <header id="top-bar">
+            <div id="top-left">
+              <p id="cyril">Cyril John Mathew | </p>
+              <p id="hpy">Happiness sustains!</p>
+            </div>
+            <div id="top-right">
+              <div>
+                <FaPhoneAlt color="#000" size={17} />
+                <p>8714772868</p>
+              </div>
+              <div>
+                <MdEmail color="#000" size={17} />
+                <p>cyriljon@yahoo.com</p>
+              </div>
             </div>
             <div>
-              <MdEmail color="#000" size={17} />
-              <p>cyriljon@yahoo.com</p>
+              <FaUserCircle
+                id="dropbtn"
+                onClick={() => this.handleMenu()}
+                color="#000"
+                size={25}
+                style={{ cursor: "pointer" }}
+              />
+              {this.state.showMenu && this.state.token && (
+                <ul ref={this.state.dropdownRef}>
+                  <li onClick={() => this.profile()}>{Cookies.get("email")}</li>
+                  <li onClick={() => this.logout()}>LogOut</li>
+                </ul>
+              )}
+              {this.state.showMenu && !this.state.token && (
+                <ul ref={this.state.dropdownRef}>
+                  <li onClick={() => this.openModal()}>Signup</li>
+                </ul>
+              )}
             </div>
-          </div>
-          <div>
-            <FaUserCircle
-              id="dropbtn"
-              onClick={() => this.handleMenu()}
-              color="#000"
-              size={25}
-              style={{ cursor: "pointer" }}
-            />
-            {this.state.showMenu && this.state.token && (
-              <ul ref={this.state.dropdownRef}>
-                <li onClick={() => this.profile()}>{Cookies.get("email")}</li>
-                <li onClick={() => this.logout()}>LogOut</li>
-              </ul>
-            )}
-            {this.state.showMenu && !this.state.token && (
-              <ul ref={this.state.dropdownRef}>
-                <li onClick={() => this.openModal()}>Signup</li>
-              </ul>
-            )}
-          </div>
-        </header>
+          </header>
 
-        <div id="page-title-div" style={{ height: "70px" }}>
-          <div id="left-page-title">
-            <p id="appointment-booking">Appointment Booking</p>
-          </div>
-          <div id="right-page-title">
-            <p id="cjmab">Cyril John Mathew &gt; Appointment Booking</p>
-          </div>
-        </div>
-        <div id="empty-space"></div>
-        <div id="book-appointment" style={{ height: "70px" }}>
-          <p id="book-app-text">Book an Appointment</p>
-        </div>
-        <div id="empty-space"></div>
-        <div id="therapist-list">
-          <p id="therapist-list-text">Therapists list</p>
-        </div>
-        <div id="empty-space"></div>
-        <div id="filter-div">
-          <div id="left-filter">
-            <div id="filter-text">
-              <p>Filter list by: </p>
+          <div id="page-title-div" style={{ height: "70px" }}>
+            <div id="left-page-title">
+              <p id="appointment-booking">Appointment Booking</p>
             </div>
-            <div id="left-filter-content">
-              <p>ONLINE</p>
-              <p>OFFLINE</p>
-              <p>MALE</p>
-              <p>FEMALE</p>
+            <div id="right-page-title">
+              <p id="cjmab">Cyril John Mathew &gt; Appointment Booking</p>
             </div>
           </div>
-          <div id="right-filter">
-            <input
-              id="search"
-              placeholder="Search Available Therapist"
-              type="text"
-            />
-            <div className="att-btn" id="search-btn">
-              Search
+          <div id="empty-space"></div>
+          <div id="book-appointment" style={{ height: "70px" }}>
+            <p id="book-app-text">Book an Appointment</p>
+          </div>
+          <div id="empty-space"></div>
+          <div id="therapist-list">
+            <p id="therapist-list-text">Therapists list</p>
+          </div>
+          <div id="empty-space"></div>
+          <div id="filter-div">
+            <div id="left-filter">
+              <div id="filter-text">
+                <p>Filter list by: </p>
+              </div>
+              <div id="left-filter-content">
+                <p>ONLINE</p>
+                <p>OFFLINE</p>
+                <p>MALE</p>
+                <p>FEMALE</p>
+              </div>
+            </div>
+            <div id="right-filter">
+              <input
+                id="search"
+                placeholder="Search Available Therapist"
+                type="text"
+              />
+              <div className="att-btn" id="search-btn">
+                Search
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="table-div">{this.gettherapistTable(this.therapists)}</div>
+          <div id="table-div">{this.gettherapistTable(this.therapists)}</div>
 
-        <div id="myModal" class="modal">
-          <div class="home-modal-content">
-            <p onClick={() => this.closeModal()} class="close">
-              <span>&times;</span>
-            </p>
-            <p
-              style={{
-                textAlign: "center",
-                fontSize: "30px",
-                color: "#7F9BC9",
-                fontWeight: "600",
-              }}
-            >
-              Signup
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              {/* <p>Are you an</p> */}
-              {/* <div style={{ display: "flex", flexDirection: "row" }}>
+          <div id="myModal" class="modal">
+            <div class="home-modal-content">
+              <p onClick={() => this.closeModal()} class="close">
+                <span>&times;</span>
+              </p>
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "30px",
+                  color: "#7F9BC9",
+                  fontWeight: "600",
+                }}
+              >
+                Signup
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                {/* <p>Are you an</p> */}
+                {/* <div style={{ display: "flex", flexDirection: "row" }}>
                 <div>
                   <input
                     id="customer-signup"
@@ -597,141 +629,149 @@ export default class Home extends Component {
                   <label for="admin-radio">Admin</label>
                 </div> 
               </div> */}
-              <p>Username</p>
-              <input
-                id="email-customer"
-                type="text"
-                className="padding-input"
-                placeholder="Enter username"
-                onChange={(text) =>
-                  this.setState({ username: text.target.value })
-                }
-              />
-              <p>Email</p>
-              <input
-                id="email-customer"
-                type="text"
-                className="padding-input"
-                placeholder="Enter email"
-                onChange={(text) => this.setState({ email: text.target.value })}
-              />
-              <p>Password</p>
-              <input
-                id="therapist-cust"
-                type="password"
-                className="padding-input"
-                placeholder="Enter password"
-                onChange={(text) => this.setState({ passw: text.target.value })}
-              />
-              <p
-                style={{ cursor: "pointer", opacity: "0.7" }}
-                onClick={() => this.loginModal()}
-              >
-                Already have an account?
+                <p>Username</p>
+                <input
+                  id="email-customer"
+                  type="text"
+                  className="padding-input"
+                  placeholder="Enter username"
+                  onChange={(text) =>
+                    this.setState({ username: text.target.value })
+                  }
+                />
+                <p>Email</p>
+                <input
+                  id="email-customer"
+                  type="text"
+                  className="padding-input"
+                  placeholder="Enter email"
+                  onChange={(text) =>
+                    this.setState({ email: text.target.value })
+                  }
+                />
+                <p>Password</p>
+                <input
+                  id="therapist-cust"
+                  type="password"
+                  className="padding-input"
+                  placeholder="Enter password"
+                  onChange={(text) =>
+                    this.setState({ passw: text.target.value })
+                  }
+                />
+                <p
+                  style={{ cursor: "pointer", opacity: "0.7" }}
+                  onClick={() => this.loginModal()}
+                >
+                  Already have an account?
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                >
+                  <button onClick={() => this.signUp()} id="signup-btn">
+                    Signup
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="loginModal" class="modal">
+            <div class="home-modal-content">
+              <p onClick={() => this.closeLoginModal()} class="close">
+                <span>&times;</span>
               </p>
-              <div
+              <p
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
+                  textAlign: "center",
+                  fontSize: "30px",
+                  color: "#7F9BC9",
+                  fontWeight: "600",
                 }}
               >
-                <button onClick={() => this.signUp()} id="signup-btn">
-                  Signup
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="loginModal" class="modal">
-          <div class="home-modal-content">
-            <p onClick={() => this.closeLoginModal()} class="close">
-              <span>&times;</span>
-            </p>
-            <p
-              style={{
-                textAlign: "center",
-                fontSize: "30px",
-                color: "#7F9BC9",
-                fontWeight: "600",
-              }}
-            >
-              Login
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              <p>Are you an</p>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <div>
-                  <input
-                    id="customer-login"
-                    type="radio"
-                    name="login"
-                    value="customer"
-                  />
-                  <label for="customer-radio">Customer</label>
-                </div>
-                <div style={{ marginLeft: "20px" }}>
-                  <input
-                    id="therapist-login"
-                    type="radio"
-                    name="login"
-                    value="therapist"
-                  />
-                  <label for="therapist-radio">therapist</label>
-                </div>
-                <div style={{ marginLeft: "20px" }}>
-                  <input
-                    id="admin-login"
-                    type="radio"
-                    name="login"
-                    value="admin"
-                  />
-                  <label for="admin-radio">Admin</label>
-                </div>
-              </div>
-              <p>Email</p>
-              <input
-                id="email-customer"
-                type="text"
-                className="padding-input"
-                placeholder="Enter email"
-                onChange={(text) => this.setState({ email: text.target.value })}
-              />
-              <p>Password</p>
-              <input
-                id="therapist-cust"
-                type="password"
-                className="padding-input"
-                placeholder="Enter password"
-                onChange={(text) => this.setState({ passw: text.target.value })}
-              />
+                Login
+              </p>
 
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
                   justifyContent: "center",
-                  width: "100%",
+                  flexDirection: "column",
                 }}
               >
-                <button onClick={() => this.login()} id="login-btn">
-                  Login
-                </button>
+                <p>Are you an</p>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div>
+                    <input
+                      id="customer-login"
+                      type="radio"
+                      name="login"
+                      value="customer"
+                    />
+                    <label for="customer-radio">Customer</label>
+                  </div>
+                  <div style={{ marginLeft: "20px" }}>
+                    <input
+                      id="therapist-login"
+                      type="radio"
+                      name="login"
+                      value="therapist"
+                    />
+                    <label for="therapist-radio">therapist</label>
+                  </div>
+                  <div style={{ marginLeft: "20px" }}>
+                    <input
+                      id="admin-login"
+                      type="radio"
+                      name="login"
+                      value="admin"
+                    />
+                    <label for="admin-radio">Admin</label>
+                  </div>
+                </div>
+                <p>Email</p>
+                <input
+                  id="email-customer"
+                  type="text"
+                  className="padding-input"
+                  placeholder="Enter email"
+                  onChange={(text) =>
+                    this.setState({ email: text.target.value })
+                  }
+                />
+                <p>Password</p>
+                <input
+                  id="therapist-cust"
+                  type="password"
+                  className="padding-input"
+                  placeholder="Enter password"
+                  onChange={(text) =>
+                    this.setState({ passw: text.target.value })
+                  }
+                />
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                >
+                  <button onClick={() => this.login()} id="login-btn">
+                    Login
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* <div id='foot'>
+          {/* <div id='foot'>
         <div id='overcome'>
           <p id='overcome-text'>OVERCOME</p>
           <p id='overcome-desc'>Overcome is an earnest attempt to help people conquer their problems and replenish in life.</p>
@@ -765,7 +805,10 @@ export default class Home extends Component {
           <p>cyriljon@yahoo.com</p>
         </div>
       </div> */}
-      </div>
-    );
+        </div>
+      );
+    } else {
+      return <h1>You have not access to this page</h1>;
+    }
   }
 }
