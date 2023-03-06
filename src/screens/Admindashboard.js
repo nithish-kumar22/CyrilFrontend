@@ -3,21 +3,9 @@ import "../CSS/AdminDashboard.css";
 import Chart from "react-google-charts";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
+import axios from "axios";
 import Cookies from "js-cookie";
 
-const AppointmentData = [
-  ["Month", "Therapist 1", "Therapist 2"],
-  ["Jan", 9, 0],
-  ["Feb", 10, 5],
-  ["Mar", 23, 15],
-  ["May", 17, 9],
-  ["Jun", 17, 9],
-  ["Jul", 17, 9],
-  ["Aug", 0, 9],
-  ["Sep", 0, 9],
-  ["Nov", 0, 9],
-  ["Dec", 0, 9],
-];
 const AppointmentChartOptions = {
   title: "Appointments",
   hAxis: {
@@ -63,42 +51,21 @@ export default class Admindashboard extends React.Component {
 
     this.state = {
       showMenu: false,
-      paymentData: [
-        {
-          date: "15.02.2023",
-          amount: "20",
-          paytype: "paytm",
-          therapist: "Therapist 1",
-        },
-        {
-          date: "10.02.2023",
-          amount: "15",
-          paytype: "Gpay",
-          therapist: "Therapist 1",
-        },
-        {
-          date: "09.02.2023",
-          amount: "30",
-          paytype: "PhonePe",
-          therapist: "Therapist 1",
-        },
-        {
-          date: "06.02.2023",
-          amount: "10",
-          paytype: "paytm",
-          therapist: "Therapist 1",
-        },
-        {
-          date: "02.02.2023",
-          amount: "20",
-          paytype: "PhonePe",
-          therapist: "Therapist 1",
-        },
+      token: Cookies.get("jwtToken") || "",
+      nooftherapists: 0,
+      noofappointments: 0,
+      appointments: [],
+      upMonth: null,
+      paymentData: [],
+      Appointment: [
+        { Month: "Jan", Akash: 2, Kumar: 1 },
+        { Month: "Feb", Akash: 3, Kumar: 5 },
       ],
+      AppointmentData: [],
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.addEventListener("click", (event) =>
       this.handleClickOutside(event)
     );
@@ -106,6 +73,100 @@ export default class Admindashboard extends React.Component {
     // Cookies.remove("jwtToken");
     // Cookies.remove("email");
     // Cookies.remove("usertype");
+
+    var therapistname = [];
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        this.setState({ nooftherapists: res.data.data.length });
+        for (var i = 0; i < res.data.data.length; i++) {
+          therapistname.push(res.data.data[i].attributes.name);
+        }
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get("http://localhost:1337/api/payments", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+
+        if (res.data.data.length > 5) {
+          for (var i = 0; i < 5; i++) {
+            resArray.push(res.data.data[i].attributes);
+          }
+        } else {
+          for (var i = 0; i < res.data.data.length; i++) {
+            resArray.push(res.data.data[i].attributes);
+          }
+        }
+
+        this.setState({ paymentData: resArray });
+      })
+      .catch((err) => console.log(err));
+
+    const chartData = [
+      ["Month", "Akash", "Kumar"],
+      ...this.state.Appointment.map(({ Month, Akash, Kumar }) => [
+        Month,
+        Akash,
+        Kumar,
+      ]),
+    ];
+
+    this.setState({ AppointmentData: chartData });
+
+    await axios
+      .get("http://localhost:1337/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        this.setState({ noofappointments: res.data.data.length });
+        var resArray = [];
+
+        this.setState({
+          upMonth: new Date(
+            res.data.data[0].attributes.date
+          ).toLocaleDateString("default", { month: "long" }),
+        });
+        for (var i = 0; i < res.data.data.length; i++) {
+          var date = new Date(res.data.data[i].attributes.date)
+            .toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "numeric",
+              year: "numeric",
+            })
+            .replace(/(\d+)\/(\d+)\/(\d+)/, "$2/$1/$3");
+          var upcome = `${date} ${res.data.data[i].attributes.timeslot}`;
+          resArray.push(upcome);
+        }
+        this.setState({ appointments: resArray });
+
+        var count = 0;
+        var therapistApp = [];
+        var monthApp = [res.data.data.length];
+
+        for (var j = 0; j < res.data.data.length; j++) {
+          // for (var k = 0; k < res.data.data.length; k++) {
+          console.log(new Date(res.data.data[j].attributes.date).getMonth());
+          monthApp[new Date(res.data.data[j].attributes.date).getMonth() + 1] =
+            count += 1;
+          // }
+        }
+        console.log(monthApp);
+      })
+
+      .catch((err) => console.log(err));
   }
 
   componentWillUnmount() {
@@ -192,8 +253,12 @@ export default class Admindashboard extends React.Component {
             id="stats-div-left"
             style={{ animation: "search-btn 2s ease-in-out" }}
           >
-            <p style={{ fontWeight: "bold" }}>Total no of therapists: 5</p>
-            <p style={{ fontWeight: "bold" }}>Total no of appointments: 20</p>
+            <p style={{ fontWeight: "bold" }}>
+              Total no of therapists: {this.state.nooftherapists}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Total no of appointments: {this.state.noofappointments}
+            </p>
             <p style={{ fontWeight: "bold" }}>Total amounts earned: $150</p>
           </div>
           <div style={{ animation: "search 2s ease-in-out" }}>
@@ -221,7 +286,9 @@ export default class Admindashboard extends React.Component {
                   alignItems: "center",
                 }}
               >
-                <p style={{ position: "relative", top: "8px" }}>February</p>
+                <p style={{ position: "relative", top: "8px" }}>
+                  {this.state.upMonth}
+                </p>
               </div>
               <div
                 style={{
@@ -232,8 +299,8 @@ export default class Admindashboard extends React.Component {
                   flexDirection: "column",
                 }}
               >
-                <p>Therapist 1: 08 (9.00AM)</p>
-                <p>Therapist 2: 22 (10.30AM)</p>
+                <p>{this.state.appointments[0]}</p>
+                <p>{this.state.appointments[1]}</p>
               </div>
             </div>
           </div>
@@ -252,7 +319,7 @@ export default class Admindashboard extends React.Component {
                           color="#000"
                           style={{ marginTop: "5px" }}
                         />
-                        <p style={{ marginLeft: "10px" }}>{val.date}</p>
+                        <p style={{ marginLeft: "10px" }}>{val.payment_date}</p>
                       </div>
                     </td>
                     <td>
@@ -267,12 +334,12 @@ export default class Admindashboard extends React.Component {
                     </td>
                     <td>
                       <div>
-                        <p>{val.paytype}</p>
+                        <p>{val.type}</p>
                       </div>
                     </td>
                     <td>
                       <div>
-                        <p>{val.therapist}</p>
+                        <p>{val.provider}</p>
                       </div>
                     </td>
                   </tr>
@@ -287,7 +354,7 @@ export default class Admindashboard extends React.Component {
             height={"410px"}
             chartType="LineChart"
             loader={<div>Loading Chart</div>}
-            data={AppointmentData}
+            data={this.state.AppointmentData}
             options={AppointmentChartOptions}
             rootProps={{ "data-testid": "2" }}
           />

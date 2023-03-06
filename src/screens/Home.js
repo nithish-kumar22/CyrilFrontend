@@ -21,6 +21,7 @@ export default class Home extends Component {
       isExpand: false,
       showMenu: false,
       token: Cookies.get("jwtToken") || "",
+      tname: "",
     };
   }
 
@@ -319,7 +320,7 @@ export default class Home extends Component {
   therapists = [
     {
       id: 20,
-      name: "Mark P. Daye",
+      name: "Akash",
       services: "Individual therapy",
       mode: "Online",
       gender: "Male",
@@ -336,7 +337,7 @@ export default class Home extends Component {
     },
     {
       id: 30,
-      name: "Lenora C. Hickson",
+      name: "Kumar",
       services: "Couple therapy",
       mode: "Offline",
       gender: "female",
@@ -353,8 +354,17 @@ export default class Home extends Component {
 
   goToBooking = (event) => {
     if (this.state.token) {
-      console.log(event.target.parentNode.parentNode.closest("tr").rowIndex);
-      // window.location.href = `http://localhost:3000/booking`;
+      const params = new URLSearchParams(window.location.search);
+      params.set("therapist_name", this.state.tname);
+      const newUrl =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname +
+        "booking?" +
+        params.toString();
+      //window.history.pushState({ path: newUrl }, "", newUrl);
+      window.location.href = newUrl;
     } else {
       this.openModal();
     }
@@ -416,7 +426,7 @@ export default class Home extends Component {
     const details = therapist.details || [];
 
     const firstRow = (
-      <tr>
+      <tr onClick={() => this.setState({ tname: therapist.name })}>
         <td>{therapist.name}</td>
         <td>{therapist.services}</td>
         <td>{therapist.mode}</td>
@@ -494,7 +504,7 @@ export default class Home extends Component {
 
   render() {
     var userType = Cookies.get("usertype");
-    if (userType === "customer") {
+    if (userType !== "customer") {
       return (
         <div id="container">
           <header id="top-bar">

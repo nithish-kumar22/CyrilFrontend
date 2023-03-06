@@ -4,23 +4,27 @@ import "../CSS/Therapistdashboard.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
+
+import axios from "axios";
 import Cookies from "js-cookie";
 
-const LineData = [
-  ["Month", "Therapist"],
-  ["Jan", 9],
-  ["Feb", 10],
-  ["Mar", 23],
-  ["May", 17],
-  ["Jun", 17],
-  ["Jul", 17],
+const AppointmentData = [
+  ["Month", Cookies.get("email")],
+  ["Jan", 0],
+  ["Feb", 0],
+  ["Mar", 0],
+  ["Apr", 0],
+  ["May", 0],
+  ["Jun", 0],
+  ["Jul", 0],
   ["Aug", 0],
   ["Sep", 0],
+  ["Oct", 0],
   ["Nov", 0],
   ["Dec", 0],
 ];
 
-const LineChartOptions = {
+const AppointmentChartOptions = {
   title: "Appointments",
   hAxis: {
     title: "Month",
@@ -35,16 +39,18 @@ const LineChartOptions = {
 
 const PaymentData = [
   ["Month", "Amount"],
-  ["Jan", 9],
-  ["Feb", 10],
-  ["Mar", 23],
-  ["May", 17],
-  ["Jun", 17],
-  ["Jul", 17],
-  ["Aug", 10],
-  ["Sep", 13],
-  ["Nov", 8],
-  ["Dec", 24],
+  ["Jan", 0],
+  ["Feb", 0],
+  ["Mar", 0],
+  ["Apr", 0],
+  ["May", 0],
+  ["Jun", 0],
+  ["Jul", 0],
+  ["Aug", 0],
+  ["Sep", 0],
+  ["Oct", 0],
+  ["Nov", 0],
+  ["Dec", 0],
 ];
 const PaymentChartOptions = {
   title: "Payments",
@@ -67,41 +73,93 @@ export default class Therapistdashboard extends React.Component {
       showMenu: false,
       showDropMenu: false,
       token: Cookies.get("jwtToken") || "",
-      paymentData: [
-        {
-          date: "15.02.2023",
-          amount: "20",
-          customer: "Customer 1",
-        },
-        {
-          date: "10.02.2023",
-          amount: "15",
-          customer: "Customer 2",
-        },
-        {
-          date: "09.02.2023",
-          amount: "30",
-          customer: "Customer 3",
-        },
-        {
-          date: "06.02.2023",
-          amount: "10",
-          customer: "Customer 1",
-        },
-        {
-          date: "02.02.2023",
-          amount: "20",
-          customer: "Customer 4",
-        },
-      ],
+      email: Cookies.get("email") || "",
+      noofappointments: 0,
+      totalamount: 0,
+      therapistname: "",
+      tapp: [],
+      paymentData: [],
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.addEventListener("click", (event) => {
       this.handleClickOutside(event);
       this.handleDropClickOutside(event);
     });
+
+    await axios
+      .get(`http://localhost:1337/api/getname/${this.state.email}`, {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => this.setState({ therapistname: res.data }))
+      .catch((e) => console.log(e));
+
+    await axios
+      .get(`http://localhost:1337/api/payments`, {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var pay = 0;
+        var resArray = [];
+
+        for (var j = 1; j < PaymentData.length; j++) {
+          PaymentData[j][1] = 0;
+        }
+
+        for (var i = 0; i < res.data.data.length; i++) {
+          console.log("Therapist " + res.data.data[i].attributes.provider);
+          if (
+            this.state.therapistname == res.data.data[i].attributes.provider
+          ) {
+            pay += res.data.data[i].attributes.amount;
+            resArray.push(res.data.data[i].attributes);
+
+            var month = res.data.data[i].attributes.payment_date.split("/");
+            PaymentData[month[1]][1] += 1;
+          }
+        }
+        this.setState({ totalamount: pay });
+        this.setState({ paymentData: resArray });
+      })
+      .catch((e) => console.log(e));
+
+    await axios
+      .get("http://localhost:1337/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        this.setState({ nooftherapists: res.data.data.length });
+        var count = 0;
+        var resArray = [];
+
+        for (var j = 1; j < AppointmentData.length; j++) {
+          AppointmentData[j][1] = 0;
+        }
+
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (
+            res.data.data[i].attributes.therapist_name ===
+            this.state.therapistname
+          ) {
+            count += 1;
+            var app = `${res.data.data[i].attributes.date} ${res.data.data[i].attributes.timeslot}`;
+            resArray.push(app);
+            var month = res.data.data[i].attributes.date.split("/");
+            AppointmentData[month[1]][1] += 1;
+            console.log(AppointmentData[month[1]][1]);
+          }
+        }
+        this.setState({ tapp: resArray });
+        this.setState({ noofappointments: count });
+      })
+      .catch((err) => console.log(err));
   }
 
   componentWillUnmount() {
@@ -225,8 +283,12 @@ export default class Therapistdashboard extends React.Component {
             id="therapist-stats-left"
             style={{ animation: "search-btn 2s ease-in-out" }}
           >
-            <p style={{ fontWeight: "bold" }}>Total no of appointments: 20</p>
-            <p style={{ fontWeight: "bold" }}>Total amounts earned: $150</p>
+            <p style={{ fontWeight: "bold" }}>
+              Total no of appointments: {this.state.noofappointments}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Total amounts earned: {this.state.totalamount}
+            </p>
           </div>
           <div style={{ animation: "search 2s ease-in-out" }}>
             <p id="therapist-stats-left" style={{ fontWeight: "bold" }}>
@@ -265,8 +327,8 @@ export default class Therapistdashboard extends React.Component {
                   flexDirection: "column",
                 }}
               >
-                <p>08 (9.00AM)</p>
-                <p>22 (10.30AM)</p>
+                <p>{this.state.tapp[0]}</p>
+                <p>{this.state.tapp[1]}</p>
               </div>
             </div>
           </div>
@@ -285,7 +347,7 @@ export default class Therapistdashboard extends React.Component {
                           color="#000"
                           style={{ marginTop: "5px" }}
                         />
-                        <p style={{ marginLeft: "10px" }}>{val.date}</p>
+                        <p style={{ marginLeft: "10px" }}>{val.payment_date}</p>
                       </div>
                     </td>
                     <td>
@@ -300,7 +362,7 @@ export default class Therapistdashboard extends React.Component {
                     </td>
                     <td>
                       <div>
-                        <p>{val.customer}</p>
+                        <p>{val.name}</p>
                       </div>
                     </td>
                   </tr>
@@ -309,14 +371,14 @@ export default class Therapistdashboard extends React.Component {
             </table>
           </div>
         </div>
-        <div id="adminchart">
+        <div id="therapistchart">
           <Chart
             width={"100%"}
             height={"410px"}
             chartType="LineChart"
             loader={<div>Loading Chart</div>}
-            data={LineData}
-            options={LineChartOptions}
+            data={AppointmentData}
+            options={AppointmentChartOptions}
             rootProps={{ "data-testid": "2" }}
           />
           <Chart

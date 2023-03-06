@@ -13,6 +13,7 @@ export default class CreateEvent extends React.Component {
       selectedTherapistOption: "",
       therapistOptions: [],
       token: Cookies.get("jwtToken") || "",
+      price: null,
     };
   }
 
@@ -44,6 +45,21 @@ export default class CreateEvent extends React.Component {
           }
         }
         this.setState({ therapistOptions: tOptions });
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get("http://localhost:1337/api/services", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (res.data.data[i].attributes.title === event.target.value) {
+            this.setState({ price: res.data.data[i].attributes.price });
+          }
+        }
       })
       .catch((err) => console.log(err));
 
@@ -215,6 +231,13 @@ export default class CreateEvent extends React.Component {
     }
   };
 
+  handleFeeChange = async (num) => {
+    if (num.target.value >= this.state.price && this.state.price != null) {
+      alert("Fee should not exceed the selected service fee");
+      num.target.value = null;
+    }
+  };
+
   addslot = () => {
     var table = document.getElementById("ts-table");
     var row = table.insertRow(table.rows.length);
@@ -332,153 +355,160 @@ style=" width: 20px; height: 20px; "
   };
 
   render() {
-    return (
-      <div id="container">
-        <div id="top-bar" style={{ height: "100px" }}>
-          <div id="top-left">
-            <p id="cyril">Cyril John Mathew | </p>
-            <p id="hpy">Happiness sustains!</p>
-          </div>
-          <div id="top-right">
-            <div>
-              <FaPhoneAlt color="#000" size={17} />
-              <p>8714772868</p>
+    if (Cookies.get("usertype") === "customer") {
+      return (
+        <div id="container">
+          <div id="top-bar" style={{ height: "100px" }}>
+            <div id="top-left">
+              <p id="cyril">Cyril John Mathew | </p>
+              <p id="hpy">Happiness sustains!</p>
             </div>
-            <div>
-              <MdEmail color="#000" size={17} />
-              <p>cyriljon@yahoo.com</p>
+            <div id="top-right">
+              <div>
+                <FaPhoneAlt color="#000" size={17} />
+                <p>8714772868</p>
+              </div>
+              <div>
+                <MdEmail color="#000" size={17} />
+                <p>cyriljon@yahoo.com</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="page-title-div" style={{ height: "70px" }}>
-          <div id="left-page-title">
-            <p id="appointment-booking">Event Management</p>
+          <div id="page-title-div" style={{ height: "70px" }}>
+            <div id="left-page-title">
+              <p id="appointment-booking">Event Management</p>
+            </div>
+            <div id="right-page-title">
+              <p id="cjmab">Cyril John Mathew &gt; Event Management</p>
+            </div>
           </div>
-          <div id="right-page-title">
-            <p id="cjmab">Cyril John Mathew &gt; Event Management</p>
-          </div>
-        </div>
-        <div id="empty-space"></div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "30px",
-              fontWeight: "700",
-              animation: "book-app 2s ease-in-out forwards",
-            }}
-          >
-            Create an Event
-          </p>
-
+          <div id="empty-space"></div>
           <div
-            id="event-container"
             style={{
-              animation: "book-app 2s ease-in-out forwards",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
             }}
           >
-            <div>
-              <p className="text-size">Name of Event</p>
-              <input
-                id="event-name"
-                className="padding-input"
-                type="text"
-                placeholder="Enter event name"
-              />
-              {/* <select name="event-type" id="event-type" className="dropdown">
+            <p
+              style={{
+                fontSize: "30px",
+                fontWeight: "700",
+                animation: "book-app 2s ease-in-out forwards",
+              }}
+            >
+              Create an Event
+            </p>
+
+            <div
+              id="event-container"
+              style={{
+                animation: "book-app 2s ease-in-out forwards",
+              }}
+            >
+              <div>
+                <p className="text-size">Name of Event</p>
+                <input
+                  id="event-name"
+                  className="padding-input"
+                  type="text"
+                  placeholder="Enter event name"
+                />
+                {/* <select name="event-type" id="event-type" className="dropdown">
                 <option value="null" selected>
                   Select
                 </option>
                 <option value="1to1">One to One meeting</option>
               </select> */}
-              <p className="text-size">Service</p>
-              <select
-                name="service-type"
-                id="event-service-type"
-                className="dropdown"
-                value={this.state.selectedServiceOption}
-                onChange={(event) => this.handleServiceChange(event)}
-              >
-                {this.state.serviceOptions.map((option, index) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <p className="text-size">Service</p>
+                <select
+                  name="service-type"
+                  id="event-service-type"
+                  className="dropdown"
+                  value={this.state.selectedServiceOption}
+                  onChange={(event) => this.handleServiceChange(event)}
+                >
+                  {this.state.serviceOptions.map((option, index) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
-              <p className="text-size">Within India</p>
-              <select name="living" id="living-type" className="dropdown">
-                <option value="null" selected>
-                  Select
-                </option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-              <p className="text-size">Duration</p>
-              <select name="duration" id="duration-type" className="dropdown">
-                <option value="null" selected>
-                  Select duration
-                </option>
-                <option value="30">30 mins</option>
-                <option value="60">1 hr</option>
-                <option value="90">1 hr 30 mins</option>
-              </select>
-              <p className="text-size">Period</p>
-              <select name="therapist" id="period" className="dropdown">
-                <option value="null" selected>
-                  Select
-                </option>
-                <option value="se">Start to End</option>
-              </select>
-            </div>
-            <div>
-              <p className="text-size">Therapist:</p>
-              <select
-                name="therapist-type"
-                id="event-therapist-type"
-                className="dropdown"
-                value={this.state.selectedTherapistOption}
-                onChange={(event) => this.handleTherapistChange(event)}
-              >
-                {this.state.therapistOptions.map((option, index) => (
-                  <option key={option} value={option}>
-                    {option}
+                <p className="text-size">Within India</p>
+                <select name="living" id="living-type" className="dropdown">
+                  <option value="null" selected>
+                    Select
                   </option>
-                ))}
-              </select>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+                <p className="text-size">Duration</p>
+                <select name="duration" id="duration-type" className="dropdown">
+                  <option value="null" selected>
+                    Select duration
+                  </option>
+                  <option value="30">30 mins</option>
+                  <option value="60">1 hr</option>
+                  <option value="90">1 hr 30 mins</option>
+                </select>
+                <p className="text-size">Period</p>
+                <select name="therapist" id="period" className="dropdown">
+                  <option value="null" selected>
+                    Select
+                  </option>
+                  <option value="se">Start to End</option>
+                </select>
+              </div>
+              <div>
+                <p className="text-size">Therapist:</p>
+                <select
+                  name="therapist-type"
+                  id="event-therapist-type"
+                  className="dropdown"
+                  value={this.state.selectedTherapistOption}
+                  onChange={(event) => this.handleTherapistChange(event)}
+                >
+                  {this.state.therapistOptions.map((option, index) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
 
-              <p className="text-size">Mode</p>
-              <select
-                name="mode-type"
-                id="event-mode-type"
-                className="dropdown"
-              >
-                <option value="null" selected>
-                  Select mode
-                </option>
-                <option value="online">Online</option>
-                <option value="offline">Offline</option>
-              </select>
-              <p className="text-size">Booking type</p>
-              <select
-                name="category-type"
-                id="event-booking-type"
-                className="dropdown"
-              >
-                <option value="null" selected>
-                  Select category
-                </option>
-                <option value="pre">Pre-booking</option>
-                <option value="instant">Instant booking</option>
-              </select>
-              <p className="text-size">Fee</p>
-              <select name="fee" id="event-fee-type" className="dropdown">
+                <p className="text-size">Mode</p>
+                <select
+                  name="mode-type"
+                  id="event-mode-type"
+                  className="dropdown"
+                >
+                  <option value="null" selected>
+                    Select mode
+                  </option>
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                </select>
+                <p className="text-size">Booking type</p>
+                <select
+                  name="category-type"
+                  id="event-booking-type"
+                  className="dropdown"
+                >
+                  <option value="null" selected>
+                    Select category
+                  </option>
+                  <option value="pre">Pre-booking</option>
+                  <option value="instant">Instant booking</option>
+                </select>
+                <p className="text-size">Fee</p>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Enter fee"
+                  onChange={(num) => this.handleFeeChange(num)}
+                />
+                {/* <select name="fee" id="event-fee-type" className="dropdown">
                 <option value="null" selected>
                   Select
                 </option>
@@ -486,85 +516,85 @@ style=" width: 20px; height: 20px; "
                 <option value="20">$20.00</option>
                 <option value="30">$30.00</option>
                 <option value="40">$40.00</option>
-              </select>
+              </select> */}
+              </div>
             </div>
-          </div>
-          <p className="text-size" style={{ marginTop: "20px" }}>
-            Available Time Slots
-          </p>
-          <div
-            style={{
-              overflowX: "auto",
-              paddingTop: "50px",
-              width: "95%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: "30px",
-            }}
-          >
-            <table id="ts-table">
-              <tr>
-                <td>
-                  <input
-                    className="day"
-                    type="text"
-                    placeholder="Enter day"
-                    style={{ padding: "5px" }}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="start-time"
-                    type="text"
-                    placeholder="Enter start time"
-                    style={{ padding: "5px" }}
-                  />
-                </td>
-                <td>
-                  <input
-                    className="end-time"
-                    type="text"
-                    placeholder="Enter end time"
-                    style={{ padding: "5px" }}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    name="check"
-                    className="eventcheckbox"
-                    style={{ width: "20px", height: "20px" }}
-                  />
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div style={{ paddingBottom: "30px" }}>
-            <button
-              className="att-btn"
-              style={{ justifyContent: "flex-end" }}
-              onClick={() => this.addslot()}
+            <p className="text-size" style={{ marginTop: "20px" }}>
+              Available Time Slots
+            </p>
+            <div
+              style={{
+                overflowX: "auto",
+                paddingTop: "50px",
+                width: "95%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "30px",
+              }}
             >
-              Add new slots
-            </button>
-            <button
-              className="att-btn"
-              id="create-eve-btn"
-              onClick={() => this.createEvent()}
-            >
-              Create
-            </button>
+              <table id="ts-table">
+                <tr>
+                  <td>
+                    <input
+                      className="day"
+                      type="text"
+                      placeholder="Enter day"
+                      style={{ padding: "5px" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="start-time"
+                      type="text"
+                      placeholder="Enter start time"
+                      style={{ padding: "5px" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="end-time"
+                      type="text"
+                      placeholder="Enter end time"
+                      style={{ padding: "5px" }}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="check"
+                      className="eventcheckbox"
+                      style={{ width: "20px", height: "20px" }}
+                    />
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div style={{ paddingBottom: "30px" }}>
+              <button
+                className="att-btn"
+                style={{ justifyContent: "flex-end" }}
+                onClick={() => this.addslot()}
+              >
+                Add new slots
+              </button>
+              <button
+                className="att-btn"
+                id="create-eve-btn"
+                onClick={() => this.createEvent()}
+              >
+                Create
+              </button>
 
-            <button
-              className="att-btn"
-              id="dlt-slot"
-              onClick={(event) => this.deleteSlot()}
-            >
-              Delete Slot
-            </button>
-          </div>
-          {/* <div id="time-slot-cont">
+              <button
+                className="att-btn"
+                id="dlt-slot"
+                onClick={(event) => this.deleteSlot()}
+              >
+                Delete Slot
+              </button>
+            </div>
+            {/* <div id="time-slot-cont">
             <div id="ts-container">
               <div id="ts">
                 <input
@@ -609,8 +639,11 @@ style=" width: 20px; height: 20px; "
               </button>
             </div>
           </div> */}
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return <h1>You don't have access to this page</h1>;
+    }
   }
 }

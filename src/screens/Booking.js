@@ -34,6 +34,9 @@ export default class Booking extends Component {
     // Cookies.remove("usertype");
     //document.getElementById("defaultOpen").click();
 
+    const params = new URLSearchParams(window.location.search);
+    this.setState({ selectedTherapistOption: params.get("therapist_name") });
+
     this.tabClicked("service", "service-content");
 
     var name = document.getElementById("booking-input-name");
@@ -178,7 +181,7 @@ export default class Booking extends Component {
           // period: period.value,
           // duration: duration.value,
           // fee: fee.value,
-          date: new Date(),
+          date: date,
           service: service,
           timeslot: this.state.ts,
         },
