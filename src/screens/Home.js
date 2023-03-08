@@ -22,6 +22,7 @@ export default class Home extends Component {
       showMenu: false,
       token: Cookies.get("jwtToken") || "",
       tname: "",
+      therapists: [],
     };
   }
 
@@ -38,12 +39,26 @@ export default class Home extends Component {
   // });
   //}
 
-  componentDidMount() {
+  async componentDidMount() {
     document.addEventListener("click", (event) =>
       this.handleClickOutside(event)
     );
-    var jwt = Cookies.get("jwtToken");
-    console.log(jwt);
+
+    await axios
+      .get("http://localhost:1337/api/therapists", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var resArray = [];
+
+        for (var i = 0; i < res.data.data.length; i++) {
+          resArray.push(res.data.data[i]);
+        }
+        this.setState({ therapists: resArray });
+      })
+      .catch((err) => console.log(err));
   }
 
   componentWillMount() {
@@ -172,7 +187,6 @@ export default class Home extends Component {
               `${url}/api/auth/local`,
               requestConfig
             ).catch((e) => alert(e));
-            console.log(res);
             const json = await res.json();
             if (json.error) {
               alert(json.error.message);
@@ -210,7 +224,6 @@ export default class Home extends Component {
               `${url}/api/auth/local`,
               requestConfig
             ).catch((e) => alert(e));
-            console.log(res);
             const json = await res.json();
             if (json.error) {
               alert(json.error.message);
@@ -385,10 +398,10 @@ export default class Home extends Component {
     });
 
     if (idxFound > -1) {
-      console.log("Collapsing " + therapist.firstName + " " + idxFound);
+      console.log("Collapsing " + therapist.attributes.name + " " + idxFound);
       newExpandedRows.splice(idxFound, 1);
     } else {
-      console.log("Expanding " + therapist.firstName);
+      console.log("Expanding " + therapist.attributes.name);
       newExpandedRows.push(therapist.id);
     }
 
@@ -409,12 +422,14 @@ export default class Home extends Component {
   expandAll = (therapists) => {
     console.log("ExapndedRows: " + this.state.expandedRows.length);
     console.log("therapists:      " + therapists.length);
-    if (this.state.expandedRows.length === therapists.length) {
+    if (this.state.expandedRows.length === this.state.therapists.length) {
       let newExpandedRows = [];
       this.setState({ expandedRows: [...newExpandedRows] });
       console.log("Collapsing all...");
     } else {
-      let newExpandedRows = therapists.map((therapist) => therapist.id);
+      let newExpandedRows = this.state.therapists.map(
+        (therapist) => therapist.id
+      );
       this.setState({ expandedRows: [...newExpandedRows] });
       console.log("Expanding all...");
       console.log("Expanded rows " + newExpandedRows.length);
@@ -424,15 +439,106 @@ export default class Home extends Component {
   getRows = (therapist) => {
     let rows = [];
     const details = therapist.details || [];
+    var serviceStr = ``;
+    var bookingTs = [];
+    var eventTs = [];
+
+    //compare with bookings
+    axios
+      .get("http://localhost:1337/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (this.state.tname === res.data.data[i].attributes.therapist_name) {
+            bookingTs.push(res.data.data[i].attributes.timeslot);
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+    //compare with events
+    axios
+      .get("http://localhost:1337/api/events", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (this.state.tname === res.data.data[i].attributes.therapist) {
+            for (
+              var j = 0;
+              j < res.data.data[i].attributes.timeslot.length;
+              j++
+            ) {
+              if (
+                new Date(
+                  res.data.data[i].attributes.timeslot[j].date
+                ).getDate() === new Date().getDate()
+              )
+                eventTs.push(
+                  `${res.data.data[i].attributes.timeslot[j].start} - ${res.data.data[i].attributes.timeslot[j].end}`
+                );
+            }
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+
+    console.log(eventTs);
+
+    for (var i = 0; i < therapist.attributes.services.length; i++) {
+      serviceStr += ` ${therapist.attributes.services[i].service} `;
+    }
+
+    var ts = ``;
+    for (var j = 0; j < therapist.attributes.timeslot.length; j++) {
+      var currentDate = new Date();
+      var fetchedDate = new Date(therapist.attributes.timeslot[j].date);
+
+      // if (fetchedDate.getTime() >= currentDate.getTime()) {
+      //   ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
+      // }
+
+      if (fetchedDate.getDate() === currentDate.getDate()) {
+        console.log(eventTs.length);
+        for (var l = 0; l < eventTs.length; l++) {
+          console.log("Hello");
+          console.log(
+            "Fetched " +
+              `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}`
+          );
+          if (
+            `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
+            eventTs[l]
+          ) {
+            for (var k = 0; k < bookingTs.length; k++) {
+              if (
+                `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
+                bookingTs[k]
+              ) {
+                continue;
+              } else {
+                ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
+              }
+            }
+          } else {
+            continue;
+          }
+        }
+      }
+    }
 
     const firstRow = (
-      <tr onClick={() => this.setState({ tname: therapist.name })}>
-        <td>{therapist.name}</td>
-        <td>{therapist.services}</td>
-        <td>{therapist.mode}</td>
-        <td>{therapist.gender}</td>
+      <tr onClick={() => this.setState({ tname: therapist.attributes.name })}>
+        <td>{therapist.attributes.name}</td>
+        <td>{serviceStr}</td>
+        <td>{therapist.attributes.mode}</td>
+        <td>{therapist.attributes.gender}</td>
         <td>
-          {details.length > 0 && (
+          {this.state.therapists.length > 0 && (
             <button
               id="addorminus"
               onClick={() => this.handleExpand(therapist)}
@@ -446,20 +552,24 @@ export default class Home extends Component {
 
     rows.push(firstRow);
 
-    if (this.isExpanded(therapist) && details.length > 0) {
-      const detailRows = details.map((detail) => (
+    if (this.isExpanded(therapist)) {
+      const detailRows = (
         <tr>
           <td>
-            <img id="therapist-photo" alt="therapist" src={detail.photo} />
+            <img
+              id="therapist-photo"
+              alt="therapist"
+              src={therapist.image_url}
+            />
           </td>
           <td>
-            <p id="desc">{detail.desc}</p>
+            <p id="desc">{therapist.description}</p>
           </td>
           <td>
             <li id="tslist">
               <p>Work Schedule</p>
-              <p>{detail.ts1}</p>
-              <p>{detail.ts2}</p>
+              <p>{ts}</p>
+              {/* <p>{detail.ts2}</p> */}
             </li>
           </td>
           <td>
@@ -471,7 +581,7 @@ export default class Home extends Component {
             </button>
           </td>
         </tr>
-      ));
+      );
 
       rows.push(detailRows);
     }
@@ -504,7 +614,7 @@ export default class Home extends Component {
 
   render() {
     var userType = Cookies.get("usertype");
-    if (userType !== "customer") {
+    if (userType === "customer") {
       return (
         <div id="container">
           <header id="top-bar">
@@ -585,7 +695,9 @@ export default class Home extends Component {
             </div>
           </div>
 
-          <div id="table-div">{this.gettherapistTable(this.therapists)}</div>
+          <div id="table-div">
+            {this.gettherapistTable(this.state.therapists)}
+          </div>
 
           <div id="myModal" class="modal">
             <div class="home-modal-content">

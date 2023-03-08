@@ -15,6 +15,7 @@ export default class Booking extends Component {
     super(props);
     this.state = {
       startDate: "",
+      uploadDate: "",
       dob: null,
       token: Cookies.get("jwtToken") || "",
       usertype: Cookies.get("usertype") || "",
@@ -128,6 +129,9 @@ export default class Booking extends Component {
                   res.data.data[i].attributes.timeslot[k].date
                 ).getDate();
                 var selectDate = new Date().getDate();
+
+                console.log(fetchedDate);
+                console.log(selectDate);
                 if (fetchedDate === selectDate) {
                   var tsString = `${res.data.data[i].attributes.timeslot[k].start} - ${res.data.data[i].attributes.timeslot[k].end}`;
                   resArray.push(tsString);
@@ -158,7 +162,6 @@ export default class Booking extends Component {
     var category = document.getElementById("booking-category-type");
     var living = document.getElementById("booking-service-type");
     var mode = document.getElementById("booking-mode-type");
-    var date = this.state.startDate;
 
     // var ts = document.getElementsByClassName("booking-slot");
     // var selectedTs = [];
@@ -181,7 +184,7 @@ export default class Booking extends Component {
           // period: period.value,
           // duration: duration.value,
           // fee: fee.value,
-          date: date,
+          date: this.state.uploadDate,
           service: service,
           timeslot: this.state.ts,
         },
@@ -218,7 +221,12 @@ export default class Booking extends Component {
   };
 
   handleDateChange = async (date) => {
+    const month = date.getMonth();
+    const day = date.getDate();
+    const year = date.getFullYear();
+    var editedDate = `${day}/${month}/${year}`;
     this.setState({ startDate: date });
+    this.setState({ uploadDate: editedDate });
     await axios
       .get("http://localhost:1337/api/events", {
         headers: {
