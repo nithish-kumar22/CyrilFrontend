@@ -189,6 +189,21 @@ export default class CreateEvent extends React.Component {
       }
     }
 
+    // var resArray = [
+    //   {
+    //     name: name.value,
+    //     therapist: therapist,
+    //     mode: mode.value,
+    //     bookingtype: booking.value,
+    //     period: period.value,
+    //     duration: duration.value,
+    //     fee: fee.value,
+    //     service: service,
+    //     timeslot: ts,
+    //   },
+    // ];
+    // console.log(resArray);
+
     await fetch(`http://localhost:1337/api/events/`, {
       method: "POST",
       headers: {
@@ -204,7 +219,7 @@ export default class CreateEvent extends React.Component {
           period: period.value,
           duration: duration.value,
           fee: fee.value,
-          service: [{ service: service }],
+          service: service,
           timeslot: ts,
         },
       }),
@@ -458,7 +473,7 @@ style=" width: 20px; height: 20px; "
                   <option value="null" selected>
                     Select
                   </option>
-                  <option value="se">Start to End</option>
+                  <option value="Start to End">Start to End</option>
                 </select>
               </div>
               <div>
@@ -498,11 +513,12 @@ style=" width: 20px; height: 20px; "
                   <option value="null" selected>
                     Select category
                   </option>
-                  <option value="pre">Pre-booking</option>
-                  <option value="instant">Instant booking</option>
+                  <option value="Pre-booking">Pre-booking</option>
+                  <option value="Instant booking">Instant booking</option>
                 </select>
                 <p className="text-size">Fee</p>
                 <input
+                  id="event-fee-type"
                   type="number"
                   min="0"
                   placeholder="Enter fee"

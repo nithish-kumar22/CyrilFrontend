@@ -23,6 +23,9 @@ export default class Home extends Component {
       token: Cookies.get("jwtToken") || "",
       tname: "",
       therapists: [],
+      eventTs: [],
+      bookingTs: [],
+      getslots: [],
     };
   }
 
@@ -57,6 +60,73 @@ export default class Home extends Component {
           resArray.push(res.data.data[i]);
         }
         this.setState({ therapists: resArray });
+      })
+      .catch((err) => console.log(err));
+
+    var eventTs = [];
+    await axios
+      .get("http://localhost:1337/api/events", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        for (var i = 0; i < res.data.data.length; i++) {
+          for (
+            var j = 0;
+            j < res.data.data[i].attributes.timeslot.length;
+            j++
+          ) {
+            if (
+              new Date(
+                res.data.data[i].attributes.timeslot[j].date
+              ).getDate() === new Date().getDate()
+            )
+              eventTs.push(
+                `${res.data.data[i].attributes.timeslot[j].start} - ${res.data.data[i].attributes.timeslot[j].end}`
+              );
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+
+    var bookingTs = [];
+    await axios
+      .get("http://localhost:1337/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        for (var i = 0; i < res.data.data.length; i++) {
+          bookingTs.push(res.data.data[i]);
+        }
+        this.setState({ bookingTs: bookingTs });
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get(
+        `http://localhost:1337/api/getslots/${new Date().toLocaleString(
+          "en-US",
+          { weekday: "long" }
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        // var resArray = [];
+
+        // for (var i = 0; i < res.data.length; i++) {
+        //   resArray.push({
+        //     name: res.data[i].name,
+        //     ts: res.data[i].ts,
+        //   });
+        // }
+        this.setState({ getslots: res.data });
       })
       .catch((err) => console.log(err));
   }
@@ -330,41 +400,6 @@ export default class Home extends Component {
     Cookies.remove("usertype");
   };
 
-  therapists = [
-    {
-      id: 20,
-      name: "Akash",
-      services: "Individual therapy",
-      mode: "Online",
-      gender: "Male",
-      details: [
-        {
-          id: "1",
-          photo:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlRbn8W997IVVHToRRiUgaVwIy4oq_GbnmiQ&usqp=CAU",
-          desc: "He/She is a good therapist go above and beyond to meet the needs of their clients",
-          ts1: "8.00 - 12.00",
-          ts2: "1.00 - 3.00",
-        },
-      ],
-    },
-    {
-      id: 30,
-      name: "Kumar",
-      services: "Couple therapy",
-      mode: "Offline",
-      gender: "female",
-      details: [
-        {
-          id: "1",
-          photo:
-            "https://www.shutterstock.com/image-photo/portrait-beautiful-female-psychologist-wearing-260nw-704294779.jpg",
-          desc: "He/She is a good therapist go above and beyond to meet the needs of their clients",
-        },
-      ],
-    },
-  ];
-
   goToBooking = (event) => {
     if (this.state.token) {
       const params = new URLSearchParams(window.location.search);
@@ -443,93 +478,71 @@ export default class Home extends Component {
     var bookingTs = [];
     var eventTs = [];
 
-    //compare with bookings
-    axios
-      .get("http://localhost:1337/api/bookings", {
-        headers: {
-          Authorization: `Bearer ${this.state.token}`,
-        },
-      })
-      .then((res) => {
-        for (var i = 0; i < res.data.data.length; i++) {
-          if (this.state.tname === res.data.data[i].attributes.therapist_name) {
-            bookingTs.push(res.data.data[i].attributes.timeslot);
-          }
-        }
-      })
-      .catch((err) => console.log(err));
-    //compare with events
-    axios
-      .get("http://localhost:1337/api/events", {
-        headers: {
-          Authorization: `Bearer ${this.state.token}`,
-        },
-      })
-      .then((res) => {
-        for (var i = 0; i < res.data.data.length; i++) {
-          if (this.state.tname === res.data.data[i].attributes.therapist) {
-            for (
-              var j = 0;
-              j < res.data.data[i].attributes.timeslot.length;
-              j++
-            ) {
-              if (
-                new Date(
-                  res.data.data[i].attributes.timeslot[j].date
-                ).getDate() === new Date().getDate()
-              )
-                eventTs.push(
-                  `${res.data.data[i].attributes.timeslot[j].start} - ${res.data.data[i].attributes.timeslot[j].end}`
-                );
-            }
-          }
-        }
-      })
-      .catch((err) => console.log(err));
+    // //compare with bookings
+    // this.getBookingTs()
+    //   .then((data) => {
+    //     console.log(data);
+    //     bookingTs = data;
+    //   })
+    //   .catch((e) => console.log(e));
+    // //compare with events
+    // this.getEventTs()
+    //   .then((data) => {
+    //     // console.log(data);
+    //     eventTs = data;
+    //   })
+    //   .catch((e) => console.log(e));
+    // for (var i = 0; i < therapist.attributes.services.length; i++) {
+    //   serviceStr += ` ${therapist.attributes.services[i].service} `;
+    // }
 
-    console.log(eventTs);
+    // var ts = ``;
+    // for (var j = 0; j < therapist.attributes.timeslot.length; j++) {
+    //   var currentDate = new Date();
+    //   var fetchedDate = new Date(therapist.attributes.timeslot[j].date);
 
-    for (var i = 0; i < therapist.attributes.services.length; i++) {
-      serviceStr += ` ${therapist.attributes.services[i].service} `;
-    }
+    //   // if (fetchedDate.getTime() >= currentDate.getTime()) {
+    //   //   ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
+    //   // }
 
-    var ts = ``;
-    for (var j = 0; j < therapist.attributes.timeslot.length; j++) {
-      var currentDate = new Date();
-      var fetchedDate = new Date(therapist.attributes.timeslot[j].date);
+    //   if (fetchedDate.getDate() === currentDate.getDate()) {
+    //     for (var l = 0; l < eventTs.length; l++) {
+    //       if (
+    //         `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
+    //         eventTs[l]
+    //       ) {
+    //         for (var k = 0; k < bookingTs.length; k++) {
+    //           if (
+    //             `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
+    //             bookingTs[k]
+    //           ) {
+    //             continue;
+    //           } else {
+    //             ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
+    //           }
+    //         }
+    //       } else {
+    //         continue;
+    //       }
+    // }
+    // }
+    //}
 
-      // if (fetchedDate.getTime() >= currentDate.getTime()) {
-      //   ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
-      // }
+    var ts = "";
 
-      if (fetchedDate.getDate() === currentDate.getDate()) {
-        console.log(eventTs.length);
-        for (var l = 0; l < eventTs.length; l++) {
-          console.log("Hello");
-          console.log(
-            "Fetched " +
-              `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}`
-          );
-          if (
-            `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
-            eventTs[l]
-          ) {
-            for (var k = 0; k < bookingTs.length; k++) {
-              if (
-                `${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end}` ==
-                bookingTs[k]
-              ) {
-                continue;
-              } else {
-                ts += `\n ${therapist.attributes.timeslot[j].start} - ${therapist.attributes.timeslot[j].end} \n`;
-              }
-            }
-          } else {
-            continue;
-          }
-        }
-      }
-    }
+    var tsslots = this.state.getslots;
+    console.log(tsslots);
+
+    // for (var i = 0; i < tsslots.length; i++) {
+    //   if (tsslots.data[i].name === this.state.bookingTs.attributes.name) {
+    //     if (tsslots.data[i].ts !== this.state.bookingTs.attributes.timeslot) {
+    //       ts += tsslots.data[i].ts;
+    //       console.log(ts);
+    //     }
+    //   }
+    // }
+
+    ts = "";
 
     const firstRow = (
       <tr onClick={() => this.setState({ tname: therapist.attributes.name })}>
@@ -614,115 +627,115 @@ export default class Home extends Component {
 
   render() {
     var userType = Cookies.get("usertype");
-    if (userType === "customer") {
-      return (
-        <div id="container">
-          <header id="top-bar">
-            <div id="top-left">
-              <p id="cyril">Cyril John Mathew | </p>
-              <p id="hpy">Happiness sustains!</p>
-            </div>
-            <div id="top-right">
-              <div>
-                <FaPhoneAlt color="#000" size={17} />
-                <p>8714772868</p>
-              </div>
-              <div>
-                <MdEmail color="#000" size={17} />
-                <p>cyriljon@yahoo.com</p>
-              </div>
+    // if (userType === "customer") {
+    return (
+      <div id="container">
+        <header id="top-bar">
+          <div id="top-left">
+            <p id="cyril">Cyril John Mathew | </p>
+            <p id="hpy">Happiness sustains!</p>
+          </div>
+          <div id="top-right">
+            <div>
+              <FaPhoneAlt color="#000" size={17} />
+              <p>8714772868</p>
             </div>
             <div>
-              <FaUserCircle
-                id="dropbtn"
-                onClick={() => this.handleMenu()}
-                color="#000"
-                size={25}
-                style={{ cursor: "pointer" }}
-              />
-              {this.state.showMenu && this.state.token && (
-                <ul ref={this.state.dropdownRef}>
-                  <li onClick={() => this.profile()}>{Cookies.get("email")}</li>
-                  <li onClick={() => this.logout()}>LogOut</li>
-                </ul>
-              )}
-              {this.state.showMenu && !this.state.token && (
-                <ul ref={this.state.dropdownRef}>
-                  <li onClick={() => this.openModal()}>Signup</li>
-                </ul>
-              )}
+              <MdEmail color="#000" size={17} />
+              <p>cyriljon@yahoo.com</p>
             </div>
-          </header>
+          </div>
+          <div>
+            <FaUserCircle
+              id="dropbtn"
+              onClick={() => this.handleMenu()}
+              color="#000"
+              size={25}
+              style={{ cursor: "pointer" }}
+            />
+            {this.state.showMenu && this.state.token && (
+              <ul ref={this.state.dropdownRef}>
+                <li onClick={() => this.profile()}>{Cookies.get("email")}</li>
+                <li onClick={() => this.logout()}>LogOut</li>
+              </ul>
+            )}
+            {this.state.showMenu && !this.state.token && (
+              <ul ref={this.state.dropdownRef}>
+                <li onClick={() => this.openModal()}>Signup</li>
+              </ul>
+            )}
+          </div>
+        </header>
 
-          <div id="page-title-div" style={{ height: "70px" }}>
-            <div id="left-page-title">
-              <p id="appointment-booking">Appointment Booking</p>
-            </div>
-            <div id="right-page-title">
-              <p id="cjmab">Cyril John Mathew &gt; Appointment Booking</p>
-            </div>
+        <div id="page-title-div" style={{ height: "70px" }}>
+          <div id="left-page-title">
+            <p id="appointment-booking">Appointment Booking</p>
           </div>
-          <div id="empty-space"></div>
-          <div id="book-appointment" style={{ height: "70px" }}>
-            <p id="book-app-text">Book an Appointment</p>
+          <div id="right-page-title">
+            <p id="cjmab">Cyril John Mathew &gt; Appointment Booking</p>
           </div>
-          <div id="empty-space"></div>
-          <div id="therapist-list">
-            <p id="therapist-list-text">Therapists list</p>
-          </div>
-          <div id="empty-space"></div>
-          <div id="filter-div">
-            <div id="left-filter">
-              <div id="filter-text">
-                <p>Filter list by: </p>
-              </div>
-              <div id="left-filter-content">
-                <p>ONLINE</p>
-                <p>OFFLINE</p>
-                <p>MALE</p>
-                <p>FEMALE</p>
-              </div>
+        </div>
+        <div id="empty-space"></div>
+        <div id="book-appointment" style={{ height: "70px" }}>
+          <p id="book-app-text">Book an Appointment</p>
+        </div>
+        <div id="empty-space"></div>
+        <div id="therapist-list">
+          <p id="therapist-list-text">Therapists list</p>
+        </div>
+        <div id="empty-space"></div>
+        <div id="filter-div">
+          <div id="left-filter">
+            <div id="filter-text">
+              <p>Filter list by: </p>
             </div>
-            <div id="right-filter">
-              <input
-                id="search"
-                placeholder="Search Available Therapist"
-                type="text"
-              />
-              <div className="att-btn" id="search-btn">
-                Search
-              </div>
+            <div id="left-filter-content">
+              <p>ONLINE</p>
+              <p>OFFLINE</p>
+              <p>MALE</p>
+              <p>FEMALE</p>
             </div>
           </div>
+          <div id="right-filter">
+            <input
+              id="search"
+              placeholder="Search Available Therapist"
+              type="text"
+            />
+            <div className="att-btn" id="search-btn">
+              Search
+            </div>
+          </div>
+        </div>
 
-          <div id="table-div">
-            {this.gettherapistTable(this.state.therapists)}
-          </div>
+        <div id="table-div">
+          {this.gettherapistTable(this.state.therapists)}
+        </div>
 
-          <div id="myModal" class="modal">
-            <div class="home-modal-content">
-              <p onClick={() => this.closeModal()} class="close">
-                <span>&times;</span>
-              </p>
-              <p
-                style={{
-                  textAlign: "center",
-                  fontSize: "30px",
-                  color: "#7F9BC9",
-                  fontWeight: "600",
-                }}
-              >
-                Signup
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-              >
-                {/* <p>Are you an</p> */}
-                {/* <div style={{ display: "flex", flexDirection: "row" }}>
+        <div id="myModal" class="modal">
+          <div class="home-modal-content">
+            <p onClick={() => this.closeModal()} class="close">
+              <span>&times;</span>
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "30px",
+                color: "#7F9BC9",
+                fontWeight: "600",
+              }}
+            >
+              Signup
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              {/* <p>Are you an</p> */}
+              {/* <div style={{ display: "flex", flexDirection: "row" }}>
                 <div>
                   <input
                     id="customer-signup"
@@ -751,149 +764,141 @@ export default class Home extends Component {
                   <label for="admin-radio">Admin</label>
                 </div> 
               </div> */}
-                <p>Username</p>
-                <input
-                  id="email-customer"
-                  type="text"
-                  className="padding-input"
-                  placeholder="Enter username"
-                  onChange={(text) =>
-                    this.setState({ username: text.target.value })
-                  }
-                />
-                <p>Email</p>
-                <input
-                  id="email-customer"
-                  type="text"
-                  className="padding-input"
-                  placeholder="Enter email"
-                  onChange={(text) =>
-                    this.setState({ email: text.target.value })
-                  }
-                />
-                <p>Password</p>
-                <input
-                  id="therapist-cust"
-                  type="password"
-                  className="padding-input"
-                  placeholder="Enter password"
-                  onChange={(text) =>
-                    this.setState({ passw: text.target.value })
-                  }
-                />
-                <p
-                  style={{ cursor: "pointer", opacity: "0.7" }}
-                  onClick={() => this.loginModal()}
-                >
-                  Already have an account?
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                  }}
-                >
-                  <button onClick={() => this.signUp()} id="signup-btn">
-                    Signup
-                  </button>
-                </div>
+              <p>Username</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter username"
+                onChange={(text) =>
+                  this.setState({ username: text.target.value })
+                }
+              />
+              <p>Email</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter email"
+                onChange={(text) => this.setState({ email: text.target.value })}
+              />
+              <p>Password</p>
+              <input
+                id="therapist-cust"
+                type="password"
+                className="padding-input"
+                placeholder="Enter password"
+                onChange={(text) => this.setState({ passw: text.target.value })}
+              />
+              <p
+                style={{ cursor: "pointer", opacity: "0.7" }}
+                onClick={() => this.loginModal()}
+              >
+                Already have an account?
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <button onClick={() => this.signUp()} id="signup-btn">
+                  Signup
+                </button>
               </div>
             </div>
           </div>
+        </div>
 
-          <div id="loginModal" class="modal">
-            <div class="home-modal-content">
-              <p onClick={() => this.closeLoginModal()} class="close">
-                <span>&times;</span>
-              </p>
-              <p
-                style={{
-                  textAlign: "center",
-                  fontSize: "30px",
-                  color: "#7F9BC9",
-                  fontWeight: "600",
-                }}
-              >
-                Login
-              </p>
+        <div id="loginModal" class="modal">
+          <div class="home-modal-content">
+            <p onClick={() => this.closeLoginModal()} class="close">
+              <span>&times;</span>
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "30px",
+                color: "#7F9BC9",
+                fontWeight: "600",
+              }}
+            >
+              Login
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <p>Are you an</p>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div>
+                  <input
+                    id="customer-login"
+                    type="radio"
+                    name="login"
+                    value="customer"
+                  />
+                  <label for="customer-radio">Customer</label>
+                </div>
+                <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="therapist-login"
+                    type="radio"
+                    name="login"
+                    value="therapist"
+                  />
+                  <label for="therapist-radio">therapist</label>
+                </div>
+                <div style={{ marginLeft: "20px" }}>
+                  <input
+                    id="admin-login"
+                    type="radio"
+                    name="login"
+                    value="admin"
+                  />
+                  <label for="admin-radio">Admin</label>
+                </div>
+              </div>
+              <p>Email</p>
+              <input
+                id="email-customer"
+                type="text"
+                className="padding-input"
+                placeholder="Enter email"
+                onChange={(text) => this.setState({ email: text.target.value })}
+              />
+              <p>Password</p>
+              <input
+                id="therapist-cust"
+                type="password"
+                className="padding-input"
+                placeholder="Enter password"
+                onChange={(text) => this.setState({ passw: text.target.value })}
+              />
 
               <div
                 style={{
                   display: "flex",
+                  alignItems: "center",
                   justifyContent: "center",
-                  flexDirection: "column",
+                  width: "100%",
                 }}
               >
-                <p>Are you an</p>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div>
-                    <input
-                      id="customer-login"
-                      type="radio"
-                      name="login"
-                      value="customer"
-                    />
-                    <label for="customer-radio">Customer</label>
-                  </div>
-                  <div style={{ marginLeft: "20px" }}>
-                    <input
-                      id="therapist-login"
-                      type="radio"
-                      name="login"
-                      value="therapist"
-                    />
-                    <label for="therapist-radio">therapist</label>
-                  </div>
-                  <div style={{ marginLeft: "20px" }}>
-                    <input
-                      id="admin-login"
-                      type="radio"
-                      name="login"
-                      value="admin"
-                    />
-                    <label for="admin-radio">Admin</label>
-                  </div>
-                </div>
-                <p>Email</p>
-                <input
-                  id="email-customer"
-                  type="text"
-                  className="padding-input"
-                  placeholder="Enter email"
-                  onChange={(text) =>
-                    this.setState({ email: text.target.value })
-                  }
-                />
-                <p>Password</p>
-                <input
-                  id="therapist-cust"
-                  type="password"
-                  className="padding-input"
-                  placeholder="Enter password"
-                  onChange={(text) =>
-                    this.setState({ passw: text.target.value })
-                  }
-                />
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                  }}
-                >
-                  <button onClick={() => this.login()} id="login-btn">
-                    Login
-                  </button>
-                </div>
+                <button onClick={() => this.login()} id="login-btn">
+                  Login
+                </button>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* <div id='foot'>
+        {/* <div id='foot'>
         <div id='overcome'>
           <p id='overcome-text'>OVERCOME</p>
           <p id='overcome-desc'>Overcome is an earnest attempt to help people conquer their problems and replenish in life.</p>
@@ -927,10 +932,10 @@ export default class Home extends Component {
           <p>cyriljon@yahoo.com</p>
         </div>
       </div> */}
-        </div>
-      );
-    } else {
-      return <h1>You have not access to this page</h1>;
-    }
+      </div>
+    );
+    // } else {
+    //   return <h1>You have not access to this page</h1>;
+    // }
   }
 }

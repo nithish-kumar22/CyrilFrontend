@@ -86,18 +86,25 @@ export default class Staff extends React.Component {
     var cell3 = row.insertCell(2);
 
     ReactDOM.render(
-      <DatePicker
-        id="staff-date-picker"
-        className="staff-date"
-        selected={this.state.selectedDate}
-        onChange={(date) => {
-          this.setState({ selectedDate: date });
-          // this.setState((prevState) => ({
-          //   dates: [...prevState.dates, { date: date }],
-          // }));
-        }}
-        minDate={new Date()}
-        dateFormat="dd/MM/yyyy"
+      // <DatePicker
+      //   id="staff-date-picker"
+      //   className="staff-date"
+      //   selected={this.state.selectedDate}
+      //   onChange={(date) => {
+      //     this.setState({ selectedDate: date });
+      //     // this.setState((prevState) => ({
+      //     //   dates: [...prevState.dates, { date: date }],
+      //     // }));
+      //   }}
+      //   minDate={new Date()}
+      //   dateFormat="dd/MM/yyyy"
+      // />
+      <input
+        id="staff-ts-day"
+        className="day"
+        type="text"
+        placeholder="Enter day"
+        value={val.day}
       />,
       cell1
     );
@@ -414,16 +421,13 @@ export default class Staff extends React.Component {
 
     var start = document.getElementsByClassName("start-time");
     var end = document.getElementsByClassName("end-time");
-    var dates = document.getElementsByClassName("staff-date");
+    var days = document.getElementsByClassName("day");
     var array = [];
 
     for (let i = 0; i < start.length; i++) {
-      const [day, month, year] = dates[i].value.split("/");
-      const dateObject = new Date(year, month - 1, day);
       array.push({
-        date: String(dateObject),
-        start: start[i].value,
-        end: end[i].value,
+        day: days[i].value,
+        ts: `${start[i].value} - ${end[i].value}`,
       });
     }
 
@@ -856,7 +860,7 @@ export default class Staff extends React.Component {
                       return (
                         <tr>
                           <td>
-                            <DatePicker
+                            {/* <DatePicker
                               id="staff-date-picker"
                               className="staff-date"
                               selected={new Date(val.date)}
@@ -871,14 +875,14 @@ export default class Staff extends React.Component {
                               }}
                               minDate={new Date()}
                               dateFormat="h:mm aa"
-                            />
-                            {/* <input
+                            /> */}
+                            <input
                               id="staff-ts-day"
                               className="day"
                               type="text"
                               placeholder="Enter day"
                               value={val.day}
-                            /> */}
+                            />
                           </td>
                           <td>
                             {/* <DatePicker
@@ -891,13 +895,13 @@ export default class Staff extends React.Component {
                               dateFormat="h:mm aa"
                               timeCaption="Time"
                             /> */}
-                            {/* <input
+                            <input
                               id="staff-ts-start"
                               className="start-time"
                               type="text"
                               placeholder="Enter start time"
                               value={val.start}
-                            /> */}
+                            />
                           </td>
                           <td>
                             {/* <DatePicker
@@ -910,13 +914,13 @@ export default class Staff extends React.Component {
                               dateFormat="h:mm aa"
                               timeCaption="Time"
                             /> */}
-                            {/* <input
+                            <input
                               id="staff-ts-end"
                               className="end-time"
                               type="text"
                               placeholder="Enter end time"
                               value={val.end}
-                            /> */}
+                            />
                           </td>
                         </tr>
                       );
