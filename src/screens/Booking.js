@@ -184,7 +184,7 @@ export default class Booking extends Component {
           // period: period.value,
           // duration: duration.value,
           // fee: fee.value,
-          date: this.state.uploadDate,
+          date: new Date(),
           service: service,
           timeslot: this.state.ts,
         },
@@ -221,14 +221,12 @@ export default class Booking extends Component {
   };
 
   handleDateChange = async (date) => {
-    const month = date.getMonth();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    var editedDate = `${day}/${month}/${year}`;
     this.setState({ startDate: date });
-    this.setState({ uploadDate: editedDate });
+    var day = new Date(date).toLocaleDateString("en-US", {
+      weekday: "long",
+    });
     await axios
-      .get("http://localhost:1337/api/events", {
+      .get(`http://localhost:1337/api/getslots/${date}/`, {
         headers: {
           Authorization: `Bearer ${this.state.token}`,
         },
@@ -236,33 +234,43 @@ export default class Booking extends Component {
       .then((res) => {
         var resArray = [];
 
-        for (var i = 0; i < res.data.data.length; i++) {
-          if (
-            res.data.data[i].attributes.therapist ===
-            this.state.selectedTherapistOption
-          ) {
-            if (
-              res.data.data[i].attributes.service ===
-              this.state.selectedServiceOption
-            ) {
-              for (
-                var k = 0;
-                k < res.data.data[i].attributes.timeslot.length;
-                k++
-              ) {
-                var fetchedDate = new Date(
-                  res.data.data[i].attributes.timeslot[k].date
-                ).getDate();
-                var selectDate = new Date(date).getDate();
-                if (fetchedDate === selectDate) {
-                  var tsString = `${res.data.data[i].attributes.timeslot[k].start} - ${res.data.data[i].attributes.timeslot[k].end}`;
-                  resArray.push(tsString);
-                }
-              }
-            }
+        try {
+          for (var i = 0; i < res.data.length; i++) {
+            resArray.push(res.data[i].ts);
           }
+
+          this.setState({ avtimeslot: resArray });
+        } catch (error) {
+          this.setState({ avtimeslot: null });
         }
-        this.setState({ avtimeslot: resArray });
+
+        // for (var i = 0; i < res.data.data.length; i++) {
+        //   if (
+        //     res.data.data[i].attributes.therapist ===
+        //     this.state.selectedTherapistOption
+        //   ) {
+        //     if (
+        //       res.data.data[i].attributes.service ===
+        //       this.state.selectedServiceOption
+        //     ) {
+        //       for (
+        //         var k = 0;
+        //         k < res.data.data[i].attributes.timeslot.length;
+        //         k++
+        //       ) {
+        //         var fetchedDate = new Date(
+        //           res.data.data[i].attributes.timeslot[k].date
+        //         ).getDate();
+        //         var selectDate = new Date(date).getDate();
+        //         if (fetchedDate === selectDate) {
+        //           var tsString = `${res.data.data[i].attributes.timeslot[k].start} - ${res.data.data[i].attributes.timeslot[k].end}`;
+        //           resArray.push(tsString);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+        // this.setState({ avtimeslot: resArray });
       })
       .catch((err) => console.log(err));
   };
@@ -368,8 +376,8 @@ export default class Booking extends Component {
                     <option value="null" selected>
                       Select category
                     </option>
-                    <option value="pre">Pre-booking</option>
-                    <option value="instant">Instant booking</option>
+                    <option value="Pre-booking">Pre-booking</option>
+                    <option value="Instant-booking">Instant booking</option>
                   </select>
                   {/* <p style={{ fontWeight: "600" }}>Therapist</p> */}
                   {/* <select name="therapist" id="service-type">

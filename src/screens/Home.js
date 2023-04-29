@@ -475,10 +475,12 @@ export default class Home extends Component {
     let rows = [];
     const details = therapist.details || [];
     var serviceStr = ``;
-    var bookingTs = [];
-    var eventTs = [];
+    // var bookingTs = [];
+    // var eventTs = [];
 
-    // //compare with bookings
+    console.log(therapist);
+
+    //compare with bookings
     // this.getBookingTs()
     //   .then((data) => {
     //     console.log(data);
@@ -492,9 +494,9 @@ export default class Home extends Component {
     //     eventTs = data;
     //   })
     //   .catch((e) => console.log(e));
-    // for (var i = 0; i < therapist.attributes.services.length; i++) {
-    //   serviceStr += ` ${therapist.attributes.services[i].service} `;
-    // }
+    for (var i = 0; i < therapist.attributes.services.length; i++) {
+      serviceStr += ` ${therapist.attributes.services[i].service} `;
+    }
 
     // var ts = ``;
     // for (var j = 0; j < therapist.attributes.timeslot.length; j++) {
@@ -528,21 +530,21 @@ export default class Home extends Component {
     // }
     //}
 
-    var ts = "";
+    // var ts = "";
 
-    var tsslots = this.state.getslots;
-    console.log(tsslots);
+    // var tsslots = this.state.getslots;
+    // console.log(tsslots);
 
-    // for (var i = 0; i < tsslots.length; i++) {
-    //   if (tsslots.data[i].name === this.state.bookingTs.attributes.name) {
-    //     if (tsslots.data[i].ts !== this.state.bookingTs.attributes.timeslot) {
-    //       ts += tsslots.data[i].ts;
-    //       console.log(ts);
-    //     }
-    //   }
-    // }
+    // // for (var i = 0; i < tsslots.length; i++) {
+    // //   if (tsslots.data[i].name === this.state.bookingTs.attributes.name) {
+    // //     if (tsslots.data[i].ts !== this.state.bookingTs.attributes.timeslot) {
+    // //       ts += tsslots.data[i].ts;
+    // //       console.log(ts);
+    // //     }
+    // //   }
+    // // }
 
-    ts = "";
+    // ts = "";
 
     const firstRow = (
       <tr onClick={() => this.setState({ tname: therapist.attributes.name })}>
@@ -567,24 +569,19 @@ export default class Home extends Component {
 
     if (this.isExpanded(therapist)) {
       const detailRows = (
-        <tr>
+        <tr style={{ backgroundColor: "#ddd" }}>
           <td>
             <img
               id="therapist-photo"
               alt="therapist"
-              src={therapist.image_url}
+              src={therapist.attributes.image_url}
             />
           </td>
+          <td></td>
           <td>
-            <p id="desc">{therapist.description}</p>
+            <p id="desc">{therapist.attributes.description}</p>
           </td>
-          <td>
-            <li id="tslist">
-              <p>Work Schedule</p>
-              <p>{ts}</p>
-              {/* <p>{detail.ts2}</p> */}
-            </li>
-          </td>
+          <td></td>
           <td>
             <button
               id="book-button"

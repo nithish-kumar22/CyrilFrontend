@@ -4,46 +4,20 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import axios from "axios";
 
 export default class ListAppointments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       startDate: new Date(),
-      upcomingdata: [
-        {
-          employee: "Cyril Mathew",
-          customer: "Mark P daye",
-          service: "Individual therapy",
-          event: "One to one",
-          date: "24.01.22",
-          timeslot: "9.00 - 9.30AM",
-        },
-      ],
-      pastdata: [
-        {
-          employee: "Cyril Mathew",
-          customer: "Mark P daye",
-          service: "Individual therapy",
-          event: "One to one",
-          date: "24.01.22",
-          timeslot: "9.00 - 9.30AM",
-        },
-      ],
-      canceldata: [
-        {
-          employee: "Cyril Mathew",
-          customer: "Mark P daye",
-          service: "Individual therapy",
-          event: "One to one",
-          date: "24.01.22",
-          timeslot: "9.00 - 9.30AM",
-        },
-      ],
+      upcomingdata: [],
+      pastdata: [],
+      canceldata: [],
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     document.getElementById("defaultOpen").click();
 
     const content = document.getElementById("container");
@@ -54,6 +28,39 @@ export default class ListAppointments extends React.Component {
     } else {
       content.style.height = "100vh";
     }
+
+    await axios
+      .get("http://localhost:1337/api/bookings", {
+        headers: {
+          Authorization: `Bearer ${this.state.token}`,
+        },
+      })
+      .then((res) => {
+        var upcome = [];
+        var past = [];
+        for (var i = 0; i < res.data.data.length; i++) {
+          if (new Date(res.data.data[i].attributes.date) < new Date()) {
+            upcome.push({
+              employee: res.data.data[i].attributes.therapist_name,
+              customer: res.data.data[i].attributes.customer_name,
+              service: res.data.data[i].attributes.service,
+              date: res.data.data[i].attributes.date.slice(0, 10),
+              timeslot: res.data.data[i].attributes.timeslot,
+            });
+          } else {
+            past.push({
+              employee: res.data.data[i].attributes.therapist_name,
+              customer: res.data.data[i].attributes.customer_name,
+              service: res.data.data[i].attributes.service,
+              date: res.data.data[i].attributes.date,
+              timeslot: res.data.data[i].attributes.timeslot,
+            });
+          }
+        }
+        this.setState({ upcomingdata: upcome });
+        this.setState({ pastdata: past });
+      })
+      .catch((e) => console.log(e));
   }
 
   getDate = (date) => {

@@ -4,6 +4,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import axios from "axios";
 import Cookies from "js-cookie";
+import moment from "moment";
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
@@ -175,19 +176,81 @@ export default class CreateEvent extends React.Component {
     var booking = document.getElementById("event-booking-type");
     var fee = document.getElementById("event-fee-type");
 
-    var day = [];
-    var starttime = [];
-    var endtime = [];
     var ts = [];
-    for (var i = 0; i < days.length; i++) {
+    for (var i = 0; i < start.length; i++) {
       if (
         days[i].value !== "" &&
         start[i].value !== "" &&
         end[i].value !== ""
       ) {
-        ts = [{ day: days[i].value, start: start[i].value, end: end[i].value }];
+        ts = [
+          { day: days[i].value, ts: `${start[i].value} - ${end[i].value}` },
+        ];
       }
     }
+
+    // await axios
+    //   .get("http://localhost:1337/api/checkcrtslots", {
+    //     headers: {
+    //       Authorization: `Bearer ${this.state.token}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     for (var i = 0; i < res.data.data.length; i++) {
+    //       if (res.data.data[i].name === therapist) {
+    //         fetchedTs.push(res.data.data[i].timeslot);
+    //       }
+    //     }
+    //   });
+
+    // let isOverlap = false;
+
+    // for (let i = 0; i < ts.length; i++) {
+    //   for (let j = 0; j < fetchedTs.length; j++) {
+    //     if (ts[i].day === fetchedTs[i].day) {
+    //       let [start1, end1] = ts[i].ts.split("-");
+    //       let [start2, end2] = fetchedTs[i].ts.split("-");
+
+    //       start1 = moment(start1.trim(), "hh:mm A").format("HH:mm");
+    //       end1 = moment(end1.trim(), "hh:mm A").format("HH:mm");
+
+    //       start2 = moment(start2.trim(), "hh:mm A").format("HH:mm");
+    //       end2 = moment(end2.trim(), "hh:mm A").format("HH:mm");
+
+    //       if (start1 <= end2 && start2 <= end1) {
+    //         isOverlap = true;
+    //         alert("Time slots overlap " + ts[i]);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // const tstimeString = ts[i].start;
+    // const datets = new Date("1970-01-01T" + timeString + "Z");
+    // const tshours = datets.getHours();
+    // const tsminutes = datets.getMinutes();
+    // const timeStringstart = fetchedTs[j].start;
+    // const datefetstart = new Date("1970-01-01T" + timeString + "Z");
+    // const fetchedhoursstart = datefetstart.getHours();
+    // const fetchedminutesstart = datefetstart.getMinutes();
+    // const timeStringend = fetchedTs[j].end;
+    // const datefetend = new Date("1970-01-01T" + timeString + "Z");
+    // const fetchedhoursend = datefetend.getHours();
+    // const fetchedminutesend = datefetend.getMinutes();
+
+    // if (
+    //   (tshours > fetchedhoursstart ||
+    //     (tshours === fetchedhoursstart && tsminutes >= fetchedminutesstart)) &&
+    //   (tshours < endTime.hours ||
+    //     (currentHours === endTime.hours &&
+    //       currentMinutes <= endTime.minutes))
+    // ) {
+    //   console.log("The current time is within the time slot.");
+    // } else {
+    //   console.log("The current time is outside the time slot.");
+    // }
+    //   }
+    // }
 
     // var resArray = [
     //   {
@@ -204,6 +267,7 @@ export default class CreateEvent extends React.Component {
     // ];
     // console.log(resArray);
 
+    // if (!isOverlap) {
     await fetch(`http://localhost:1337/api/events/`, {
       method: "POST",
       headers: {

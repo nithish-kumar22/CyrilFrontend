@@ -54,14 +54,17 @@ export default class Admindashboard extends React.Component {
       token: Cookies.get("jwtToken") || "",
       nooftherapists: 0,
       noofappointments: 0,
+      bmonths: [],
       appointments: [],
+      tnames: [],
       upMonth: null,
       paymentData: [],
       Appointment: [
         { Month: "Jan", Akash: 2, Kumar: 1 },
         { Month: "Feb", Akash: 3, Kumar: 5 },
       ],
-      AppointmentData: [],
+      tchartsData: [],
+      AppointmentData: [{ month: "Jan", akash: "10", kumar: "20" }],
     };
   }
 
@@ -74,7 +77,7 @@ export default class Admindashboard extends React.Component {
     // Cookies.remove("email");
     // Cookies.remove("usertype");
 
-    var therapistname = [];
+    var chartData = [];
 
     await axios
       .get("http://localhost:1337/api/therapists", {
@@ -83,10 +86,16 @@ export default class Admindashboard extends React.Component {
         },
       })
       .then((res) => {
+        var therapistname = ["Month"];
+        var tn = [];
         this.setState({ nooftherapists: res.data.data.length });
         for (var i = 0; i < res.data.data.length; i++) {
           therapistname.push(res.data.data[i].attributes.name);
+          tn.push(res.data.data[i].attributes.name);
         }
+        this.setState({ tnames: tn });
+        // chartData.push(therapistname);
+        //  this.setState({ tchartsData: chartData });
       })
       .catch((err) => console.log(err));
 
@@ -113,17 +122,6 @@ export default class Admindashboard extends React.Component {
       })
       .catch((err) => console.log(err));
 
-    const chartData = [
-      ["Month", "Akash", "Kumar"],
-      ...this.state.Appointment.map(({ Month, Akash, Kumar }) => [
-        Month,
-        Akash,
-        Kumar,
-      ]),
-    ];
-
-    this.setState({ AppointmentData: chartData });
-
     await axios
       .get("http://localhost:1337/api/bookings", {
         headers: {
@@ -131,39 +129,123 @@ export default class Admindashboard extends React.Component {
         },
       })
       .then((res) => {
-        this.setState({ noofappointments: res.data.data.length });
-        var resArray = [];
+        var apdata = [];
+        var mon = [];
+        for (let i = 0; i < res.data.data.length; i++) {
+          apdata.push({
+            therapist: res.data.data[i].attributes.therapist_name,
+            date: res.data.data[i].attributes.date,
+          });
+          mon.push(
+            new Date(res.data.data[i].attributes.date).toLocaleString(
+              "default",
+              { month: "long" }
+            )
+          );
+        }
+        this.setState({ bmonths: mon });
 
-        this.setState({
-          upMonth: new Date(
-            res.data.data[0].attributes.date
-          ).toLocaleDateString("default", { month: "long" }),
+        var appointmentCounts = {};
+
+        apdata.forEach((booking) => {
+          var month = new Date(booking.date).toLocaleString("default", {
+            month: "long",
+          });
+          var therapist = booking.therapist;
+
+          if (!appointmentCounts[month]) {
+            appointmentCounts[month] = {};
+          }
+          if (!appointmentCounts[month][therapist]) {
+            appointmentCounts[month][therapist] = 0;
+          }
+          appointmentCounts[month][therapist]++;
         });
-        for (var i = 0; i < res.data.data.length; i++) {
-          var date = new Date(res.data.data[i].attributes.date)
-            .toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "numeric",
-              year: "numeric",
-            })
-            .replace(/(\d+)\/(\d+)\/(\d+)/, "$2/$1/$3");
-          var upcome = `${date} ${res.data.data[i].attributes.timeslot}`;
-          resArray.push(upcome);
-        }
-        this.setState({ appointments: resArray });
 
-        var count = 0;
-        var therapistApp = [];
-        var monthApp = [res.data.data.length];
-
-        for (var j = 0; j < res.data.data.length; j++) {
-          // for (var k = 0; k < res.data.data.length; k++) {
-          console.log(new Date(res.data.data[j].attributes.date).getMonth());
-          monthApp[new Date(res.data.data[j].attributes.date).getMonth() + 1] =
-            count += 1;
-          // }
+        const chartData = [["Month", ...this.state.tnames]];
+        const therapists = new Set();
+        for (const month in appointmentCounts) {
+          therapists.add(month);
         }
-        console.log(monthApp);
+
+        const sortedTherapists = Array.from(therapists).sort();
+
+        const dataRows = sortedTherapists.map((therapist) => {
+          const therapistData = [therapist];
+          for (const month in appointmentCounts) {
+            for (const therapis in appointmentCounts[month][therapist])
+              therapistData.push(appointmentCounts[month][therapist] || 0);
+          }
+          return therapistData;
+        });
+
+        const finalData = chartData.concat(dataRows);
+
+        console.log(finalData);
+
+        this.setState({ AppointmentData: chartData });
+        // var dt = [];
+
+        // for (const month in appointmentCounts) {
+        //   console.log(`Appointments for ${month}:`);
+        //   for (const therapist in appointmentCounts[month]) {
+        //     console.log(`${therapist}: ${appointmentCounts[month][therapist]}`);
+
+        //     for (let i = 0; i < this.state.tnames.length; i++) {
+        //       dt.push([
+        //         appointmentCounts[month][this.state.tnames[i]] === undefined
+        //           ? 0
+        //           : appointmentCounts[month][this.state.tnames[i]],
+        //       ]);
+
+        //     }
+        //   }
+        //   console.log("");
+        // }
+
+        // console.log(dt);
+
+        // for (const month in appointmentCounts) {
+        //   console.log(`Months for ${month}:`);
+        //   for (const therapist in appointmentCounts[month]) {
+        //     console.log(`${therapist}: ${appointmentCounts[therapist][month]}`);
+        //   }
+        //   console.log("");
+        // }
+
+        // this.setState({ noofappointments: res.data.data.length });
+        // var resArray = [];
+
+        // this.setState({
+        //   upMonth: new Date(
+        //     res.data.data[0].attributes.date
+        //   ).toLocaleDateString("default", { month: "long" }),
+        // });
+        // for (var i = 0; i < res.data.data.length; i++) {
+        //   var date = new Date(res.data.data[i].attributes.date)
+        //     .toLocaleDateString("en-US", {
+        //       day: "numeric",
+        //       month: "numeric",
+        //       year: "numeric",
+        //     })
+        //     .replace(/(\d+)\/(\d+)\/(\d+)/, "$2/$1/$3");
+        //   var upcome = `${date} ${res.data.data[i].attributes.timeslot}`;
+        //   resArray.push(upcome);
+        // }
+        // this.setState({ appointments: resArray });
+
+        // var count = 0;
+        // var therapistApp = [];
+        // var monthApp = [res.data.data.length];
+
+        // for (var j = 0; j < res.data.data.length; j++) {
+        //   // for (var k = 0; k < res.data.data.length; k++) {
+        //   // console.log(new Date(res.data.data[j].attributes.date).getMonth());
+        //   monthApp[new Date(res.data.data[j].attributes.date).getMonth() + 1] =
+        //     count += 1;
+        //   // }
+        // }
+        // console.log("Month", monthApp);
       })
 
       .catch((err) => console.log(err));
